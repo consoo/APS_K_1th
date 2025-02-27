@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-//#define		NORINDA_MODE
+#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0
@@ -35,7 +35,9 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 static int LGIT_MODEL_INDEX = M1_LSI_5M;
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-#define					VER_STR		"241128_1"			//1호기 miu close 수정, 차트 좌표 5,6,7,8  로 수정 9~ , 1호기 Sensor Align pass
+#define					VER_STR		"250227_1"			//Tangering AA - 해상력, 이물, OC
+
+//#define					VER_STR		"241128_1"			//1호기 miu close 수정, 차트 좌표 5,6,7,8  로 수정 9~ , 1호기 Sensor Align pass
 //#define					VER_STR		"241126_1"			//1호기 M1_LSI_5M 추가
 //#define					VER_STR		"241114_1"
 //차트 밝기 green 150정도 노출값으로 조정 , 도포무게 = 0.035 ~ 0.039정도
