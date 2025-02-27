@@ -608,6 +608,7 @@ public:
     int m_iDefectInspPass;
 	int m_iLaserInspPass;
 	int m_iAlignCamInspPass;
+	int m_iSfrMaxValueInsp;
 	int m_iEpoxyLaserInspPass;
 	int m_i1stAaEbable;
 	int m_iDispensePass;
@@ -1397,6 +1398,23 @@ public:
 	double		INSP_AAmode_OC_Max_Spec;
 	double		INSP_Procmode_OC_Min_Spec;
 	double		INSP_Procmode_OC_Max_Spec;
+
+	int INSP_SfrDeltaAlgorithmType;
+	double INSP_SfrGamma;
+	double INSP_SfrMaxEdgeAngle;
+	int INSP_SfrAlgorithmType;
+	int INSP_SfrAlgorithmMethod;
+	int INSP_SfrFrequencyUnit;
+	double INSP_SfrInspOffset[4];   //0 = left 1 = top 2 = right 3 = bottom
+	
+	double INSP_OCCenterSpecX;
+	double INSP_OCCenterSpecY;
+	double INSP_OCThresholdRatio;
+	int INSP_OCRoiCount;
+	int INSP_OCEdgeTopMargin;
+	int INSP_OCBlockSize;
+	double INSP_OCInspOffset[4];   //0 = left 1 = top 2 = right 3 = bottom
+
 
 	double		Rotation_Spec;
 

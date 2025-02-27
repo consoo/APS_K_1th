@@ -8505,6 +8505,28 @@ CMandoSfrSpec::CMandoSfrSpec()
 	INSP_Voltage_Spec = 0.0;
 	INSP_Current_Spec = 0.0;
 
+	INSP_SfrDeltaAlgorithmType = 0;
+	INSP_SfrGamma = 0.0;
+	INSP_SfrMaxEdgeAngle = 0.0;
+	INSP_SfrAlgorithmType = 0;
+	INSP_SfrAlgorithmMethod = 0;
+	INSP_SfrFrequencyUnit = 0;
+	for (int i = 0; i > 4; i++)
+	{
+		INSP_SfrInspOffset[i] = 0.0;
+	}
+
+	INSP_OCCenterSpecX = 0.0;
+	INSP_OCCenterSpecY = 0.0;
+	INSP_OCThresholdRatio = 0.0;
+	INSP_OCRoiCount = 0;
+	INSP_OCEdgeTopMargin = 0;
+	INSP_OCBlockSize = 0;
+	for (int i = 0; i > 4; i++)
+	{
+		INSP_OCInspOffset[i] = 0.0;
+	}
+	
 }
 void CMandoSfrSpec::NewSfrSave()
 {
@@ -8562,7 +8584,55 @@ void CMandoSfrSpec::NewSfrSave()
 	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_Voltage_Spec);
 	WritePrivateProfileString(_T("VOLTAGE"), _T("MAX"), szData, szPath);
 	
-	
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_SfrDeltaAlgorithmType);
+	WritePrivateProfileString(_T("SFR"), _T("DELTA_ALGORITHM"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_SfrGamma);
+	WritePrivateProfileString(_T("SFR"), _T("GAMMA"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_SfrMaxEdgeAngle);
+	WritePrivateProfileString(_T("SFR"), _T("MAX_EDGEANGLE"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_SfrAlgorithmType);
+	WritePrivateProfileString(_T("SFR"), _T("ALGORITHM"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_SfrAlgorithmMethod);
+	WritePrivateProfileString(_T("SFR"), _T("ALGORITHM_METHOD"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_SfrFrequencyUnit);
+	WritePrivateProfileString(_T("SFR"), _T("FREQUENCY_UNIT"), szData, szPath);
+
+	for (i = 0; i < 4; i++)
+	{
+		_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_SfrInspOffset[i]);
+		_stprintf_s(szIniIndex, SIZE_OF_100BYTE, _T("OFFSET %d"), i);
+		WritePrivateProfileString(_T("SFR_INSP_OFFSET"), szIniIndex, szData, szPath);
+	}
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_OCCenterSpecX);
+	WritePrivateProfileString(_T("OC"), _T("CENTER_SPEC_X"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_OCCenterSpecY);
+	WritePrivateProfileString(_T("OC"), _T("CENTER_SPEC_Y"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_OCThresholdRatio);
+	WritePrivateProfileString(_T("OC"), _T("THRESHOLD_RATIO"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_OCRoiCount);
+	WritePrivateProfileString(_T("OC"), _T("ROI_COUNT"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_OCEdgeTopMargin);
+	WritePrivateProfileString(_T("OC"), _T("EDGE_TOP_MARGIN"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_OCBlockSize);
+	WritePrivateProfileString(_T("OC"), _T("BLOCK_SIZE"), szData, szPath);
+
+	for (i = 0; i < 4; i++)
+	{
+		_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), INSP_OCInspOffset[i]);
+		_stprintf_s(szIniIndex, SIZE_OF_100BYTE, _T("OFFSET %d"), i);
+		WritePrivateProfileString(_T("OC_INSP_OFFSET"), szIniIndex, szData, szPath);
+	}
 }
 void CMandoSfrSpec::NewSfrLoad()
 {
@@ -8618,6 +8688,56 @@ void CMandoSfrSpec::NewSfrLoad()
 	INSP_Current_Spec = _ttof(szIniBuff);
 	GetPrivateProfileString(_T("VOLTAGE"), _T("MAX"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
 	INSP_Voltage_Spec = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("SFR"), _T("DELTA_ALGORITHM"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_SfrDeltaAlgorithmType = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("SFR"), _T("GAMMA"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_SfrGamma = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("SFR"), _T("MAX_EDGEANGLE"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_SfrMaxEdgeAngle = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("SFR"), _T("ALGORITHM"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_SfrAlgorithmType = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("SFR"), _T("ALGORITHM_METHOD"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_SfrAlgorithmMethod = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("SFR"), _T("FREQUENCY_UNIT"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_SfrFrequencyUnit = _ttof(szIniBuff);
+
+	for (i = 0; i < 4; i++)
+	{
+		_stprintf_s(szIniIndex, SIZE_OF_100BYTE, _T("OFFSET %d"), i);
+		GetPrivateProfileString(_T("SFR_INSP_OFFSET"), szIniIndex, _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+		INSP_SfrInspOffset[i] = _ttof((TCHAR*)(LPCTSTR)szIniBuff);
+	}
+
+	GetPrivateProfileString(_T("OC"), _T("CENTER_SPEC_X"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_OCCenterSpecX = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("OC"), _T("CENTER_SPEC_Y"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_OCCenterSpecY = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("OC"), _T("THRESHOLD_RATIO"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_OCThresholdRatio = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("OC"), _T("ROI_COUNT"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_OCRoiCount = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("OC"), _T("EDGE_TOP_MARGIN"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_OCEdgeTopMargin = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("OC"), _T("BLOCK_SIZE"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	INSP_OCBlockSize = _ttof(szIniBuff);
+
+	for (i = 0; i < 4; i++)
+	{
+		_stprintf_s(szIniIndex, SIZE_OF_100BYTE, _T("OFFSET %d"), i);
+		GetPrivateProfileString(_T("OC_INSP_OFFSET"), szIniIndex, _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+		INSP_OCInspOffset[i] = _ttof((TCHAR*)(LPCTSTR)szIniBuff);
+	}
 
 }
 

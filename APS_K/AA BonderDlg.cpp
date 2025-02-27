@@ -5582,17 +5582,68 @@ int CAABonderDlg::_getMTF(int Mode, bool LogView)
 				//Task.m_vROI[i].nROIWidth = model.m_MTF_Direction[i] == 1 ? iSizeX : iSizeY;
 				//Task.m_vROI[i].nROIHeight = model.m_MTF_Direction[i] == 0 ? iSizeY : iSizeX;//SFR_ROI_HORIZONTAL ? iSizeY : iSizeX;
 			}
-			
+			if (MandoSfrSpec.INSP_SfrDeltaAlgorithmType == 0)
+			{
+				m_stSFRSpec.eSFRDeltaAlgorithmType = ESFRDelta_Diff;
+			}
+			else if (MandoSfrSpec.INSP_SfrDeltaAlgorithmType == 1)
+			{
+				m_stSFRSpec.eSFRDeltaAlgorithmType = ESFRDelta_Ratio;
+			}
+			//
+			if (MandoSfrSpec.INSP_SfrAlgorithmType == 0)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_ISO12233;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 1)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_RHOMBUS;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 2)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_LGIT_ISO;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 3)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_VNE;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 4)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_Mobis;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 5)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_Tesla_Trinity;
+			}
+			//
+			if (MandoSfrSpec.INSP_SfrAlgorithmMethod == 0)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmMethod = ESFRMethod_Freq2SFR;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmMethod == 1)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmMethod = ESFRMethod_SFR2Freq;
+			}
+			//
+			if (MandoSfrSpec.INSP_SfrFrequencyUnit == 0)
+			{
+				m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_CyclePerPixel;
+			}
+			else if (MandoSfrSpec.INSP_SfrFrequencyUnit == 1)
+			{
+				m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_LinePairPerMilliMeter;
+			}
+			else if (MandoSfrSpec.INSP_SfrFrequencyUnit == 2)
+			{
+				m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_LineWidthPerPictureHeight;
+			}
+
 			m_stSFRSpec.tSFRConfig.nMaxROIWidth = iSizeX;
 			m_stSFRSpec.tSFRConfig.nMaxROIHeight = iSizeY;
-			m_stSFRSpec.tSFRConfig.dMaxEdgeAngle = 45.0;
+			m_stSFRSpec.tSFRConfig.dMaxEdgeAngle = MandoSfrSpec.INSP_SfrMaxEdgeAngle; //45.0;
 			m_stSFRSpec.tSFRConfig.dPixelSize = model.m_dSize_CCD_Cell;// 4.2;
-			m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_ISO12233;
-			m_stSFRSpec.tSFRConfig.eAlgorithmMethod = ESFRMethod_Freq2SFR;
 			//ESFRFreq_CyclePerPixel;			//소수점
 			//ESFRFreq_LinePairPerMilliMeter;	//십의자리
-			m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_CyclePerPixel;			//SFR
-			m_stSFRSpec.eSFRDeltaAlgorithmType = ESFRDelta_Diff;
 			m_stSFRSpec.dEdgeDir = Task.m_vDirection.data();
 			m_stSFRSpec.dFrequency = Task.m_vFrquency.data();
 			m_stSFRSpec.dSFR = Task.m_vSFR.data();
@@ -8277,18 +8328,70 @@ bool CAABonderDlg::func_MTF(BYTE* ChartRawImage, bool bAutoMode, int dindex)
 				Task.m_vROI[i].nROIHeight = model.m_MTF_Direction[i] == 0 ? iSizeY : iSizeX;
 			}
 			
+			if (MandoSfrSpec.INSP_SfrDeltaAlgorithmType == 0)
+			{
+				m_stSFRSpec.eSFRDeltaAlgorithmType = ESFRDelta_Diff;
+			}
+			else if (MandoSfrSpec.INSP_SfrDeltaAlgorithmType == 1)
+			{
+				m_stSFRSpec.eSFRDeltaAlgorithmType = ESFRDelta_Ratio;
+			}
+			//
+			if (MandoSfrSpec.INSP_SfrAlgorithmType == 0)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_ISO12233;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 1)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_RHOMBUS;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 2)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_LGIT_ISO;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 3)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_VNE;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 4)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_Mobis;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmType == 5)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_Tesla_Trinity;
+			}
+			//
+			if (MandoSfrSpec.INSP_SfrAlgorithmMethod == 0)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmMethod = ESFRMethod_Freq2SFR;
+			}
+			else if (MandoSfrSpec.INSP_SfrAlgorithmMethod == 1)
+			{
+				m_stSFRSpec.tSFRConfig.eAlgorithmMethod = ESFRMethod_SFR2Freq;
+			}
+			//
+			if (MandoSfrSpec.INSP_SfrFrequencyUnit == 0)
+			{
+				m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_CyclePerPixel;
+			}
+			else if (MandoSfrSpec.INSP_SfrFrequencyUnit == 1)
+			{
+				m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_LinePairPerMilliMeter;
+			}
+			else if (MandoSfrSpec.INSP_SfrFrequencyUnit == 2)
+			{
+				m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_LineWidthPerPictureHeight;
+			}
+
+
+
 			m_stSFRSpec.tSFRConfig.nMaxROIWidth = iSizeX;
 			m_stSFRSpec.tSFRConfig.nMaxROIHeight = iSizeY;
 			m_stSFRSpec.tSFRConfig.dMaxEdgeAngle = 45.0;
 			m_stSFRSpec.tSFRConfig.dPixelSize = model.m_dSize_CCD_Cell;// 4.2;
-
-			m_stSFRSpec.tSFRConfig.eAlgorithmType = ESFRAlgorithm_ISO12233;	//ESFRAlgorithm_VNE
-			m_stSFRSpec.tSFRConfig.eAlgorithmMethod = ESFRMethod_Freq2SFR;
-
 			//ESFRFreq_CyclePerPixel;//소수점
 			//ESFRFreq_LinePairPerMilliMeter;	//십의자리
-			m_stSFRSpec.tSFRConfig.eFrequencyUnit = ESFRFreq_CyclePerPixel;		//MTF
-			m_stSFRSpec.eSFRDeltaAlgorithmType = ESFRDelta_Diff;
 			m_stSFRSpec.dEdgeDir = Task.m_vDirection.data();
 			m_stSFRSpec.dFrequency = Task.m_vFrquency.data();
 			m_stSFRSpec.dSFR = Task.m_vSFR.data();

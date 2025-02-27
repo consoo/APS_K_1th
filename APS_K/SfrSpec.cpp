@@ -99,6 +99,26 @@ void CSfrSpec::OnClickedGridOc(NMHDR* pNMHDR, LRESULT* pResult)
 			//if(iVal<0)		iVal = 0;
 			//if(iVal>60)			iVal = 60;
 
+			if (nRow == 10)		//deltaAlgorithm
+			{
+				if (iVal<0)		iVal = 0;
+				if (iVal>1)			iVal = 1;
+			}
+			if (nRow == 13)		//sfrAlgorithm
+			{
+				if (iVal<0)		iVal = 0;
+				if (iVal>5)			iVal = 5;
+			}
+			if (nRow == 14)		//sfrAlgorithmMethod
+			{
+				if (iVal<0)		iVal = 0;
+				if (iVal>1)			iVal = 1;
+			}
+			if (nRow == 15)		//Frequency
+			{
+				if (iVal<0)		iVal = 0;
+				if (iVal>2)			iVal = 2;
+			}
 			celData.Format("%.03f", iVal);
 			m_clGridOcSpec.SetItemText(nRow, nCol, celData);
 			m_clGridOcSpec.Invalidate();
@@ -179,16 +199,43 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_Voltage_Spec);
 	m_clGridOcSpec.SetItemText(9, 1, tmpStr);
 
-	////MandoSfrSpec.INSP_RIDiff_Spec = (float)atof(tmpStr);
-	/*
-	 = 0.0;
-	 = 0.0;
-	
-	tmpStr.Format("%.03f", sysData.dLimit_SFR_04F_Balance);
-	SetDlgItemText(IDC_LIMIT_04F_BALANCE, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrDeltaAlgorithmType);
+	m_clGridOcSpec.SetItemText(10, 1, tmpStr);
+	tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrGamma);
+	m_clGridOcSpec.SetItemText(11, 1, tmpStr);
+	tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrMaxEdgeAngle);
+	m_clGridOcSpec.SetItemText(12, 1, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrAlgorithmType);
+	m_clGridOcSpec.SetItemText(13, 1, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrAlgorithmMethod);
+	m_clGridOcSpec.SetItemText(14, 1, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrFrequencyUnit);
+	m_clGridOcSpec.SetItemText(15, 1, tmpStr);
 
-	tmpStr.Format("%.03f", sysData.dLimit_SFR_07F_Balance);
-	SetDlgItemText(IDC_LIMIT_07F_BALANCE, tmpStr);*/
+	for (int i = 0; i < 4; i++)	//for( int iNo = 0; iNo < MTF_INSP_CNT; iNo++ )
+	{
+		tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrInspOffset[i]);
+		m_clGridOcSpec.SetItemText(16 + i, 1, tmpStr);
+	}
+
+	tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCCenterSpecX);
+	m_clGridOcSpec.SetItemText(20, 1, tmpStr);
+	tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCCenterSpecY);
+	m_clGridOcSpec.SetItemText(21, 1, tmpStr);
+	tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCThresholdRatio);
+	m_clGridOcSpec.SetItemText(22, 1, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_OCRoiCount);
+	m_clGridOcSpec.SetItemText(23, 1, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_OCEdgeTopMargin);
+	m_clGridOcSpec.SetItemText(24, 1, tmpStr);
+	tmpStr.Format("%d", MandoSfrSpec.INSP_OCBlockSize);
+	m_clGridOcSpec.SetItemText(25, 1, tmpStr);
+
+	for (int i = 0; i < 4; i++)	//for( int iNo = 0; iNo < MTF_INSP_CNT; iNo++ )
+	{
+		tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCInspOffset[i]);
+		m_clGridOcSpec.SetItemText(26 + i, 1, tmpStr);
+	}
 
 	tmpStr.Format("%.04f", sysData.m_dOcSpec.x);
 	SetDlgItemText(IDC_LIMIT_OC_ALIGN, tmpStr);
@@ -286,7 +333,7 @@ void CSfrSpec::InitGridCtrl_Oc()
 	//Picture Ctr 사이즈 구하기
 	CRect rect;
 	CWnd *pWnd= (CWnd*)GetDlgItem(IDC_STATIC_OCSPEC_GRID); 
-	ocRow = 10;// 8;// 7;// 5;
+	ocRow = 30;// 8;// 7;// 5;
 	ocCol = 2;
 	int margin = 4;
 	int gridHeight = 28;
@@ -330,6 +377,30 @@ void CSfrSpec::InitGridCtrl_Oc()
 	m_clGridOcSpec.SetItemText(7, 0, "RI Spec Max");
 	m_clGridOcSpec.SetItemText(8, 0, "Current Spec Max");
 	m_clGridOcSpec.SetItemText(9, 0, "Voltage Spec");
+
+	m_clGridOcSpec.SetItemText(10, 0, "Sfr DeltaAlgorithm type");
+	m_clGridOcSpec.SetItemText(11, 0, "Sfr Gamma");
+	m_clGridOcSpec.SetItemText(12, 0, "Sfr Edge Angle");
+	m_clGridOcSpec.SetItemText(13, 0, "Sfr Algorithm type");
+	m_clGridOcSpec.SetItemText(14, 0, "Sfr Algorithm Method");
+	m_clGridOcSpec.SetItemText(15, 0, "Sfr Frequency Unit");
+	m_clGridOcSpec.SetItemText(16, 0, "Sfr Insp.Offset Left");
+	m_clGridOcSpec.SetItemText(17, 0, "Sfr Insp.Offset Top");
+	m_clGridOcSpec.SetItemText(18, 0, "Sfr Insp.Offset Right");
+	m_clGridOcSpec.SetItemText(19, 0, "Sfr Insp.Offset Bottom");
+
+	m_clGridOcSpec.SetItemText(20, 0, "OC Center spec X");
+	m_clGridOcSpec.SetItemText(21, 0, "OC Center spec Y");
+	m_clGridOcSpec.SetItemText(22, 0, "OC Threshold Ration");
+	m_clGridOcSpec.SetItemText(23, 0, "OC ROI Count");
+	m_clGridOcSpec.SetItemText(24, 0, "OC Edge Top Margin");
+	m_clGridOcSpec.SetItemText(25, 0, "OC Block Size");
+
+	m_clGridOcSpec.SetItemText(26, 0, "OC Insp.Offset Left");
+	m_clGridOcSpec.SetItemText(27, 0, "OC Insp.Offset Top");
+	m_clGridOcSpec.SetItemText(28, 0, "OC Insp.Offset Right");
+	m_clGridOcSpec.SetItemText(29, 0, "OC Insp.Offset Bottom");
+
 	for (i = 0; i < ocRow; i++)
 	{
 		m_clGridOcSpec.SetRowHeight(i, gridHeight);
@@ -486,6 +557,56 @@ void CSfrSpec::getData()
 	tmpStr = m_clGridOcSpec.GetItemText(9, 1);
 	MandoSfrSpec.INSP_Voltage_Spec = (float)atof(tmpStr);
 	
+	tmpStr = m_clGridOcSpec.GetItemText(10, 1);
+	MandoSfrSpec.INSP_SfrDeltaAlgorithmType = (int)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(11, 1);
+	MandoSfrSpec.INSP_SfrGamma = (float)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(12, 1);
+	MandoSfrSpec.INSP_SfrMaxEdgeAngle = (float)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(13, 1);
+	MandoSfrSpec.INSP_SfrAlgorithmType = (int)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(14, 1);
+	MandoSfrSpec.INSP_SfrAlgorithmMethod = (int)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(15, 1);
+	MandoSfrSpec.INSP_SfrFrequencyUnit = (int)atof(tmpStr);
+
+	for (int i = 0; i < 4; i++)
+	{
+		tmpStr = m_clGridOcSpec.GetItemText(16 + i, 1);
+		MandoSfrSpec.INSP_SfrInspOffset[i] = atof(tmpStr);
+	}
+
+
+	tmpStr = m_clGridOcSpec.GetItemText(20, 1);
+	MandoSfrSpec.INSP_OCCenterSpecX = (float)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(21, 1);
+	MandoSfrSpec.INSP_OCCenterSpecY = (float)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(22, 1);
+	MandoSfrSpec.INSP_OCThresholdRatio = (float)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(23, 1);
+	MandoSfrSpec.INSP_OCRoiCount = (int)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(24, 1);
+	MandoSfrSpec.INSP_OCEdgeTopMargin = (int)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(25, 1);
+	MandoSfrSpec.INSP_OCBlockSize = (int)atof(tmpStr);
+
+	for (int i = 0; i < 4; i++)
+	{
+		tmpStr = m_clGridOcSpec.GetItemText(26 + i, 1);
+		MandoSfrSpec.INSP_OCInspOffset[i] = atof(tmpStr);
+	}
+
+
 	GetDlgItemText(IDC_LIMIT_OC_ALIGN, tmpStr);
 	sysData.m_dOcSpec.x = sysData.m_dOcSpec.y = atof(tmpStr);
 

@@ -231,6 +231,9 @@ static int LGIT_MODEL_INDEX = M1_LSI_5M;
 //#define		ON_LINE_VISION
 //#define		ON_LINE_MOTOR
 //#define		ON_LINE_DIO
+//#define		ON_LINE_KEYENCE
+//#define		ON_LINE_MONITOR
+
 #else
 #ifdef		ON_LINE_MODE
 #define		ON_LINE_MOTOR
