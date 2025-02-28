@@ -25,13 +25,14 @@ void CSfrSpec::DoDataExchange(CDataExchange* pDX)
 	//DDX_Control(pDX, IDC_MSFLEXGRID_SFR_SPEC, m_gridSfrSpec);
 	//DDX_Control(pDX, IDC_MSFLEXGRID_SFR_SPEC2, m_gridSfrSpec2);
 
-	DDX_Control(pDX, IDC_LIMIT_04F_BALANCE,		m_Limit_04F_Balance);
-	DDX_Control(pDX, IDC_LIMIT_07F_BALANCE,		m_Limit_07F_Balance);
-	DDX_Control(pDX, IDC_LIMIT_OC_ALIGN,		m_Limit_OC);
-	DDX_Control(pDX, IDC_LIMIT_OC_ALIGN_TH,		m_Limit_OC_TH);
-	DDX_Control(pDX, IDC_LIMIT_MAX_LIMIT,		m_Limit_Max_Limit);
-	
+	DDX_Control(pDX, IDC_LIMIT_04F_BALANCE, m_Limit_04F_Balance);
+	DDX_Control(pDX, IDC_LIMIT_07F_BALANCE, m_Limit_07F_Balance);
+	DDX_Control(pDX, IDC_LIMIT_OC_ALIGN, m_Limit_OC);
+	DDX_Control(pDX, IDC_LIMIT_OC_ALIGN_TH, m_Limit_OC_TH);
+	DDX_Control(pDX, IDC_LIMIT_MAX_LIMIT, m_Limit_Max_Limit);
+
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_COMBO2, m_LGIT_Algo_Select_1);
 }
 
 
@@ -48,6 +49,7 @@ BEGIN_MESSAGE_MAP(CSfrSpec, CDialogEx)
 	ON_NOTIFY(NM_CLICK, IDC_STATIC_OCSPEC_GRID, &CSfrSpec::OnClickedGridOc)
 	
 	ON_STN_CLICKED(IDC_LIMIT_MAX_LIMIT, &CSfrSpec::OnStnClickedLimitMaxLimit)
+	ON_CBN_SELCHANGE(IDC_COMBO2, &CSfrSpec::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
@@ -69,6 +71,10 @@ void CSfrSpec::OnShowWindow(BOOL bShow, UINT nStatus)
 BOOL CSfrSpec::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	this->m_LGIT_Algo_Select_1.AddString(TEXT("a"));
+	this->m_LGIT_Algo_Select_1.AddString(TEXT("b"));
+	this->m_LGIT_Algo_Select_1.AddString(TEXT("c"));
 
 	setInterface();
 	InitGridCtrl_Oc();
@@ -723,4 +729,16 @@ void CSfrSpec::OnStnClickedLimitMaxLimit()
 		celData.Format("%.01f", (f_num));
 		m_Limit_Max_Limit.SetText(celData);
 	}
+}
+
+
+void CSfrSpec::OnCbnSelchangeCombo2()
+{
+	// TODO: Add your control notification handler code here
+	int index;
+	//콤보 박스 선택 값 읽기	
+	index = this->m_LGIT_Algo_Select_1.GetCurSel();
+
+
+
 }

@@ -68,4 +68,6 @@ public:
 	
 	//----------------------------------------------------------------------------------------------------
 	afx_msg void OnStnClickedLimitMaxLimit();
+	CComboBox m_LGIT_Algo_Select_1;
+	afx_msg void OnCbnSelchangeCombo2();
 };
