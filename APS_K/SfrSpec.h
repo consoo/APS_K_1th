@@ -68,6 +68,12 @@ public:
 	
 	//----------------------------------------------------------------------------------------------------
 	afx_msg void OnStnClickedLimitMaxLimit();
-	CComboBox m_LGIT_Algo_Select_1;
+	CComboBox m_LGIT_Algo_Select_SFR_DeltaAlgorithm;
 	afx_msg void OnCbnSelchangeCombo2();
+	CComboBox m_LGIT_Algo_Select_AlgorithmType;
+	CComboBox m_LGIT_Algo_Select_AlgorithmMethod;
+	CComboBox m_LGIT_Algo_Select_FrequencyUnit;
+	afx_msg void OnCbnSelchangeCombo3();
+	afx_msg void OnCbnSelchangeCombo4();
+	afx_msg void OnCbnSelchangeCombo5();
 };

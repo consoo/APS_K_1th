@@ -32,7 +32,10 @@ void CSfrSpec::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIMIT_MAX_LIMIT, m_Limit_Max_Limit);
 
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_COMBO2, m_LGIT_Algo_Select_1);
+	DDX_Control(pDX, IDC_COMBO2, m_LGIT_Algo_Select_SFR_DeltaAlgorithm);
+	DDX_Control(pDX, IDC_COMBO3, m_LGIT_Algo_Select_AlgorithmType);
+	DDX_Control(pDX, IDC_COMBO4, m_LGIT_Algo_Select_AlgorithmMethod);
+	DDX_Control(pDX, IDC_COMBO5, m_LGIT_Algo_Select_FrequencyUnit);
 }
 
 
@@ -50,6 +53,9 @@ BEGIN_MESSAGE_MAP(CSfrSpec, CDialogEx)
 	
 	ON_STN_CLICKED(IDC_LIMIT_MAX_LIMIT, &CSfrSpec::OnStnClickedLimitMaxLimit)
 	ON_CBN_SELCHANGE(IDC_COMBO2, &CSfrSpec::OnCbnSelchangeCombo2)
+	ON_CBN_SELCHANGE(IDC_COMBO3, &CSfrSpec::OnCbnSelchangeCombo3)
+	ON_CBN_SELCHANGE(IDC_COMBO4, &CSfrSpec::OnCbnSelchangeCombo4)
+	ON_CBN_SELCHANGE(IDC_COMBO5, &CSfrSpec::OnCbnSelchangeCombo5)
 END_MESSAGE_MAP()
 
 
@@ -72,10 +78,27 @@ BOOL CSfrSpec::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	this->m_LGIT_Algo_Select_1.AddString(TEXT("a"));
-	this->m_LGIT_Algo_Select_1.AddString(TEXT("b"));
-	this->m_LGIT_Algo_Select_1.AddString(TEXT("c"));
+	//DeltaAlgorithmType
+	this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.AddString(TEXT("ESFRDelta_Diff"));
+	this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.AddString(TEXT("ESFRDelta_Ratio"));
 
+	//eAlgorithmType
+	this->m_LGIT_Algo_Select_AlgorithmType.AddString(TEXT("ESFRAlgorithm_ISO12233"));
+	this->m_LGIT_Algo_Select_AlgorithmType.AddString(TEXT("ESFRAlgorithm_RHOMBUS"));
+	this->m_LGIT_Algo_Select_AlgorithmType.AddString(TEXT("ESFRAlgorithm_LGIT_ISO"));
+	this->m_LGIT_Algo_Select_AlgorithmType.AddString(TEXT("ESFRAlgorithm_VNE"));
+	this->m_LGIT_Algo_Select_AlgorithmType.AddString(TEXT("ESFRAlgorithm_Mobis"));
+	this->m_LGIT_Algo_Select_AlgorithmType.AddString(TEXT("ESFRAlgorithm_Tesla_Trinity"));
+
+	//eAlgorithmMethod
+	this->m_LGIT_Algo_Select_AlgorithmMethod.AddString(TEXT("ESFRMethod_Freq2SFR"));
+	this->m_LGIT_Algo_Select_AlgorithmMethod.AddString(TEXT("ESFRMethod_SFR2Freq"));
+
+	//eFrequencyUnit
+	this->m_LGIT_Algo_Select_FrequencyUnit.AddString(TEXT("ESFRFreq_CyclePerPixel"));
+	this->m_LGIT_Algo_Select_FrequencyUnit.AddString(TEXT("ESFRFreq_LinePairPerMilliMeter"));
+	this->m_LGIT_Algo_Select_FrequencyUnit.AddString(TEXT("ESFRFreq_LineWidthPerPictureHeight"));
+	
 	setInterface();
 	InitGridCtrl_Oc();
 	InitGridCtrl_Sfr();
@@ -204,43 +227,50 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 	m_clGridOcSpec.SetItemText(8, 1, tmpStr);
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_Voltage_Spec);
 	m_clGridOcSpec.SetItemText(9, 1, tmpStr);
-
-	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrDeltaAlgorithmType);
-	m_clGridOcSpec.SetItemText(10, 1, tmpStr);
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrGamma);
-	m_clGridOcSpec.SetItemText(11, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(10, 1, tmpStr);
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrMaxEdgeAngle);
+	m_clGridOcSpec.SetItemText(11, 1, tmpStr);
+
+
+
+	this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.SetCurSel(MandoSfrSpec.INSP_SfrDeltaAlgorithmType);
+	this->m_LGIT_Algo_Select_AlgorithmType.SetCurSel(MandoSfrSpec.INSP_SfrAlgorithmType);
+	this->m_LGIT_Algo_Select_AlgorithmMethod.SetCurSel(MandoSfrSpec.INSP_SfrAlgorithmMethod);
+	this->m_LGIT_Algo_Select_FrequencyUnit.SetCurSel(MandoSfrSpec.INSP_SfrFrequencyUnit);
+
+	/*tmpStr.Format("%d", MandoSfrSpec.INSP_SfrDeltaAlgorithmType);
 	m_clGridOcSpec.SetItemText(12, 1, tmpStr);
 	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrAlgorithmType);
 	m_clGridOcSpec.SetItemText(13, 1, tmpStr);
 	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrAlgorithmMethod);
 	m_clGridOcSpec.SetItemText(14, 1, tmpStr);
 	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrFrequencyUnit);
-	m_clGridOcSpec.SetItemText(15, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(15, 1, tmpStr);*/
 
 	for (int i = 0; i < 4; i++)	//for( int iNo = 0; iNo < MTF_INSP_CNT; iNo++ )
 	{
 		tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrInspOffset[i]);
-		m_clGridOcSpec.SetItemText(16 + i, 1, tmpStr);
+		m_clGridOcSpec.SetItemText(12 + i, 1, tmpStr);
 	}
 
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCCenterSpecX);
-	m_clGridOcSpec.SetItemText(20, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(16, 1, tmpStr);
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCCenterSpecY);
-	m_clGridOcSpec.SetItemText(21, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(17, 1, tmpStr);
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCThresholdRatio);
-	m_clGridOcSpec.SetItemText(22, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(18, 1, tmpStr);
 	tmpStr.Format("%d", MandoSfrSpec.INSP_OCRoiCount);
-	m_clGridOcSpec.SetItemText(23, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(19, 1, tmpStr);
 	tmpStr.Format("%d", MandoSfrSpec.INSP_OCEdgeTopMargin);
-	m_clGridOcSpec.SetItemText(24, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(20, 1, tmpStr);
 	tmpStr.Format("%d", MandoSfrSpec.INSP_OCBlockSize);
-	m_clGridOcSpec.SetItemText(25, 1, tmpStr);
+	m_clGridOcSpec.SetItemText(21, 1, tmpStr);
 
 	for (int i = 0; i < 4; i++)	//for( int iNo = 0; iNo < MTF_INSP_CNT; iNo++ )
 	{
 		tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCInspOffset[i]);
-		m_clGridOcSpec.SetItemText(26 + i, 1, tmpStr);
+		m_clGridOcSpec.SetItemText(22 + i, 1, tmpStr);
 	}
 
 	tmpStr.Format("%.04f", sysData.m_dOcSpec.x);
@@ -339,7 +369,7 @@ void CSfrSpec::InitGridCtrl_Oc()
 	//Picture Ctr 사이즈 구하기
 	CRect rect;
 	CWnd *pWnd= (CWnd*)GetDlgItem(IDC_STATIC_OCSPEC_GRID); 
-	ocRow = 30;// 8;// 7;// 5;
+	ocRow = 26;// 8;// 7;// 5;
 	ocCol = 2;
 	int margin = 4;
 	int gridHeight = 28;
@@ -384,28 +414,24 @@ void CSfrSpec::InitGridCtrl_Oc()
 	m_clGridOcSpec.SetItemText(8, 0, "Current Spec Max");
 	m_clGridOcSpec.SetItemText(9, 0, "Voltage Spec");
 
-	m_clGridOcSpec.SetItemText(10, 0, "Sfr DeltaAlgorithm type");
-	m_clGridOcSpec.SetItemText(11, 0, "Sfr Gamma");
-	m_clGridOcSpec.SetItemText(12, 0, "Sfr Edge Angle");
-	m_clGridOcSpec.SetItemText(13, 0, "Sfr Algorithm type");
-	m_clGridOcSpec.SetItemText(14, 0, "Sfr Algorithm Method");
-	m_clGridOcSpec.SetItemText(15, 0, "Sfr Frequency Unit");
-	m_clGridOcSpec.SetItemText(16, 0, "Sfr Insp.Offset Left");
-	m_clGridOcSpec.SetItemText(17, 0, "Sfr Insp.Offset Top");
-	m_clGridOcSpec.SetItemText(18, 0, "Sfr Insp.Offset Right");
-	m_clGridOcSpec.SetItemText(19, 0, "Sfr Insp.Offset Bottom");
+	m_clGridOcSpec.SetItemText(10, 0, "Sfr Gamma");
+	m_clGridOcSpec.SetItemText(11, 0, "Sfr Edge Angle");
+	m_clGridOcSpec.SetItemText(12, 0, "Sfr Insp.Offset Left");
+	m_clGridOcSpec.SetItemText(13, 0, "Sfr Insp.Offset Top");
+	m_clGridOcSpec.SetItemText(14, 0, "Sfr Insp.Offset Right");
+	m_clGridOcSpec.SetItemText(15, 0, "Sfr Insp.Offset Bottom");
 
-	m_clGridOcSpec.SetItemText(20, 0, "OC Center spec X");
-	m_clGridOcSpec.SetItemText(21, 0, "OC Center spec Y");
-	m_clGridOcSpec.SetItemText(22, 0, "OC Threshold Ration");
-	m_clGridOcSpec.SetItemText(23, 0, "OC ROI Count");
-	m_clGridOcSpec.SetItemText(24, 0, "OC Edge Top Margin");
-	m_clGridOcSpec.SetItemText(25, 0, "OC Block Size");
+	m_clGridOcSpec.SetItemText(16, 0, "OC Center spec X");
+	m_clGridOcSpec.SetItemText(17, 0, "OC Center spec Y");
+	m_clGridOcSpec.SetItemText(18, 0, "OC Threshold Ration");
+	m_clGridOcSpec.SetItemText(19, 0, "OC ROI Count");
+	m_clGridOcSpec.SetItemText(20, 0, "OC Edge Top Margin");
+	m_clGridOcSpec.SetItemText(21, 0, "OC Block Size");
 
-	m_clGridOcSpec.SetItemText(26, 0, "OC Insp.Offset Left");
-	m_clGridOcSpec.SetItemText(27, 0, "OC Insp.Offset Top");
-	m_clGridOcSpec.SetItemText(28, 0, "OC Insp.Offset Right");
-	m_clGridOcSpec.SetItemText(29, 0, "OC Insp.Offset Bottom");
+	m_clGridOcSpec.SetItemText(22, 0, "OC Insp.Offset Left");
+	m_clGridOcSpec.SetItemText(23, 0, "OC Insp.Offset Top");
+	m_clGridOcSpec.SetItemText(24, 0, "OC Insp.Offset Right");
+	m_clGridOcSpec.SetItemText(25, 0, "OC Insp.Offset Bottom");
 
 	for (i = 0; i < ocRow; i++)
 	{
@@ -563,52 +589,41 @@ void CSfrSpec::getData()
 	tmpStr = m_clGridOcSpec.GetItemText(9, 1);
 	MandoSfrSpec.INSP_Voltage_Spec = (float)atof(tmpStr);
 	
-	tmpStr = m_clGridOcSpec.GetItemText(10, 1);
-	MandoSfrSpec.INSP_SfrDeltaAlgorithmType = (int)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(11, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(10, 1);
 	MandoSfrSpec.INSP_SfrGamma = (float)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(12, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(11, 1);
 	MandoSfrSpec.INSP_SfrMaxEdgeAngle = (float)atof(tmpStr);
-
-	tmpStr = m_clGridOcSpec.GetItemText(13, 1);
-	MandoSfrSpec.INSP_SfrAlgorithmType = (int)atof(tmpStr);
-
-	tmpStr = m_clGridOcSpec.GetItemText(14, 1);
-	MandoSfrSpec.INSP_SfrAlgorithmMethod = (int)atof(tmpStr);
-
-	tmpStr = m_clGridOcSpec.GetItemText(15, 1);
-	MandoSfrSpec.INSP_SfrFrequencyUnit = (int)atof(tmpStr);
 
 	for (int i = 0; i < 4; i++)
 	{
-		tmpStr = m_clGridOcSpec.GetItemText(16 + i, 1);
+		tmpStr = m_clGridOcSpec.GetItemText(12 + i, 1);
 		MandoSfrSpec.INSP_SfrInspOffset[i] = atof(tmpStr);
 	}
 
 
-	tmpStr = m_clGridOcSpec.GetItemText(20, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(16, 1);
 	MandoSfrSpec.INSP_OCCenterSpecX = (float)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(21, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(17, 1);
 	MandoSfrSpec.INSP_OCCenterSpecY = (float)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(22, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(18, 1);
 	MandoSfrSpec.INSP_OCThresholdRatio = (float)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(23, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(19, 1);
 	MandoSfrSpec.INSP_OCRoiCount = (int)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(24, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(20, 1);
 	MandoSfrSpec.INSP_OCEdgeTopMargin = (int)atof(tmpStr);
 
-	tmpStr = m_clGridOcSpec.GetItemText(25, 1);
+	tmpStr = m_clGridOcSpec.GetItemText(21, 1);
 	MandoSfrSpec.INSP_OCBlockSize = (int)atof(tmpStr);
 
 	for (int i = 0; i < 4; i++)
 	{
-		tmpStr = m_clGridOcSpec.GetItemText(26 + i, 1);
+		tmpStr = m_clGridOcSpec.GetItemText(22 + i, 1);
 		MandoSfrSpec.INSP_OCInspOffset[i] = atof(tmpStr);
 	}
 
@@ -735,10 +750,27 @@ void CSfrSpec::OnStnClickedLimitMaxLimit()
 void CSfrSpec::OnCbnSelchangeCombo2()
 {
 	// TODO: Add your control notification handler code here
-	int index;
-	//콤보 박스 선택 값 읽기	
-	index = this->m_LGIT_Algo_Select_1.GetCurSel();
+	MandoSfrSpec.INSP_SfrDeltaAlgorithmType = this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.GetCurSel();
+
+}
 
 
+void CSfrSpec::OnCbnSelchangeCombo3()
+{
+	// TODO: Add your control notification handler code here
+	MandoSfrSpec.INSP_SfrAlgorithmType = this->m_LGIT_Algo_Select_AlgorithmType.GetCurSel();
+}
 
+
+void CSfrSpec::OnCbnSelchangeCombo4()
+{
+	// TODO: Add your control notification handler code here
+	MandoSfrSpec.INSP_SfrAlgorithmMethod = this->m_LGIT_Algo_Select_AlgorithmMethod.GetCurSel();
+}
+
+
+void CSfrSpec::OnCbnSelchangeCombo5()
+{
+	// TODO: Add your control notification handler code here
+	MandoSfrSpec.INSP_SfrFrequencyUnit = this->m_LGIT_Algo_Select_FrequencyUnit.GetCurSel();
 }

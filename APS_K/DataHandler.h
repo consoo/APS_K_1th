@@ -1399,12 +1399,14 @@ public:
 	double		INSP_Procmode_OC_Min_Spec;
 	double		INSP_Procmode_OC_Max_Spec;
 
-	int INSP_SfrDeltaAlgorithmType;
 	double INSP_SfrGamma;
 	double INSP_SfrMaxEdgeAngle;
+
+	int INSP_SfrDeltaAlgorithmType;
 	int INSP_SfrAlgorithmType;
 	int INSP_SfrAlgorithmMethod;
 	int INSP_SfrFrequencyUnit;
+
 	double INSP_SfrInspOffset[4];   //0 = left 1 = top 2 = right 3 = bottom
 	
 	double INSP_OCCenterSpecX;
