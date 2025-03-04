@@ -211,8 +211,6 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 	m_clGridOcSpec.SetItemText(3, 1, tmpStr);
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_Procmode_OC_Min_Spec);
 	m_clGridOcSpec.SetItemText(4, 1, tmpStr);
-	//tmpStr.Format("%.03f", MandoSfrSpec.Rotation_Spec);
-	//m_clGridOcSpec.SetItemText(5, 1, tmpStr);
 
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_Diff_Spec[0]);
 	m_clGridOcSpec.SetItemText(5, 1, tmpStr);
@@ -232,23 +230,12 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 	tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrMaxEdgeAngle);
 	m_clGridOcSpec.SetItemText(11, 1, tmpStr);
 
-
-
 	this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.SetCurSel(MandoSfrSpec.INSP_SfrDeltaAlgorithmType);
 	this->m_LGIT_Algo_Select_AlgorithmType.SetCurSel(MandoSfrSpec.INSP_SfrAlgorithmType);
 	this->m_LGIT_Algo_Select_AlgorithmMethod.SetCurSel(MandoSfrSpec.INSP_SfrAlgorithmMethod);
 	this->m_LGIT_Algo_Select_FrequencyUnit.SetCurSel(MandoSfrSpec.INSP_SfrFrequencyUnit);
 
-	/*tmpStr.Format("%d", MandoSfrSpec.INSP_SfrDeltaAlgorithmType);
-	m_clGridOcSpec.SetItemText(12, 1, tmpStr);
-	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrAlgorithmType);
-	m_clGridOcSpec.SetItemText(13, 1, tmpStr);
-	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrAlgorithmMethod);
-	m_clGridOcSpec.SetItemText(14, 1, tmpStr);
-	tmpStr.Format("%d", MandoSfrSpec.INSP_SfrFrequencyUnit);
-	m_clGridOcSpec.SetItemText(15, 1, tmpStr);*/
-
-	for (int i = 0; i < 4; i++)	//for( int iNo = 0; iNo < MTF_INSP_CNT; iNo++ )
+	for (int i = 0; i < 4; i++)	
 	{
 		tmpStr.Format("%.03f", MandoSfrSpec.INSP_SfrInspOffset[i]);
 		m_clGridOcSpec.SetItemText(12 + i, 1, tmpStr);
@@ -267,7 +254,7 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 	tmpStr.Format("%d", MandoSfrSpec.INSP_OCBlockSize);
 	m_clGridOcSpec.SetItemText(21, 1, tmpStr);
 
-	for (int i = 0; i < 4; i++)	//for( int iNo = 0; iNo < MTF_INSP_CNT; iNo++ )
+	for (int i = 0; i < 4; i++)	
 	{
 		tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCInspOffset[i]);
 		m_clGridOcSpec.SetItemText(22 + i, 1, tmpStr);
@@ -332,7 +319,7 @@ void CSfrSpec::InitGridCtrl_Sfr()
 
 
 	CString specStr;
-	for (i = 0; i < COMMON_MTF_INSP_CNT; i++)//for (i = 0; i < MTF_INSP_CNT; i++)
+	for (i = 0; i < COMMON_MTF_INSP_CNT; i++)
 	{
 		specStr.Format(_T("[%d] ROI"), i);
 		m_clGridSfrSpec.SetItemText(1 + i, 0, specStr);
@@ -571,9 +558,6 @@ void CSfrSpec::getData()
 
 	tmpStr = m_clGridOcSpec.GetItemText(4,1);				
 	MandoSfrSpec.INSP_Procmode_OC_Min_Spec = (float)atof(tmpStr);	
-
-	//tmpStr = m_clGridOcSpec.GetItemText(5, 1);
-	//MandoSfrSpec.Rotation_Spec = (float)atof(tmpStr);
 
 	tmpStr = m_clGridOcSpec.GetItemText(5, 1);
 	MandoSfrSpec.INSP_Diff_Spec[0] = (float)atof(tmpStr);

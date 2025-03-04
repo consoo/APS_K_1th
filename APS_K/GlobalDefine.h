@@ -35,7 +35,8 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 static int LGIT_MODEL_INDEX = M1_LSI_5M;
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-#define					VER_STR		"250227_1"			//Tangering AA - 해상력, 이물, OC
+#define					VER_STR		"250304_1"			//SFR Algorithm 그리드 -> 콤보 박스로 변경
+//#define					VER_STR		"250227_1"			//Tangering AA - 해상력, 이물, OC
 
 //#define					VER_STR		"241128_1"			//1호기 miu close 수정, 차트 좌표 5,6,7,8  로 수정 9~ , 1호기 Sensor Align pass
 //#define					VER_STR		"241126_1"			//1호기 M1_LSI_5M 추가
