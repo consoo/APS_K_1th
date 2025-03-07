@@ -2938,6 +2938,7 @@ int CPRIFunc_Insp::FDFInsp(BYTE* img, bool bAutoMode)
 	//stSpecFDF.nMedianFilterWidth = (int)model.m_FDFSpec[specCount++];//0;
 	//stSpecFDF.nMedianFilterHeight = model.m_FDFSpec[specCount++];//1000;
 	stSpecFDF.nMedianFilterSize = (int)model.m_FDFSpec[specCount++];//0;
+	stSpecFDF.nLscBlockSize = (int)model.m_FDFSpec[specCount++];//0;
 
 	stSpecFDF.nWidthScaleRatio = model.m_FDFSpec[specCount++];//70.0;
 	stSpecFDF.nHeightScaleRatio = model.m_FDFSpec[specCount++];//4.2;
