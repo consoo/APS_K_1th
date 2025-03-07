@@ -1,15 +1,7 @@
 #pragma once
 
-
 #include "export.h"
-#include <list>
-#include <vector>
-
 #include <LibACMISCommon\ACMISCommon.h>
-
-
-using namespace std;
-
 
 namespace ACMISSoftISP
 {
@@ -17,5 +9,6 @@ namespace ACMISSoftISP
 
 	ACMISSOFTISP_API bool xSaveImage(char* strFileName, void* srcImage);
 	ACMISSOFTISP_API bool xSaveImage(char* strFileName, BYTE* pBuffer, int nImageWidth, int nImageHeight, int nType);
+	ACMISSOFTISP_API bool xSaveImage(char* strFileName, BYTE* pBuffer, int nImageWidth, int nImageHeight, int nChannel, int nDepth);
 	ACMISSOFTISP_API bool xSaveRawImage(char* strFileName, BYTE* pBuffer, int nImageSize);
 };

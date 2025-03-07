@@ -401,122 +401,122 @@ bool CPRIFunc_Insp::func_Insp_ColorSensitivity(BYTE* img, int index, bool bAutoM
 //-----------------------------------------------------------------------------
 bool CPRIFunc_Insp::func_Insp_Snr_Vne(BYTE* ChartRaw, BYTE* ChartSecondRaw, bool bAutoMode)
 {
-	bool bRes = true;
-	int i = 0;
-	TCHAR szLog[SIZE_OF_1K];
-	Task.getROI();				// 원형 마크 위치 인식..
+	//bool bRes = true;
+	//int i = 0;
+	//TCHAR szLog[SIZE_OF_1K];
+	//Task.getROI();				// 원형 마크 위치 인식..
 
-	vision.MilBufferUpdate();
+	//vision.MilBufferUpdate();
 
-	int pitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
-	int width = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
-	int Height = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
+	//int pitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
+	//int width = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
+	//int Height = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
 
-	bool bRtn = Task._findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, Task.SFR.rcROI);
-	if (bRtn == false)
-	{
-		return false;
-	}
+	//bool bRtn = Task._findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, Task.SFR.rcROI);
+	//if (bRtn == false)
+	//{
+	//	return false;
+	//}
 
-	int nBlackLevel = 0;
-	int nWidth = gMIUDevice.nWidth;
-	int nHeight = gMIUDevice.nHeight;
-	TDATASPEC& tDataSpec = gMIUDevice.dTDATASPEC_n;
-	TSNRBWSpecN tSNRSpec;
+	//int nBlackLevel = 0;
+	//int nWidth = gMIUDevice.nWidth;
+	//int nHeight = gMIUDevice.nHeight;
+	//TDATASPEC& tDataSpec = gMIUDevice.dTDATASPEC_n;
+	//TSNRBWSpecN tSNRSpec;
 
-	std::shared_ptr< CACMISSignalNoiseRatioVNE > pSNRVNE = std::make_shared< CACMISSignalNoiseRatioVNE >();
-	TSNRNormSpecN tSNRVNESpec;
-	std::vector<RECT> vROI;
-	std::vector<double> vOffset;
-	tSNRVNESpec.tROI.ROICount = 1;
-	vROI.resize(tSNRVNESpec.tROI.ROICount);
-	vOffset.resize(tSNRVNESpec.tROI.ROICount);
-	
-	tSNRVNESpec.tROI.pROIData = vROI.data();
-	tSNRVNESpec.tROI.eROIType = ROIType_RECT;
-	tSNRVNESpec.tROI.dOffset = vOffset.data();
-	tSNRVNESpec.dSNRThreshold = model.m_SnrSpec[0];
-
-
-
-	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRVNE] dSNRThreshold = %.1lf "), tSNRVNESpec.dSNRThreshold);
-	theApp.MainDlg->putListLog(szLog);
-
-	int nROIWidth = 80;
-	int nROIHeight = 80;
-
-	double dCenterX = nWidth / 2;
-	double dCenterY = nHeight / 2;
-
-	int nShiftX = (dCenterX - (Task.m_CircleP[0].x + Task.m_CircleP[1].x + Task.m_CircleP[2].x + Task.m_CircleP[3].x) / 4 ) * -1;
-	int nShiftY = (dCenterY - (Task.m_CircleP[0].y + Task.m_CircleP[1].y + Task.m_CircleP[2].y + Task.m_CircleP[3].y) / 4 ) * -1;
-
-	//iSy = model.sfrElem.m_iOffsetY[i] + nShiftX;
-	//iSx = model.sfrElem.m_iOffsetX[i] + nShiftY;
-
-	/* Center */ 
-	vROI[0].left = dCenterX + nShiftX - nROIWidth / 2;
-	vROI[0].top = dCenterY + nShiftY - nROIHeight / 2;
-	vROI[0].right = vROI[0].left + nROIWidth - 1;
-	vROI[0].bottom = vROI[0].top + nROIHeight - 1;
-	vOffset[0] = 0.0;
-
-
-	BYTE *pBuffer[2] = { NULL, NULL };
-	pBuffer[0] = ChartRaw;		
-	pBuffer[1] = ChartSecondRaw;
-
-
-	bool result = pSNRVNE->InspectM((const BYTE**)pBuffer, nWidth, nHeight, tSNRVNESpec, tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, false, 2);
-	//tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, true, 2);
-	for (int i = 0; i < tSNRVNESpec.tROI.ROICount; i++)
-	{
-		const TSNRResult* pSNRResult = pSNRVNE->GetSNRResult(i);
-
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRVNE] Index =%d "), pSNRResult->nIndex);
-		theApp.MainDlg->putListLog(szLog);
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRVNE] SNRValue =%.2f "), pSNRResult->dSNRResult);
-		theApp.MainDlg->putListLog(szLog);
-	}
+	//std::shared_ptr< CACMISSignalNoiseRatioVNE > pSNRVNE = std::make_shared< CACMISSignalNoiseRatioVNE >();
+	//TSNRNormSpecN tSNRVNESpec;
+	//std::vector<RECT> vROI;
+	//std::vector<double> vOffset;
+	//tSNRVNESpec.tROI.ROICount = 1;
+	//vROI.resize(tSNRVNESpec.tROI.ROICount);
+	//vOffset.resize(tSNRVNESpec.tROI.ROICount);
+	//
+	//tSNRVNESpec.tROI.pROIData = vROI.data();
+	//tSNRVNESpec.tROI.eROIType = ROIType_RECT;
+	//tSNRVNESpec.tROI.dOffset = vOffset.data();
+	//tSNRVNESpec.dSNRThreshold = model.m_SnrSpec[0];
 
 
 
-	const TSNRResult* pSNRResult = pSNRVNE->GetMinSNRResult();
-	
-	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] Min Index =%d "), pSNRResult->nIndex);
-	theApp.MainDlg->putListLog(szLog);
-	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] Min SNRValue=%.2f "), pSNRResult->dSNRResult);
-	theApp.MainDlg->putListLog(szLog);
+	//_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRVNE] dSNRThreshold = %.1lf "), tSNRVNESpec.dSNRThreshold);
+	//theApp.MainDlg->putListLog(szLog);
 
-	const TSNRNormResult* pTSNRNormResult = pSNRVNE->GetInspectionResult(0);
+	//int nROIWidth = 80;
+	//int nROIHeight = 80;
 
-	double mSnrSpecMin = model.m_SnrSpec[1];
-	double mSnrSpecMax = model.m_SnrSpec[2];
+	//double dCenterX = nWidth / 2;
+	//double dCenterY = nHeight / 2;
 
-	double mSnrValue = pTSNRNormResult->dSNRResult;
-	model.m_LogSnr = mSnrValue;
-	CString sTemp = _T("");
-	if (mSnrValue < mSnrSpecMin || mSnrValue > mSnrSpecMax)
-	{
-		MandoInspLog.bInspRes = false;	//SNR VNE
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] dSNRResult = %.2lf NG (Spec:%.3lf ~ %.3lf)"), mSnrValue, mSnrSpecMin , mSnrSpecMax);
-		theApp.MainDlg->putListLog(szLog);
+	//int nShiftX = (dCenterX - (Task.m_CircleP[0].x + Task.m_CircleP[1].x + Task.m_CircleP[2].x + Task.m_CircleP[3].x) / 4 ) * -1;
+	//int nShiftY = (dCenterY - (Task.m_CircleP[0].y + Task.m_CircleP[1].y + Task.m_CircleP[2].y + Task.m_CircleP[3].y) / 4 ) * -1;
+
+	////iSy = model.sfrElem.m_iOffsetY[i] + nShiftX;
+	////iSx = model.sfrElem.m_iOffsetX[i] + nShiftY;
+
+	///* Center */ 
+	//vROI[0].left = dCenterX + nShiftX - nROIWidth / 2;
+	//vROI[0].top = dCenterY + nShiftY - nROIHeight / 2;
+	//vROI[0].right = vROI[0].left + nROIWidth - 1;
+	//vROI[0].bottom = vROI[0].top + nROIHeight - 1;
+	//vOffset[0] = 0.0;
 
 
-		sTemp.Format("[SNR] dSNRResult Spec NG: %.2lf(Spec:%.3lf ~ %.3lf)", mSnrValue, mSnrSpecMin, mSnrSpecMax);
-		//! Main Display화면 Overlay NG List
-		MandoInspLog.sDispNG[MandoInspLog.iNGCnt].Format("[SNR] Spec NG: %.2lf(Spec:%.3lf ~ %.3lf)", mSnrValue, mSnrSpecMin, mSnrSpecMax);
-		MandoInspLog.iNGCnt++;
-		sTemp.Format(_T("[SNR] %.2lf"), mSnrValue);
-		MandoInspLog.sNGList += sTemp;
-	}
-	else
-	{
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] dSNRResult = %.2f OK (Spec:%.3lf ~ %.3lf) "), mSnrValue, mSnrSpecMin, mSnrSpecMax);
-		theApp.MainDlg->putListLog(szLog);
+	//BYTE *pBuffer[2] = { NULL, NULL };
+	//pBuffer[0] = ChartRaw;		
+	//pBuffer[1] = ChartSecondRaw;
 
-	}
-	g_SaveLGITLog(m_nUnit, "SNRVNE", pSNRVNE->GetLogHeader(), pSNRVNE->GetLogData());
+
+	//bool result = pSNRVNE->InspectM((const BYTE**)pBuffer, nWidth, nHeight, tSNRVNESpec, tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, false, 2);
+	////tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, true, 2);
+	//for (int i = 0; i < tSNRVNESpec.tROI.ROICount; i++)
+	//{
+	//	const TSNRResult* pSNRResult = pSNRVNE->GetSNRResult(i);
+
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRVNE] Index =%d "), pSNRResult->nIndex);
+	//	theApp.MainDlg->putListLog(szLog);
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRVNE] SNRValue =%.2f "), pSNRResult->dSNRResult);
+	//	theApp.MainDlg->putListLog(szLog);
+	//}
+
+
+
+	//const TSNRResult* pSNRResult = pSNRVNE->GetMinSNRResult();
+	//
+	//_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] Min Index =%d "), pSNRResult->nIndex);
+	//theApp.MainDlg->putListLog(szLog);
+	//_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] Min SNRValue=%.2f "), pSNRResult->dSNRResult);
+	//theApp.MainDlg->putListLog(szLog);
+
+	//const TSNRNormResult* pTSNRNormResult = pSNRVNE->GetInspectionResult(0);
+
+	//double mSnrSpecMin = model.m_SnrSpec[1];
+	//double mSnrSpecMax = model.m_SnrSpec[2];
+
+	//double mSnrValue = pTSNRNormResult->dSNRResult;
+	//model.m_LogSnr = mSnrValue;
+	//CString sTemp = _T("");
+	//if (mSnrValue < mSnrSpecMin || mSnrValue > mSnrSpecMax)
+	//{
+	//	MandoInspLog.bInspRes = false;	//SNR VNE
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] dSNRResult = %.2lf NG (Spec:%.3lf ~ %.3lf)"), mSnrValue, mSnrSpecMin , mSnrSpecMax);
+	//	theApp.MainDlg->putListLog(szLog);
+
+
+	//	sTemp.Format("[SNR] dSNRResult Spec NG: %.2lf(Spec:%.3lf ~ %.3lf)", mSnrValue, mSnrSpecMin, mSnrSpecMax);
+	//	//! Main Display화면 Overlay NG List
+	//	MandoInspLog.sDispNG[MandoInspLog.iNGCnt].Format("[SNR] Spec NG: %.2lf(Spec:%.3lf ~ %.3lf)", mSnrValue, mSnrSpecMin, mSnrSpecMax);
+	//	MandoInspLog.iNGCnt++;
+	//	sTemp.Format(_T("[SNR] %.2lf"), mSnrValue);
+	//	MandoInspLog.sNGList += sTemp;
+	//}
+	//else
+	//{
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNR] dSNRResult = %.2f OK (Spec:%.3lf ~ %.3lf) "), mSnrValue, mSnrSpecMin, mSnrSpecMax);
+	//	theApp.MainDlg->putListLog(szLog);
+
+	//}
+	//g_SaveLGITLog(m_nUnit, "SNRVNE", pSNRVNE->GetLogHeader(), pSNRVNE->GetLogData());
 	return true;
 	
 }
@@ -527,286 +527,287 @@ bool CPRIFunc_Insp::func_Insp_Snr_Vne(BYTE* ChartRaw, BYTE* ChartSecondRaw, bool
 //-----------------------------------------------------------------------------
 bool CPRIFunc_Insp::func_Insp_Snr(BYTE* img,  bool bAutoMode)
 {
-	bool bRes = true;
-	int i = 0;
-	TCHAR szLog[SIZE_OF_1K];
+	//bool bRes = true;
+	//int i = 0;
+	//TCHAR szLog[SIZE_OF_1K];
 
-    int nBlackLevel = 0;
-    int nWidth = gMIUDevice.nWidth;
-    int nHeight = gMIUDevice.nHeight;
-    TDATASPEC& tDataSpec = gMIUDevice.dTDATASPEC_n;
-	TSNRBWSpecN tSNRSpec;
+ //   int nBlackLevel = 0;
+ //   int nWidth = gMIUDevice.nWidth;
+ //   int nHeight = gMIUDevice.nHeight;
+ //   TDATASPEC& tDataSpec = gMIUDevice.dTDATASPEC_n;
+	//TSNRBWSpecN tSNRSpec;
 
-	int pitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
-	int width = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
-	int Height = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
+	//int pitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
+	//int width = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
+	//int Height = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
 
-	//if(getROI_SFR(m_nUnit, g_clVision.m_pImgBuff[m_nUnit][1], nPitch, nSizeX, nSizeY, g_clModelData[m_nUnit].m_clSfrInfo.m_clRectCircle) == false)
-
-
-	vision.clearOverlay(CCD);
-	vision.MilBufferUpdate();
-	Task.getROI();
-
-	if (Task._findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, Task.SFR.rcROI) == false)
-		return false;
-
-	//theApp.MainDlg->g_CalcImageAlign();		//func_Insp_Snr
-
-	// Patch Center Point
-	POINT ptCenter[3];
-	std::vector<double> vdOffset(3, 0.0);
-	std::vector<TROIPoint> vROI(56);
-
-	//std::cout << std::endl;
-	//std::cout << __FUNCTION__ << std::endl;
-
-	//GetImageData(MODEL_IKC, tDataSpec, stImgInfo);
-
-	// Image buffers
-	std::vector<BYTE> vFrameBuffer(nHeight * nWidth * 2);
-
-	memset(&tSNRSpec, 0x00, sizeof(tSNRSpec));
-
-	int offsetX = model.m_oc_x*-1;
-	int offsetY = model.m_oc_y*-1;
+	////if(getROI_SFR(m_nUnit, g_clVision.m_pImgBuff[m_nUnit][1], nPitch, nSizeX, nSizeY, g_clModelData[m_nUnit].m_clSfrInfo.m_clRectCircle) == false)
 
 
-	//int izeX = model.sfrElem.m_clRectSnr[0].right - model.sfrElem.m_clRectSnr[0].left;
+	//vision.clearOverlay(CCD);
+	//vision.MilBufferUpdate();
+	//Task.getROI();
 
-	int snrSizeX = model.sfrElem.m_clRectSnr[0].right -  model.sfrElem.m_clRectSnr[0].left;
-	int snrSizeY = model.sfrElem.m_clRectSnr[0].bottom - model.sfrElem.m_clRectSnr[0].top;
-	
-	/* White */
-	ptCenter[SNR_BW_IMAGE_WHITE].x = model.sfrElem.m_clRectSnr[0].left + (snrSizeX / 2) + offsetX;
-    ptCenter[SNR_BW_IMAGE_WHITE].y = model.sfrElem.m_clRectSnr[0].top + (snrSizeY / 2) + offsetY;
-	/* Gray */
-	ptCenter[SNR_BW_IMAGE_GRAY].x = model.sfrElem.m_clRectSnr[1].left + (snrSizeX / 2) + offsetX;
-    ptCenter[SNR_BW_IMAGE_GRAY].y = model.sfrElem.m_clRectSnr[1].top + (snrSizeY / 2) + offsetY;
-    /* Black */
-    ptCenter[SNR_BW_IMAGE_BLACK].x = model.sfrElem.m_clRectSnr[2].left + (snrSizeX / 2) + offsetX;
-    ptCenter[SNR_BW_IMAGE_BLACK].y = model.sfrElem.m_clRectSnr[2].top + (snrSizeY / 2) + offsetY;
-	 
-    for (int i = 0; i < 3; i++)
-    {
-		vision.boxlist[CCD].addList(
-			ptCenter[SNR_BW_IMAGE_WHITE + i].x - (snrSizeX / 2),
-			ptCenter[SNR_BW_IMAGE_WHITE + i].y - (snrSizeY / 2),
-			ptCenter[SNR_BW_IMAGE_WHITE + i].x + (snrSizeX / 2),
-			ptCenter[SNR_BW_IMAGE_WHITE + i].y + (snrSizeY / 2),
-			PS_SOLID, M_COLOR_MAGENTA);
-        vROI[i].ptCenter.x = ptCenter[i].x;
-        vROI[i].ptCenter.y = ptCenter[i].y;
-		vROI[i].nROIWidth = snrSizeX;// 50;
-		vROI[i].nROIHeight = snrSizeY;// 50;
-    }
-    // Spec
-    tSNRSpec.dSNRThreshold = model.m_SnrSpec[0];// 20;		//1.0~100.0 양불판정 SPEC
-    tSNRSpec.dDRThreshold = model.m_SnrSpec[1]; //100;
-    tSNRSpec.tROI.eROIType = ROIType_POINT;
-    tSNRSpec.tROI.ROICount = 3;
-    tSNRSpec.tROI.dOffset = vdOffset.data();
-    tSNRSpec.tROI.pROIData = vROI.data();
-	// Load image
-	//LoadImageData(vFrameBuffer.data(), _IMG_IK_Dynamic_Range_raw);
+	//if (Task._findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, Task.SFR.rcROI) == false)
+	//	return false;
 
-	// Inspect
-	//return InspectSNRBW2(tDataSpec, tSNRSpec, vFrameBuffer.data(), stImgInfo.nDisplaySizeX, stImgInfo.nDisplaySizeY, true, _IMG_IK_Dynamic_Range_raw, false, true);
-	if (bAutoMode == false)
-	{
-		/*
-		Task.m_dShift_IMG_X = pFrame->ChartCenterOffsetX*(model.m_dSize_CCD_Cell / 1000.0f)*1.0f;
-		Task.m_dShift_IMG_Y = pFrame->ChartCenterOffsetY*(model.m_dSize_CCD_Cell / 1000.0f)*1.0f;
-		*/
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]offset Test x:%.2lf"), offsetX*(model.m_dSize_CCD_Cell / 1000.0f)*1.0f);
-		theApp.MainDlg->putListLog(szLog);
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]point1 x:%d"), ptCenter[SNR_BW_IMAGE_WHITE].x);
-		theApp.MainDlg->putListLog(szLog);
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]point2 x:%d"), ptCenter[SNR_BW_IMAGE_GRAY].x);
-		theApp.MainDlg->putListLog(szLog);
-		_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]point3 x:%d"), ptCenter[SNR_BW_IMAGE_BLACK].x);
-		theApp.MainDlg->putListLog(szLog);
-	}
-	char title[100];
+	////theApp.MainDlg->g_CalcImageAlign();		//func_Insp_Snr
 
-	// Image buffers
-	std::vector<BYTE> vBmpBuffer(nWidth * nHeight * 3, 0);
+	//// Patch Center Point
+	//POINT ptCenter[3];
+	//std::vector<double> vdOffset(3, 0.0);
+	//std::vector<TROIPoint> vROI(56);
 
-	// output image
-	IplImage *cvImgSNR = cvCreateImage(cvSize(nWidth, nHeight), 8, 3);
-	cvImgSNR->imageData = (char*)vBmpBuffer.data();
+	////std::cout << std::endl;
+	////std::cout << __FUNCTION__ << std::endl;
 
-	// for display
-	/*if (bRaw)
-	{
-		ACMISSoftISP::xMakeBMP(img, vBmpBuffer.data(), nWidth, nHeight, tDataSpec);
-	}
-	else
-	{
-		std::copy(img, img + sizeof(BYTE) * nWidth * nHeight * 3, vBmpBuffer.data());
-	}*/
+	////GetImageData(MODEL_IKC, tDataSpec, stImgInfo);
 
-	std::shared_ptr<CACMISSignalNoiseRatioBW> pSNRBW = std::make_shared<CACMISSignalNoiseRatioBW>();
-	const TSNRResult* pSNRResult = nullptr;
+	//// Image buffers
+	//std::vector<BYTE> vFrameBuffer(nHeight * nWidth * 2);
 
-	//std::cout << "[SNRBW2] Version: " << pSNRBW->GetVersion() << std::endl;
-    _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2]Version:%s"), pSNRBW->GetVersion());
-    //AddLog(szLog, 0, m_nUnit);
-	theApp.MainDlg->putListLog(szLog);
-	if (!pSNRBW->InspectM((const BYTE**)&img, nWidth, nHeight, tSNRSpec, tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, false, 1))
-	{
-		cvReleaseImage(&cvImgSNR);
+	//memset(&tSNRSpec, 0x00, sizeof(tSNRSpec));
 
-		//std::cout << "[SNRBW2] Inspection Fail! " << std::endl;
-        _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2] Inspection Fail!"));
-        //AddLog(szLog, 0, m_nUnit);
-		theApp.MainDlg->putListLog(szLog);
-		return false;
-	}
-	//std::cout << "[SNRBW2] Region Count : " << pSNRBW->GetSNRRegionCount() << std::endl;
-	_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2]Region Count Hot: %d"), pSNRBW->GetSNRRegionCount());
-	//AddLog(szLog, 1, m_nUnit, true);
-	theApp.MainDlg->putListLog(szLog);
-	for (int i = 0; i < pSNRBW->GetSNRRegionCount(); i++)
-	{
-		pSNRResult = pSNRBW->GetSNRResult(i);
-		if (pSNRResult)
-		{
-			//std::cout << "[SNRBW2] Index : " << pSNRResult->nIndex << std::endl;
-			//std::cout << "[SNRBW2] Variance Value : " << pSNRResult->dVariance << std::endl;
-			//std::cout << "[SNRBW2] Average Value : " << pSNRResult->dAverage << std::endl;
-			//std::cout << "[SNRBW2] Region : " << pSNRResult->rtROI.left << ", " << pSNRResult->rtROI.top << ", " << pSNRResult->rtROI.right << ", " << pSNRResult->rtROI.bottom << std::endl;
+	//int offsetX = model.m_oc_x*-1;
+	//int offsetY = model.m_oc_y*-1;
 
-			DisplaySNRGraphics(cvImgSNR, pSNRResult, nWidth, CV_GREEN);
-		}
-	}
-	CString sTemp;
-	pSNRResult = pSNRBW->GetMinSNRResult();
-	if (pSNRResult)
-	{
-		//std::cout << "[SNRBW2] SNRValue : " << pSNRResult->dSNRResult << std::endl;
-		//std::cout << "[SNRBW2] DRValue : " << pSNRResult->dDRResult << std::endl;
-        _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2] SNRValue: %lf"), pSNRResult->dSNRResult);
-        //AddLog(szLog, 1, m_nUnit, true);
-		theApp.MainDlg->putListLog(szLog);
-        _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2] DRValue: %lf"), pSNRResult->dDRResult);
-        //AddLog(szLog, 1, m_nUnit, true);
-		theApp.MainDlg->putListLog(szLog);
 
-        model.m_Log_SNR_SNR = pSNRResult->dSNRResult;
-        model.m_Log_SNR_DR = pSNRResult->dDRResult;
+	////int izeX = model.sfrElem.m_clRectSnr[0].right - model.sfrElem.m_clRectSnr[0].left;
 
-		MESCommunication.m_dMesSnr = model.m_Log_SNR_SNR;
-		MESCommunication.m_dMesDr = model.m_Log_SNR_DR;
+	//int snrSizeX = model.sfrElem.m_clRectSnr[0].right -  model.sfrElem.m_clRectSnr[0].left;
+	//int snrSizeY = model.sfrElem.m_clRectSnr[0].bottom - model.sfrElem.m_clRectSnr[0].top;
+	//
+	///* White */
+	//ptCenter[SNR_BW_IMAGE_WHITE].x = model.sfrElem.m_clRectSnr[0].left + (snrSizeX / 2) + offsetX;
+ //   ptCenter[SNR_BW_IMAGE_WHITE].y = model.sfrElem.m_clRectSnr[0].top + (snrSizeY / 2) + offsetY;
+	///* Gray */
+	//ptCenter[SNR_BW_IMAGE_GRAY].x = model.sfrElem.m_clRectSnr[1].left + (snrSizeX / 2) + offsetX;
+ //   ptCenter[SNR_BW_IMAGE_GRAY].y = model.sfrElem.m_clRectSnr[1].top + (snrSizeY / 2) + offsetY;
+ //   /* Black */
+ //   ptCenter[SNR_BW_IMAGE_BLACK].x = model.sfrElem.m_clRectSnr[2].left + (snrSizeX / 2) + offsetX;
+ //   ptCenter[SNR_BW_IMAGE_BLACK].y = model.sfrElem.m_clRectSnr[2].top + (snrSizeY / 2) + offsetY;
+	// 
+ //   for (int i = 0; i < 3; i++)
+ //   {
+	//	vision.boxlist[CCD].addList(
+	//		ptCenter[SNR_BW_IMAGE_WHITE + i].x - (snrSizeX / 2),
+	//		ptCenter[SNR_BW_IMAGE_WHITE + i].y - (snrSizeY / 2),
+	//		ptCenter[SNR_BW_IMAGE_WHITE + i].x + (snrSizeX / 2),
+	//		ptCenter[SNR_BW_IMAGE_WHITE + i].y + (snrSizeY / 2),
+	//		PS_SOLID, M_COLOR_MAGENTA);
+ //       vROI[i].ptCenter.x = ptCenter[i].x;
+ //       vROI[i].ptCenter.y = ptCenter[i].y;
+	//	vROI[i].nROIWidth = snrSizeX;// 50;
+	//	vROI[i].nROIHeight = snrSizeY;// 50;
+ //   }
+ //   // Spec
+ //   tSNRSpec.dSNRThreshold = model.m_SnrSpec[0];// 20;		//1.0~100.0 양불판정 SPEC
+ //   tSNRSpec.dDRThreshold = model.m_SnrSpec[1]; //100;
+ //   tSNRSpec.tROI.eROIType = ROIType_POINT;
+ //   tSNRSpec.tROI.ROICount = 3;
+ //   tSNRSpec.tROI.dOffset = vdOffset.data();
+ //   tSNRSpec.tROI.pROIData = vROI.data();
+	//// Load image
+	////LoadImageData(vFrameBuffer.data(), _IMG_IK_Dynamic_Range_raw);
 
-		DisplaySNRGraphics(cvImgSNR, pSNRResult, nWidth, CV_RED);
+	//// Inspect
+	////return InspectSNRBW2(tDataSpec, tSNRSpec, vFrameBuffer.data(), stImgInfo.nDisplaySizeX, stImgInfo.nDisplaySizeY, true, _IMG_IK_Dynamic_Range_raw, false, true);
+	//if (bAutoMode == false)
+	//{
+	//	/*
+	//	Task.m_dShift_IMG_X = pFrame->ChartCenterOffsetX*(model.m_dSize_CCD_Cell / 1000.0f)*1.0f;
+	//	Task.m_dShift_IMG_Y = pFrame->ChartCenterOffsetY*(model.m_dSize_CCD_Cell / 1000.0f)*1.0f;
+	//	*/
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]offset Test x:%.2lf"), offsetX*(model.m_dSize_CCD_Cell / 1000.0f)*1.0f);
+	//	theApp.MainDlg->putListLog(szLog);
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]point1 x:%d"), ptCenter[SNR_BW_IMAGE_WHITE].x);
+	//	theApp.MainDlg->putListLog(szLog);
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]point2 x:%d"), ptCenter[SNR_BW_IMAGE_GRAY].x);
+	//	theApp.MainDlg->putListLog(szLog);
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[pos]point3 x:%d"), ptCenter[SNR_BW_IMAGE_BLACK].x);
+	//	theApp.MainDlg->putListLog(szLog);
+	//}
+	//char title[100];
 
-		if (model.m_Log_SNR_SNR < 30)
-		{
-			//ng
-			sTemp.Format("SNR Spec NG: %.3f(Spec:%d)", model.m_Log_SNR_SNR, 30);
-			//! Main Display화면 Overlay NG List
-			MandoInspLog.sDispNG[MandoInspLog.iNGCnt].Format("SNR Spec NG: %.3f(Spec:%d)", model.m_Log_SNR_SNR, 30);
-			MandoInspLog.iNGCnt++;
-			bRes = false;
-			theApp.MainDlg->putListLog(sTemp);
-			sTemp.Format(_T("[SNR %.3lf(Spec:%d)]"), model.m_Log_SNR_SNR, 30);
-			MandoInspLog.sNGList += sTemp;
-		}
-	}
+	//// Image buffers
+	//std::vector<BYTE> vBmpBuffer(nWidth * nHeight * 3, 0);
 
-	/*if (ImagePath != nullptr && bSaveResultImage == true)
-	{
-		char filename[100];
-		char *tmp = (char *)strrchr(ImagePath, '.');
+	//// output image
+	//IplImage *cvImgSNR = cvCreateImage(cvSize(nWidth, nHeight), 8, 3);
+	//cvImgSNR->imageData = (char*)vBmpBuffer.data();
 
-		if (tmp != nullptr)
-		{
-			strncpy_s(filename, ImagePath, (int)(tmp - ImagePath));
-		}
-		else
-		{
-			strcpy_s(filename, ImagePath);
-		}
-		strcat_s(filename, "_SNRBW2_result.bmp");
-		printf("Saving Result image: %s\n", filename);
-		cvSaveImage(filename, cvImgSNR);
-	}*/
+	//// for display
+	///*if (bRaw)
+	//{
+	//	ACMISSoftISP::xMakeBMP(img, vBmpBuffer.data(), nWidth, nHeight, tDataSpec);
+	//}
+	//else
+	//{
+	//	std::copy(img, img + sizeof(BYTE) * nWidth * nHeight * 3, vBmpBuffer.data());
+	//}*/
 
-	//sprintf(title, "SNRBW2%s%s", ImagePath != nullptr ? " - " : "", ImagePath != nullptr ? ImagePath : "");
-	//cvShowImage(title, cvImgSNR);
-	cvReleaseImage(&cvImgSNR);
-    g_SaveLGITLog(m_nUnit, "SNR", pSNRBW->GetLogHeader(), pSNRBW->GetLogData());
-	//cvWaitKey(0);
+	//std::shared_ptr<CACMISSignalNoiseRatioBW> pSNRBW = std::make_shared<CACMISSignalNoiseRatioBW>();
+	//const TSNRResult* pSNRResult = nullptr;
 
-	return bRes;
+	////std::cout << "[SNRBW2] Version: " << pSNRBW->GetVersion() << std::endl;
+ //   _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2]Version:%s"), pSNRBW->GetVersion());
+ //   //AddLog(szLog, 0, m_nUnit);
+	//theApp.MainDlg->putListLog(szLog);
+	//if (!pSNRBW->InspectM((const BYTE**)&img, nWidth, nHeight, tSNRSpec, tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, false, 1))
+	//{
+	//	cvReleaseImage(&cvImgSNR);
+
+	//	//std::cout << "[SNRBW2] Inspection Fail! " << std::endl;
+ //       _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2] Inspection Fail!"));
+ //       //AddLog(szLog, 0, m_nUnit);
+	//	theApp.MainDlg->putListLog(szLog);
+	//	return false;
+	//}
+	////std::cout << "[SNRBW2] Region Count : " << pSNRBW->GetSNRRegionCount() << std::endl;
+	//_stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2]Region Count Hot: %d"), pSNRBW->GetSNRRegionCount());
+	////AddLog(szLog, 1, m_nUnit, true);
+	//theApp.MainDlg->putListLog(szLog);
+	//for (int i = 0; i < pSNRBW->GetSNRRegionCount(); i++)
+	//{
+	//	pSNRResult = pSNRBW->GetSNRResult(i);
+	//	if (pSNRResult)
+	//	{
+	//		//std::cout << "[SNRBW2] Index : " << pSNRResult->nIndex << std::endl;
+	//		//std::cout << "[SNRBW2] Variance Value : " << pSNRResult->dVariance << std::endl;
+	//		//std::cout << "[SNRBW2] Average Value : " << pSNRResult->dAverage << std::endl;
+	//		//std::cout << "[SNRBW2] Region : " << pSNRResult->rtROI.left << ", " << pSNRResult->rtROI.top << ", " << pSNRResult->rtROI.right << ", " << pSNRResult->rtROI.bottom << std::endl;
+
+	//		DisplaySNRGraphics(cvImgSNR, pSNRResult, nWidth, CV_GREEN);
+	//	}
+	//}
+	//CString sTemp;
+	//pSNRResult = pSNRBW->GetMinSNRResult();
+	//if (pSNRResult)
+	//{
+	//	//std::cout << "[SNRBW2] SNRValue : " << pSNRResult->dSNRResult << std::endl;
+	//	//std::cout << "[SNRBW2] DRValue : " << pSNRResult->dDRResult << std::endl;
+ //       _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2] SNRValue: %lf"), pSNRResult->dSNRResult);
+ //       //AddLog(szLog, 1, m_nUnit, true);
+	//	theApp.MainDlg->putListLog(szLog);
+ //       _stprintf_s(szLog, SIZE_OF_1K, _T("[SNRBW2] DRValue: %lf"), pSNRResult->dDRResult);
+ //       //AddLog(szLog, 1, m_nUnit, true);
+	//	theApp.MainDlg->putListLog(szLog);
+
+ //       model.m_Log_SNR_SNR = pSNRResult->dSNRResult;
+ //       model.m_Log_SNR_DR = pSNRResult->dDRResult;
+
+	//	MESCommunication.m_dMesSnr = model.m_Log_SNR_SNR;
+	//	MESCommunication.m_dMesDr = model.m_Log_SNR_DR;
+
+	//	DisplaySNRGraphics(cvImgSNR, pSNRResult, nWidth, CV_RED);
+
+	//	if (model.m_Log_SNR_SNR < 30)
+	//	{
+	//		//ng
+	//		sTemp.Format("SNR Spec NG: %.3f(Spec:%d)", model.m_Log_SNR_SNR, 30);
+	//		//! Main Display화면 Overlay NG List
+	//		MandoInspLog.sDispNG[MandoInspLog.iNGCnt].Format("SNR Spec NG: %.3f(Spec:%d)", model.m_Log_SNR_SNR, 30);
+	//		MandoInspLog.iNGCnt++;
+	//		bRes = false;
+	//		theApp.MainDlg->putListLog(sTemp);
+	//		sTemp.Format(_T("[SNR %.3lf(Spec:%d)]"), model.m_Log_SNR_SNR, 30);
+	//		MandoInspLog.sNGList += sTemp;
+	//	}
+	//}
+
+	///*if (ImagePath != nullptr && bSaveResultImage == true)
+	//{
+	//	char filename[100];
+	//	char *tmp = (char *)strrchr(ImagePath, '.');
+
+	//	if (tmp != nullptr)
+	//	{
+	//		strncpy_s(filename, ImagePath, (int)(tmp - ImagePath));
+	//	}
+	//	else
+	//	{
+	//		strcpy_s(filename, ImagePath);
+	//	}
+	//	strcat_s(filename, "_SNRBW2_result.bmp");
+	//	printf("Saving Result image: %s\n", filename);
+	//	cvSaveImage(filename, cvImgSNR);
+	//}*/
+
+	////sprintf(title, "SNRBW2%s%s", ImagePath != nullptr ? " - " : "", ImagePath != nullptr ? ImagePath : "");
+	////cvShowImage(title, cvImgSNR);
+	//cvReleaseImage(&cvImgSNR);
+ //   g_SaveLGITLog(m_nUnit, "SNR", pSNRBW->GetLogHeader(), pSNRBW->GetLogData());
+	////cvWaitKey(0);
+
+	//return bRes;
+return true;
 }
-void CPRIFunc_Insp::DisplaySNRGraphics(IplImage* _cvImgBuf, const TSNRResult* _SNRResult, int _nImageWidth, CvScalar color)
-{
-	IplImage* cvImgBuf = _cvImgBuf;
-
-	if (cvImgBuf == nullptr || _SNRResult == nullptr)
-		return;
-
-	CvFont cvfont;
-	CvPoint pt, pt2;
-	char strTmp[256], strTmp2[256];
-	int scale = (_nImageWidth > 640 ? 1 : 2);
-	double nFontSize = 0.5 / scale;
-#define __FONTSIZE	9
-
-	cvInitFont(&cvfont, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_NORMAL, nFontSize, nFontSize, 0, 1, 10);
-	if (_SNRResult->rtROI.right != 0 && _SNRResult->rtROI.bottom != 0)
-	{
-		if (_SNRResult->dSNRResult == 0.0 && _SNRResult->dDRResult == 0.0)
-		{
-			sprintf_s(strTmp, "[%d]Avg : %.3f", _SNRResult->nIndex, _SNRResult->dAverage);
-			sprintf_s(strTmp2, "[%d]Var : %.3f", _SNRResult->nIndex, _SNRResult->dVariance);
-		}
-		else if (_SNRResult->dDRResult != 0.0)
-		{
-			sprintf_s(strTmp, "[%d]SNR : %2.3f", _SNRResult->nIndex, _SNRResult->dSNRResult);
-			sprintf_s(strTmp2, "[%d]DR : %2.3f", _SNRResult->nIndex, _SNRResult->dDRResult);
-		}
-		else
-		{
-			sprintf_s(strTmp, "[%d]SNR : %2.3f", _SNRResult->nIndex, _SNRResult->dSNRResult);
-			memset(strTmp2, 0, sizeof(strTmp2));
-		}
-
-		cvRectangle(cvImgBuf, cvPoint((int)_SNRResult->rtROI.left, (int)_SNRResult->rtROI.top), cvPoint((int)_SNRResult->rtROI.right, (int)_SNRResult->rtROI.bottom), color);
-
-		pt.x = (_SNRResult->rtROI.left + _SNRResult->rtROI.right - 1) / 2 - (int)(strlen(strTmp) * __FONTSIZE / 2 / scale);
-		pt.y = (_SNRResult->rtROI.top + _SNRResult->rtROI.bottom - 1) / 2 + __FONTSIZE / 2 / scale;
-		pt2.x = (_SNRResult->rtROI.left + _SNRResult->rtROI.right - 1) / 2 - (int)(strlen(strTmp2) * __FONTSIZE / 2 / scale);
-		pt2.y = (_SNRResult->rtROI.top + _SNRResult->rtROI.bottom - 1) / 2 + __FONTSIZE / 2 / scale + __FONTSIZE * 2;
-	}
-	else
-	{
-		if (_SNRResult->dSNRResult == 0.0 && _SNRResult->dDRResult == 0.0)
-		{
-			sprintf_s(strTmp, "Avg : %.3f", _SNRResult->dAverage);
-			sprintf_s(strTmp2, "VAR : %.3f", _SNRResult->dVariance);
-		}
-		else if (_SNRResult->dDRResult != 0.0)
-		{
-			sprintf_s(strTmp, "SNR : %2.3f", _SNRResult->dSNRResult);
-			sprintf_s(strTmp2, "DR : %2.3f", _SNRResult->dDRResult);
-		}
-		else
-		{
-			sprintf_s(strTmp, "SNR : %2.3f", _SNRResult->dSNRResult);
-			memset(strTmp2, 0, sizeof(strTmp2));
-		}
-
-		pt.x = _nImageWidth / 2 - (int)(strlen(strTmp) * __FONTSIZE / 2 / scale);
-		pt.y = __FONTSIZE * 2;
-		pt2.x = _nImageWidth / 2 - (int)(strlen(strTmp2) * __FONTSIZE / 2 / scale);
-		pt2.y = __FONTSIZE * 2 + __FONTSIZE * 2;
-	}
-	cvPutText(cvImgBuf, strTmp, pt, &cvfont, color);
-	cvPutText(cvImgBuf, strTmp2, pt2, &cvfont, color);
-}
+//void CPRIFunc_Insp::DisplaySNRGraphics(IplImage* _cvImgBuf, const TSNRResult* _SNRResult, int _nImageWidth, CvScalar color)
+//{
+//	/*IplImage* cvImgBuf = _cvImgBuf;
+//
+//	if (cvImgBuf == nullptr || _SNRResult == nullptr)
+//		return;
+//
+//	CvFont cvfont;
+//	CvPoint pt, pt2;
+//	char strTmp[256], strTmp2[256];
+//	int scale = (_nImageWidth > 640 ? 1 : 2);
+//	double nFontSize = 0.5 / scale;
+//#define __FONTSIZE	9
+//
+//	cvInitFont(&cvfont, CV_FONT_HERSHEY_SIMPLEX | CV_FONT_NORMAL, nFontSize, nFontSize, 0, 1, 10);
+//	if (_SNRResult->rtROI.right != 0 && _SNRResult->rtROI.bottom != 0)
+//	{
+//		if (_SNRResult->dSNRResult == 0.0 && _SNRResult->dDRResult == 0.0)
+//		{
+//			sprintf_s(strTmp, "[%d]Avg : %.3f", _SNRResult->nIndex, _SNRResult->dAverage);
+//			sprintf_s(strTmp2, "[%d]Var : %.3f", _SNRResult->nIndex, _SNRResult->dVariance);
+//		}
+//		else if (_SNRResult->dDRResult != 0.0)
+//		{
+//			sprintf_s(strTmp, "[%d]SNR : %2.3f", _SNRResult->nIndex, _SNRResult->dSNRResult);
+//			sprintf_s(strTmp2, "[%d]DR : %2.3f", _SNRResult->nIndex, _SNRResult->dDRResult);
+//		}
+//		else
+//		{
+//			sprintf_s(strTmp, "[%d]SNR : %2.3f", _SNRResult->nIndex, _SNRResult->dSNRResult);
+//			memset(strTmp2, 0, sizeof(strTmp2));
+//		}
+//
+//		cvRectangle(cvImgBuf, cvPoint((int)_SNRResult->rtROI.left, (int)_SNRResult->rtROI.top), cvPoint((int)_SNRResult->rtROI.right, (int)_SNRResult->rtROI.bottom), color);
+//
+//		pt.x = (_SNRResult->rtROI.left + _SNRResult->rtROI.right - 1) / 2 - (int)(strlen(strTmp) * __FONTSIZE / 2 / scale);
+//		pt.y = (_SNRResult->rtROI.top + _SNRResult->rtROI.bottom - 1) / 2 + __FONTSIZE / 2 / scale;
+//		pt2.x = (_SNRResult->rtROI.left + _SNRResult->rtROI.right - 1) / 2 - (int)(strlen(strTmp2) * __FONTSIZE / 2 / scale);
+//		pt2.y = (_SNRResult->rtROI.top + _SNRResult->rtROI.bottom - 1) / 2 + __FONTSIZE / 2 / scale + __FONTSIZE * 2;
+//	}
+//	else
+//	{
+//		if (_SNRResult->dSNRResult == 0.0 && _SNRResult->dDRResult == 0.0)
+//		{
+//			sprintf_s(strTmp, "Avg : %.3f", _SNRResult->dAverage);
+//			sprintf_s(strTmp2, "VAR : %.3f", _SNRResult->dVariance);
+//		}
+//		else if (_SNRResult->dDRResult != 0.0)
+//		{
+//			sprintf_s(strTmp, "SNR : %2.3f", _SNRResult->dSNRResult);
+//			sprintf_s(strTmp2, "DR : %2.3f", _SNRResult->dDRResult);
+//		}
+//		else
+//		{
+//			sprintf_s(strTmp, "SNR : %2.3f", _SNRResult->dSNRResult);
+//			memset(strTmp2, 0, sizeof(strTmp2));
+//		}
+//
+//		pt.x = _nImageWidth / 2 - (int)(strlen(strTmp) * __FONTSIZE / 2 / scale);
+//		pt.y = __FONTSIZE * 2;
+//		pt2.x = _nImageWidth / 2 - (int)(strlen(strTmp2) * __FONTSIZE / 2 / scale);
+//		pt2.y = __FONTSIZE * 2 + __FONTSIZE * 2;
+//	}
+//	cvPutText(cvImgBuf, strTmp, pt, &cvfont, color);
+//	cvPutText(cvImgBuf, strTmp2, pt2, &cvfont, color);*/
+//}
 
 //-----------------------------------------------------------------------------
 //
@@ -979,271 +980,272 @@ bool CPRIFunc_Insp::func_Insp_Shm_Illumination(BYTE* rawImage, bool bAutoMode, b
 //-----------------------------------------------------------------------------
 bool CPRIFunc_Insp::func_Insp_Color_reproduction(const BYTE* pBuffer, bool bAutoMode)
 {
-	TCHAR szLog[SIZE_OF_1K];
-	int i = 0;
-	int nResult = R_RESULT_PASS;
-	const DPOINT* dResultPos;
-	int nWidth = gMIUDevice.nWidth;
-	int nHeight = gMIUDevice.nHeight;
-	TDATASPEC tDataSpec;			// = g_clLaonGrabberWrapper[m_nUnit].dColor_Tdataspec;
-	tDataSpec.eDataFormat = DATAFORMAT_YUV;
-	tDataSpec.eOutMode = OUTMODE_YUV422_CbYCrY;
-	tDataSpec.eSensorType = SENSORTYPE_OTHER;
-	tDataSpec.eDemosaicMethod = DEMOSAICMETHOD_NONE;
-	tDataSpec.nBlackLevel = 0;
+	return true;
+	//TCHAR szLog[SIZE_OF_1K];
+	//int i = 0;
+	//int nResult = R_RESULT_PASS;
+	//const DPOINT* dResultPos;
+	//int nWidth = gMIUDevice.nWidth;
+	//int nHeight = gMIUDevice.nHeight;
+	//TDATASPEC tDataSpec;			// = g_clLaonGrabberWrapper[m_nUnit].dColor_Tdataspec;
+	//tDataSpec.eDataFormat = DATAFORMAT_YUV;
+	//tDataSpec.eOutMode = OUTMODE_YUV422_CbYCrY;
+	//tDataSpec.eSensorType = SENSORTYPE_OTHER;
+	//tDataSpec.eDemosaicMethod = DEMOSAICMETHOD_NONE;
+	//tDataSpec.nBlackLevel = 0;
 
 
-	bool bUse8BitOnly = false;
+	//bool bUse8BitOnly = false;
 
-	//g_clVision.ClearOverlay(m_nUnit);
-	vision.clearOverlay(CCD);
-	CACMISColorReproduction *m_pColorReproduction = new CACMISColorReproduction();
+	////g_clVision.ClearOverlay(m_nUnit);
+	//vision.clearOverlay(CCD);
+	//CACMISColorReproduction *m_pColorReproduction = new CACMISColorReproduction();
 
-	std::vector<RECT> vROI;
-	std::vector<double> vOffset;
-	std::vector<double> vThreshold;
-	std::vector<TColorLab> vColorLab;
+	//std::vector<RECT> vROI;
+	//std::vector<double> vOffset;
+	//std::vector<double> vThreshold;
+	//std::vector<TColorLab> vColorLab;
 
+	////TColorReproductionSpecN m_stColorReproductionSpec;
 	//TColorReproductionSpecN m_stColorReproductionSpec;
-	TColorReproductionSpecN m_stColorReproductionSpec;
-	m_stColorReproductionSpec.tROI.ROICount = 4;
-	vROI.resize(m_stColorReproductionSpec.tROI.ROICount);
-	vOffset.resize(m_stColorReproductionSpec.tROI.ROICount);
-	vThreshold.resize(m_stColorReproductionSpec.tROI.ROICount);
-	vColorLab.resize(m_stColorReproductionSpec.tROI.ROICount);
-	m_stColorReproductionSpec.tROI.pROIData = vROI.data();
-	m_stColorReproductionSpec.tROI.dOffset = vOffset.data();
-	m_stColorReproductionSpec.tROI.eROIType = ROIType_RECT;
-	m_stColorReproductionSpec.pdThresholdDelta = vThreshold.data();
-	m_stColorReproductionSpec.ptRefColorLab = vColorLab.data();
+	//m_stColorReproductionSpec.tROI.ROICount = 4;
+	//vROI.resize(m_stColorReproductionSpec.tROI.ROICount);
+	//vOffset.resize(m_stColorReproductionSpec.tROI.ROICount);
+	//vThreshold.resize(m_stColorReproductionSpec.tROI.ROICount);
+	//vColorLab.resize(m_stColorReproductionSpec.tROI.ROICount);
+	//m_stColorReproductionSpec.tROI.pROIData = vROI.data();
+	//m_stColorReproductionSpec.tROI.dOffset = vOffset.data();
+	//m_stColorReproductionSpec.tROI.eROIType = ROIType_RECT;
+	//m_stColorReproductionSpec.pdThresholdDelta = vThreshold.data();
+	//m_stColorReproductionSpec.ptRefColorLab = vColorLab.data();
 
-	vThreshold[0] = 4.0;//
-	vThreshold[1] = 4.0;//
-	vThreshold[2] = 4.0;//
-	vThreshold[3] = 4.0;//
+	//vThreshold[0] = 4.0;//
+	//vThreshold[1] = 4.0;//
+	//vThreshold[2] = 4.0;//
+	//vThreshold[3] = 4.0;//
 
-	vColorLab[0].L = 0.000000;//32.404;
-	vColorLab[0].a = -27.172578;//44.222;
-	vColorLab[0].b = 2.958152;//37.356;
-	vColorLab[1].L = 0.000000;//11.326;
-	vColorLab[1].a = -33.255820;//33.245;
-	vColorLab[1].b = 32.886746;//-51.351;
-	vColorLab[2].L = 0.000000;//2.151;
-	vColorLab[2].a = -2.104597;//0.0;
-	vColorLab[2].b = 1.595063;//-0.001;
-	vColorLab[3].L = 0.000000;//26.191;
-	vColorLab[3].a = 15.324899;//-25.316;
-	vColorLab[3].b = 26.805437;//28.054;
-	
-	vROI[0].left = 150.000000;
-	vROI[0].top = 250.000000;
-	vROI[0].right = 250.000000;
-	vROI[0].bottom = 350.000000;
+	//vColorLab[0].L = 0.000000;//32.404;
+	//vColorLab[0].a = -27.172578;//44.222;
+	//vColorLab[0].b = 2.958152;//37.356;
+	//vColorLab[1].L = 0.000000;//11.326;
+	//vColorLab[1].a = -33.255820;//33.245;
+	//vColorLab[1].b = 32.886746;//-51.351;
+	//vColorLab[2].L = 0.000000;//2.151;
+	//vColorLab[2].a = -2.104597;//0.0;
+	//vColorLab[2].b = 1.595063;//-0.001;
+	//vColorLab[3].L = 0.000000;//26.191;
+	//vColorLab[3].a = 15.324899;//-25.316;
+	//vColorLab[3].b = 26.805437;//28.054;
 	//
-	vROI[1].left = 1700.000000;
-	vROI[1].top = 250.000000;
-	vROI[1].right = 1800.000000;
-	vROI[1].bottom = 350.000000;
-	//
-	vROI[2].left = 150.000000;
-	vROI[2].top = 750.000000;
-	vROI[2].right = 250.000000;
-	vROI[2].bottom = 850.000000;
-	//
-	vROI[3].left = 1700.000000;
-	vROI[3].top = 750.000000;
-	vROI[3].right = 1800.000000;
-	vROI[3].bottom = 850.000000;
-
-	for (int i = 0; i < 4; i++)
-	{
-		_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Roi #%d / Left:%d,Top:%d,Right:%d,Bottom:%d"), i + 1, vROI[i].left, vROI[i].top, vROI[i].right, vROI[i].bottom);
-		//AddLog(szLog, 0, m_nUnit);
-		theApp.MainDlg->putListLog(szLog);
-	}
-
-	char strTmp[1024];
-	char szTmp[256];
-	int dTextX = 0;
-	int dTextY = 0;
-
-	dTextX = vROI[0].left;
-	dTextY = vROI[0].top - 60;
-	if (dTextY < 0)
-	{
-		dTextY = 0;
-	}
-	sprintf_s(strTmp, "#1");
-	//g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
-	vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
-
-
-	dTextX = vROI[1].left;
-	dTextY = vROI[1].top - 60;
-	if (dTextY < 0)
-	{
-		dTextY = 0;
-	}
-	sprintf_s(strTmp, "#2");
-	//g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
-	vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
-	dTextX = vROI[2].left;
-	dTextY = vROI[2].top - 60;
-	if (dTextY < 0)
-	{
-		dTextY = 0;
-	}
-	sprintf_s(strTmp, "#3");
-	//g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
-	vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
-	dTextX = vROI[3].left;
-	dTextY = vROI[3].top - 60;
-	if (dTextY < 0)
-	{
-		dTextY = 0;
-	}
-	sprintf_s(strTmp, "#4");
-	//g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
-	vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
-	//
-	//g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[0].left, vROI[0].top, vROI[0].right, vROI[0].bottom, M_COLOR_BLUE, 1, FALSE);
-	//g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[1].left, vROI[1].top, vROI[1].right, vROI[1].bottom, M_COLOR_BLUE, 1, FALSE);
-	//g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[2].left, vROI[2].top, vROI[2].right, vROI[2].bottom, M_COLOR_BLUE, 1, FALSE);
-	//g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[3].left, vROI[3].top, vROI[3].right, vROI[3].bottom, M_COLOR_BLUE, 1, FALSE);
-
-	vision.boxlist[CCD].addList(vROI[0], PS_SOLID, M_COLOR_BLUE);
-	vision.boxlist[CCD].addList(vROI[1], PS_SOLID, M_COLOR_BLUE);
-	vision.boxlist[CCD].addList(vROI[2], PS_SOLID, M_COLOR_BLUE);
-	vision.boxlist[CCD].addList(vROI[3], PS_SOLID, M_COLOR_BLUE);
-	//ROI VIEW
-	vOffset[0] = 0.0;
-	vOffset[1] = 0.0;
-	vOffset[2] = 0.0;
-	vOffset[3] = 0.0;
-
-
-	double mColorValue = 0.0;
-	double mColorSpec = 0.0;
-	int mIndex = 0;
-
-	bool dColorRtn = true;
-	bool result = m_pColorReproduction->Inspect(pBuffer, nWidth, nHeight, m_stColorReproductionSpec,
-		tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, bUse8BitOnly,
-		false, tDataSpec.eDemosaicMethod);
-
-	for (i = 0; i < m_pColorReproduction->GetInspectionRegionCount(); i++)
-	{
-		const TColorReproductionResult* pResult = m_pColorReproduction->GetInspectionResult(i); // 결과 값
-
-		MandoInspLog.dColorReproduction[i] = pResult->dDelta;
-		//g_clMesCommunication[m_nUnit].m_nMesColorReproduction[i] = pResult->dDelta;
-
-		_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, ROI(%4d, %4d, %4d %4d), Delta = %.3f, L = %.3f, a = %.3f, b = %.3f"),
-			pResult->nIndex, pResult->rtROI.left, pResult->rtROI.top, pResult->rtROI.right, pResult->rtROI.bottom, pResult->dDelta, pResult->tColorLab.L, pResult->tColorLab.a, pResult->tColorLab.b);
-		//AddLog(szLog, 0, m_nUnit);
-		theApp.MainDlg->putListLog(szLog);
-	}
-
-	for (i = 0; i < 4; i++)
-	{
-		_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta = %.3f"), i + 1, MandoInspLog.dColorReproduction[i]);
-		theApp.MainDlg->putListLog(szLog);
-	}
-	//mIndex = 0;
-	//mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
-	//mColorSpec = vThreshold[mIndex];
-	//if (mColorValue > mColorSpec)
-	//{
-	//	//NG
-	//	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[0] = 0;
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//	dColorRtn = false;
-	//}
-	//else
-	//{
-	//	//OK
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//}
-
+	//vROI[0].left = 150.000000;
+	//vROI[0].top = 250.000000;
+	//vROI[0].right = 250.000000;
+	//vROI[0].bottom = 350.000000;
 	////
-	//mIndex = 1;
-	//mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
-	//mColorSpec = vThreshold[mIndex];
-	//if (mColorValue > mColorSpec)
-	//{
-	//	//NG
-	//	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[1] = 0;
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//	dColorRtn = false;
-	//}
-	//else
-	//{
-	//	//OK
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//}
-
+	//vROI[1].left = 1700.000000;
+	//vROI[1].top = 250.000000;
+	//vROI[1].right = 1800.000000;
+	//vROI[1].bottom = 350.000000;
 	////
-	//mIndex = 2;
-	//mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
-	//mColorSpec = vThreshold[mIndex];
-	//if (mColorValue > mColorSpec)
-	//{
-	//	//NG
-	//	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[2] = 0;
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//	dColorRtn = false;
-	//}
-	//else
-	//{
-	//	//OK
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//}
-
+	//vROI[2].left = 150.000000;
+	//vROI[2].top = 750.000000;
+	//vROI[2].right = 250.000000;
+	//vROI[2].bottom = 850.000000;
 	////
-	//mIndex = 3;
-	//mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
-	//mColorSpec = vThreshold[mIndex];
-	//if (mColorValue > mColorSpec)
-	//{
-	//	//NG
-	//	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[3] = 0;
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//	dColorRtn = false;
-	//}
-	//else
-	//{
-	//	//OK
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
-	//	AddLog(szLog, 0, m_nUnit);
-	//}
-	//g_clVision.DrawOverlayAll(m_nUnit);
-	vision.drawOverlay(CCD);
+	//vROI[3].left = 1700.000000;
+	//vROI[3].top = 750.000000;
+	//vROI[3].right = 1800.000000;
+	//vROI[3].bottom = 850.000000;
 
-
-
-	//if (dColorRtn == false)
+	//for (int i = 0; i < 4; i++)
 	//{
-	//	g_clMesCommunication[m_nUnit].m_nMesFinalResult = 0;//XX
-	//	g_clMandoInspLog[m_nUnit].m_sNGList += _T(" [Color Reproduction NG]");
-	//	g_clMandoInspLog[m_nUnit].m_bInspRes = false;
-	//	if (g_clMandoInspLog[m_nUnit].m_nNGCnt < 30)
-	//	{
-	//		g_clMandoInspLog[m_nUnit].m_sDispNG[g_clMandoInspLog[m_nUnit].m_nNGCnt].Format(_T("NG [Color Reproduction]"));
-	//		g_clMandoInspLog[m_nUnit].m_nNGCnt++;
-	//	}
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Roi #%d / Left:%d,Top:%d,Right:%d,Bottom:%d"), i + 1, vROI[i].left, vROI[i].top, vROI[i].right, vROI[i].bottom);
+	//	//AddLog(szLog, 0, m_nUnit);
+	//	theApp.MainDlg->putListLog(szLog);
 	//}
 
-	g_SaveLGITLog(m_nUnit, "Color Reproduction", m_pColorReproduction->GetLogHeader(), m_pColorReproduction->GetLogData());// , m_pColorReproduction->GetVersion());
+	//char strTmp[1024];
+	//char szTmp[256];
+	//int dTextX = 0;
+	//int dTextY = 0;
 
-	delete m_pColorReproduction;
-	return dColorRtn;
+	//dTextX = vROI[0].left;
+	//dTextY = vROI[0].top - 60;
+	//if (dTextY < 0)
+	//{
+	//	dTextY = 0;
+	//}
+	//sprintf_s(strTmp, "#1");
+	////g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
+	//vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
+
+
+	//dTextX = vROI[1].left;
+	//dTextY = vROI[1].top - 60;
+	//if (dTextY < 0)
+	//{
+	//	dTextY = 0;
+	//}
+	//sprintf_s(strTmp, "#2");
+	////g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
+	//vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
+	//dTextX = vROI[2].left;
+	//dTextY = vROI[2].top - 60;
+	//if (dTextY < 0)
+	//{
+	//	dTextY = 0;
+	//}
+	//sprintf_s(strTmp, "#3");
+	////g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
+	//vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
+	//dTextX = vROI[3].left;
+	//dTextY = vROI[3].top - 60;
+	//if (dTextY < 0)
+	//{
+	//	dTextY = 0;
+	//}
+	//sprintf_s(strTmp, "#4");
+	////g_clVision.DrawMOverlayText(m_nUnit, dTextX, dTextY, strTmp, M_COLOR_CYAN, _T("Arial"), 8, 0);
+	//vision.textlist[CCD].addList(dTextX, dTextY, strTmp, M_COLOR_GREEN, 17, 7, "Arial");
+	////
+	////g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[0].left, vROI[0].top, vROI[0].right, vROI[0].bottom, M_COLOR_BLUE, 1, FALSE);
+	////g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[1].left, vROI[1].top, vROI[1].right, vROI[1].bottom, M_COLOR_BLUE, 1, FALSE);
+	////g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[2].left, vROI[2].top, vROI[2].right, vROI[2].bottom, M_COLOR_BLUE, 1, FALSE);
+	////g_clVision.DrawMOverlayBox(m_nUnit, m_nUnit, vROI[3].left, vROI[3].top, vROI[3].right, vROI[3].bottom, M_COLOR_BLUE, 1, FALSE);
+
+	//vision.boxlist[CCD].addList(vROI[0], PS_SOLID, M_COLOR_BLUE);
+	//vision.boxlist[CCD].addList(vROI[1], PS_SOLID, M_COLOR_BLUE);
+	//vision.boxlist[CCD].addList(vROI[2], PS_SOLID, M_COLOR_BLUE);
+	//vision.boxlist[CCD].addList(vROI[3], PS_SOLID, M_COLOR_BLUE);
+	////ROI VIEW
+	//vOffset[0] = 0.0;
+	//vOffset[1] = 0.0;
+	//vOffset[2] = 0.0;
+	//vOffset[3] = 0.0;
+
+
+	//double mColorValue = 0.0;
+	//double mColorSpec = 0.0;
+	//int mIndex = 0;
+
+	//bool dColorRtn = true;
+	//bool result = m_pColorReproduction->Inspect(pBuffer, nWidth, nHeight, m_stColorReproductionSpec,
+	//	tDataSpec.eDataFormat, tDataSpec.eOutMode, tDataSpec.eSensorType, tDataSpec.nBlackLevel, bUse8BitOnly,
+	//	false, tDataSpec.eDemosaicMethod);
+
+	//for (i = 0; i < m_pColorReproduction->GetInspectionRegionCount(); i++)
+	//{
+	//	const TColorReproductionResult* pResult = m_pColorReproduction->GetInspectionResult(i); // 결과 값
+
+	//	MandoInspLog.dColorReproduction[i] = pResult->dDelta;
+	//	//g_clMesCommunication[m_nUnit].m_nMesColorReproduction[i] = pResult->dDelta;
+
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, ROI(%4d, %4d, %4d %4d), Delta = %.3f, L = %.3f, a = %.3f, b = %.3f"),
+	//		pResult->nIndex, pResult->rtROI.left, pResult->rtROI.top, pResult->rtROI.right, pResult->rtROI.bottom, pResult->dDelta, pResult->tColorLab.L, pResult->tColorLab.a, pResult->tColorLab.b);
+	//	//AddLog(szLog, 0, m_nUnit);
+	//	theApp.MainDlg->putListLog(szLog);
+	//}
+
+	//for (i = 0; i < 4; i++)
+	//{
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta = %.3f"), i + 1, MandoInspLog.dColorReproduction[i]);
+	//	theApp.MainDlg->putListLog(szLog);
+	//}
+	////mIndex = 0;
+	////mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
+	////mColorSpec = vThreshold[mIndex];
+	////if (mColorValue > mColorSpec)
+	////{
+	////	//NG
+	////	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[0] = 0;
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////	dColorRtn = false;
+	////}
+	////else
+	////{
+	////	//OK
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////}
+
+	//////
+	////mIndex = 1;
+	////mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
+	////mColorSpec = vThreshold[mIndex];
+	////if (mColorValue > mColorSpec)
+	////{
+	////	//NG
+	////	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[1] = 0;
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////	dColorRtn = false;
+	////}
+	////else
+	////{
+	////	//OK
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////}
+
+	//////
+	////mIndex = 2;
+	////mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
+	////mColorSpec = vThreshold[mIndex];
+	////if (mColorValue > mColorSpec)
+	////{
+	////	//NG
+	////	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[2] = 0;
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////	dColorRtn = false;
+	////}
+	////else
+	////{
+	////	//OK
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////}
+
+	//////
+	////mIndex = 3;
+	////mColorValue = g_clMandoInspLog[m_nUnit].m_dColorReproductionResult[mIndex];
+	////mColorSpec = vThreshold[mIndex];
+	////if (mColorValue > mColorSpec)
+	////{
+	////	//NG
+	////	g_clMesCommunication[m_nUnit].m_nMesColorReproductionResult[3] = 0;
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta NG = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////	dColorRtn = false;
+	////}
+	////else
+	////{
+	////	//OK
+	////	_stprintf_s(szLog, SIZE_OF_1K, _T("	[ColorReproduction] Region = %d, Delta OK = %.3f (Spec:%.3lf)"), mIndex + 1, mColorValue, mColorSpec);
+	////	AddLog(szLog, 0, m_nUnit);
+	////}
+	////g_clVision.DrawOverlayAll(m_nUnit);
+	//vision.drawOverlay(CCD);
+
+
+
+	////if (dColorRtn == false)
+	////{
+	////	g_clMesCommunication[m_nUnit].m_nMesFinalResult = 0;//XX
+	////	g_clMandoInspLog[m_nUnit].m_sNGList += _T(" [Color Reproduction NG]");
+	////	g_clMandoInspLog[m_nUnit].m_bInspRes = false;
+	////	if (g_clMandoInspLog[m_nUnit].m_nNGCnt < 30)
+	////	{
+	////		g_clMandoInspLog[m_nUnit].m_sDispNG[g_clMandoInspLog[m_nUnit].m_nNGCnt].Format(_T("NG [Color Reproduction]"));
+	////		g_clMandoInspLog[m_nUnit].m_nNGCnt++;
+	////	}
+	////}
+
+	//g_SaveLGITLog(m_nUnit, "Color Reproduction", m_pColorReproduction->GetLogHeader(), m_pColorReproduction->GetLogData());// , m_pColorReproduction->GetVersion());
+
+	//delete m_pColorReproduction;
+	//return dColorRtn;
 }
 bool CPRIFunc_Insp::g_GetIllumination(BYTE* RawImage)
 {
@@ -2088,6 +2090,8 @@ bool CPRIFunc_Insp::func_Insp_Saturation(BYTE* ChartRawImage, bool bAutoMode)
 //bool CPRIFunc_Insp::func_Insp_Defect(BYTE* img, bool bAutoMode)
 bool CPRIFunc_Insp::func_Insp_Defect(BYTE* midImage, BYTE* lowImage, bool bAutoMode)
 {
+	bool bRet = false;
+#if 0
 	int nBlackLevel = 0;
 	TCHAR szLog[SIZE_OF_1K];
 	int nWidth = gMIUDevice.nWidth;
@@ -2622,6 +2626,7 @@ bool CPRIFunc_Insp::func_Insp_Defect(BYTE* midImage, BYTE* lowImage, bool bAutoM
 
 	cvReleaseImage(&cvImgDefect1);
 	cvReleaseImage(&cvImgDefect2);
+#endif 
 	return bRet;
 }
 
@@ -2688,85 +2693,86 @@ CString CPRIFunc_Insp::SetDir_Check(CString sPath)
 //-----------------------------------------------------------------------------
 bool CPRIFunc_Insp::func_Insp_OpenStainLGIT(unsigned char* pImgBuff, bool bAutoMode/* = false*/)
 {
-	TDATASPEC tDataSpec;
+	//TDATASPEC tDataSpec;
 
-	// Spec information
-	TStainSpec tStainSpec;
+	//// Spec information
+	//TStainSpec tStainSpec;
 
-	//GetImageData(MODEL_NIO, tDataSpec, stImgInfo);
+	////GetImageData(MODEL_NIO, tDataSpec, stImgInfo);
 
-	tDataSpec.eDataFormat = DATAFORMAT_BAYER_12BIT;
-	tDataSpec.eOutMode = OUTMODE_BAYER_BGGR;
-	tDataSpec.eSensorType = SENSORTYPE_RCCC;
-	tDataSpec.nBlackLevel = 64;
+	//tDataSpec.eDataFormat = DATAFORMAT_BAYER_12BIT;
+	//tDataSpec.eOutMode = OUTMODE_BAYER_BGGR;
+	//tDataSpec.eSensorType = SENSORTYPE_RCCC;
+	//tDataSpec.nBlackLevel = 64;
 
-	// Image buffers
-	//std::vector<BYTE> vFrameBuffer(stImgInfo.nSensorHeight * stImgInfo.nSensorWidth * 2);
+	//// Image buffers
+	////std::vector<BYTE> vFrameBuffer(stImgInfo.nSensorHeight * stImgInfo.nSensorWidth * 2);
 
-	memset(&tStainSpec, 0x00, sizeof(TStainSpec));
+	//memset(&tStainSpec, 0x00, sizeof(TStainSpec));
 
-	//----------------------------------------------------------------------
-	// Spec - BlackSpot
-	//----------------------------------------------------------------------
-	tStainSpec.stSpecBlackSpot.nBlockWidth = 32;
-	tStainSpec.stSpecBlackSpot.nBlockHeight = 32;
-	tStainSpec.stSpecBlackSpot.nClusterSize = 5;
-	tStainSpec.stSpecBlackSpot.nDefectInCluster = 5;
-	tStainSpec.stSpecBlackSpot.dDefectRatio = 0.45000;
-	tStainSpec.stSpecBlackSpot.nMaxSingleDefectNum = 100000;	// noise image
-	tStainSpec.stSpecBlackSpot.tCircleSpec.bEnableCircle = false;
-	tStainSpec.stSpecBlackSpot.tCircleSpec.nPosOffsetX = 5;
-	tStainSpec.stSpecBlackSpot.tCircleSpec.nPosOffsetY = 5;
-	tStainSpec.stSpecBlackSpot.tCircleSpec.dRadiusRatioX = 0.45;
-	tStainSpec.stSpecBlackSpot.tCircleSpec.dRadiusRatioY = 0.45;
+	////----------------------------------------------------------------------
+	//// Spec - BlackSpot
+	////----------------------------------------------------------------------
+	//tStainSpec.stSpecBlackSpot.nBlockWidth = 32;
+	//tStainSpec.stSpecBlackSpot.nBlockHeight = 32;
+	//tStainSpec.stSpecBlackSpot.nClusterSize = 5;
+	//tStainSpec.stSpecBlackSpot.nDefectInCluster = 5;
+	//tStainSpec.stSpecBlackSpot.dDefectRatio = 0.45000;
+	//tStainSpec.stSpecBlackSpot.nMaxSingleDefectNum = 100000;	// noise image
+	//tStainSpec.stSpecBlackSpot.tCircleSpec.bEnableCircle = false;
+	//tStainSpec.stSpecBlackSpot.tCircleSpec.nPosOffsetX = 5;
+	//tStainSpec.stSpecBlackSpot.tCircleSpec.nPosOffsetY = 5;
+	//tStainSpec.stSpecBlackSpot.tCircleSpec.dRadiusRatioX = 0.45;
+	//tStainSpec.stSpecBlackSpot.tCircleSpec.dRadiusRatioY = 0.45;
 
-	//----------------------------------------------------------------------
-	// Spec - LCB
-	//----------------------------------------------------------------------
-	// !
-	tStainSpec.stSpecLCB.dCenterThreshold = model.m_dStainLsbCenter;//29.0;
-	// !
-	tStainSpec.stSpecLCB.dCornerThreshold = model.m_dStainLsbCorner;//65.0;
-	// !
-	tStainSpec.stSpecLCB.dEdgeThreshold = model.m_dStainLsbEdge;//80.0;
-	tStainSpec.stSpecLCB.nMaxSingleDefectNum = 50000;
-	tStainSpec.stSpecLCB.nMinDefectWidthHeight = 10;
-	tStainSpec.stSpecLCB.tCircleSpec.bEnableCircle = false;
-	tStainSpec.stSpecLCB.tCircleSpec.nPosOffsetX = 5;
-	tStainSpec.stSpecLCB.tCircleSpec.nPosOffsetY = 5;
-	tStainSpec.stSpecLCB.tCircleSpec.dRadiusRatioX = 0.45;
-	tStainSpec.stSpecLCB.tCircleSpec.dRadiusRatioY = 0.45;
+	////----------------------------------------------------------------------
+	//// Spec - LCB
+	////----------------------------------------------------------------------
+	//// !
+	//tStainSpec.stSpecLCB.dCenterThreshold = model.m_dStainLsbCenter;//29.0;
+	//// !
+	//tStainSpec.stSpecLCB.dCornerThreshold = model.m_dStainLsbCorner;//65.0;
+	//// !
+	//tStainSpec.stSpecLCB.dEdgeThreshold = model.m_dStainLsbEdge;//80.0;
+	//tStainSpec.stSpecLCB.nMaxSingleDefectNum = 50000;
+	//tStainSpec.stSpecLCB.nMinDefectWidthHeight = 10;
+	//tStainSpec.stSpecLCB.tCircleSpec.bEnableCircle = false;
+	//tStainSpec.stSpecLCB.tCircleSpec.nPosOffsetX = 5;
+	//tStainSpec.stSpecLCB.tCircleSpec.nPosOffsetY = 5;
+	//tStainSpec.stSpecLCB.tCircleSpec.dRadiusRatioX = 0.45;
+	//tStainSpec.stSpecLCB.tCircleSpec.dRadiusRatioY = 0.45;
 
-	//----------------------------------------------------------------------
-	// Spec - Ymean
-	//----------------------------------------------------------------------
-	tStainSpec.stSpecYmean.nDefectBlockSize = 32;
-	tStainSpec.stSpecYmean.nEdgeSize = 100;
-	// !
-	tStainSpec.stSpecYmean.fCenterThreshold = model.m_dStainYMeanCenter;//3.0;
-	// !
-	tStainSpec.stSpecYmean.fEdgeThreshold = model.m_dStainYMeanEdge;//6.0;
-	// !
-	tStainSpec.stSpecYmean.fCornerThreshold = model.m_dStainYMeanCorner;//6.0;
-	tStainSpec.stSpecYmean.nLscBlockSize = 128;
-	tStainSpec.stSpecYmean.tCircleSpec.bEnableCircle = false;
-	tStainSpec.stSpecYmean.tCircleSpec.nPosOffsetX = 5;
-	tStainSpec.stSpecYmean.tCircleSpec.nPosOffsetY = 5;
-	tStainSpec.stSpecYmean.tCircleSpec.dRadiusRatioX = 0.45;
-	tStainSpec.stSpecYmean.tCircleSpec.dRadiusRatioY = 0.45;
+	////----------------------------------------------------------------------
+	//// Spec - Ymean
+	////----------------------------------------------------------------------
+	//tStainSpec.stSpecYmean.nDefectBlockSize = 32;
+	//tStainSpec.stSpecYmean.nEdgeSize = 100;
+	//// !
+	//tStainSpec.stSpecYmean.fCenterThreshold = model.m_dStainYMeanCenter;//3.0;
+	//// !
+	//tStainSpec.stSpecYmean.fEdgeThreshold = model.m_dStainYMeanEdge;//6.0;
+	//// !
+	//tStainSpec.stSpecYmean.fCornerThreshold = model.m_dStainYMeanCorner;//6.0;
+	//tStainSpec.stSpecYmean.nLscBlockSize = 128;
+	//tStainSpec.stSpecYmean.tCircleSpec.bEnableCircle = false;
+	//tStainSpec.stSpecYmean.tCircleSpec.nPosOffsetX = 5;
+	//tStainSpec.stSpecYmean.tCircleSpec.nPosOffsetY = 5;
+	//tStainSpec.stSpecYmean.tCircleSpec.dRadiusRatioX = 0.45;
+	//tStainSpec.stSpecYmean.tCircleSpec.dRadiusRatioY = 0.45;
 
-	//----------------------------------------------------------------------
-	// Inspect Main Camera
-	//----------------------------------------------------------------------
+	////----------------------------------------------------------------------
+	//// Inspect Main Camera
+	////----------------------------------------------------------------------
 
-	// Load image
-	//LoadImageData(vFrameBuffer.data(), _IMG_NIO_Stain_MAIN_01_raw);
+	//// Load image
+	////LoadImageData(vFrameBuffer.data(), _IMG_NIO_Stain_MAIN_01_raw);
 
-	// Inspect
-	if(this->InspectStain(tDataSpec, tStainSpec, pImgBuff, gMIUDevice.nWidth, gMIUDevice.nHeight, true, true, true, bAutoMode) == 0)
-		return true;
-	else
-		return false;
+	//// Inspect
+	//if(this->InspectStain(tDataSpec, tStainSpec, pImgBuff, gMIUDevice.nWidth, gMIUDevice.nHeight, true, true, true, bAutoMode) == 0)
+	//	return true;
+	//else
+	//	return false;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2910,9 +2916,9 @@ int CPRIFunc_Insp::FDFInsp(BYTE* img, bool bAutoMode)
 	int nBlackLevel = 0;
 	//CString szLog = "";
 	TCHAR szLog[SIZE_OF_1K];
-	TFDFSpec stSpecFDF;
+	TFDFSpecN stSpecFDF;
 	CString sTemp;
-	memset(&stSpecFDF, 0x00, sizeof(TFDFSpec));
+	memset(&stSpecFDF, 0x00, sizeof(TFDFSpecN));
 	int specCount = 0;
 	int nWidth = gMIUDevice.nWidth;
 	int nHeight = gMIUDevice.nHeight;
@@ -2929,8 +2935,10 @@ int CPRIFunc_Insp::FDFInsp(BYTE* img, bool bAutoMode)
 	stSpecFDF.dCenterThreshold = model.m_FDFSpec[specCount++];//10.75;
 	stSpecFDF.dEdgeThreshold = model.m_FDFSpec[specCount++];//15.0;
 	stSpecFDF.dCornerThreshold = model.m_FDFSpec[specCount++];//15.0;
-	stSpecFDF.nMedianFilterWidth = (int)model.m_FDFSpec[specCount++];//0;
-	stSpecFDF.nMedianFilterHeight = model.m_FDFSpec[specCount++];//1000;
+	//stSpecFDF.nMedianFilterWidth = (int)model.m_FDFSpec[specCount++];//0;
+	//stSpecFDF.nMedianFilterHeight = model.m_FDFSpec[specCount++];//1000;
+	stSpecFDF.nMedianFilterSize = (int)model.m_FDFSpec[specCount++];//0;
+
 	stSpecFDF.nWidthScaleRatio = model.m_FDFSpec[specCount++];//70.0;
 	stSpecFDF.nHeightScaleRatio = model.m_FDFSpec[specCount++];//4.2;
 	stSpecFDF.nMinDefectWidthHeight = (int)model.m_FDFSpec[specCount++];//64;

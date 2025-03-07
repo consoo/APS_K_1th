@@ -1,10 +1,12 @@
-
 #pragma once
 
 #include <LibACMISCommon\ACMISCommon.h>
 #include <opencv2/opencv.hpp>
 
 #define RESIDUAL_MARGIN				22	// 11(G?) + 11(X?)
+
+extern cv::Mat Box_Filter(const cv::Mat& I, int h, int v);
+extern cv::Mat Guided_Filter(const cv::Mat& originP, const cv::Mat& originI, const cv::Mat& M, int h, int v, double eps);
 
 class CDemosaicResidual
 {

@@ -45,3 +45,5 @@ namespace ACMISSoftISP
 		std::ofstream m_file;
 	};
 }
+
+using namespace ACMISSoftISP;

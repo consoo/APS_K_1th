@@ -1,7 +1,7 @@
 #pragma once
 
 #include "export.h"
-#include "ACMISResolutionDef.h"
+#include <LibACMISResolution\ACMISResolutionDef.h>
 
 
 class ACMISRESOLUTION_API CACMISResolutionEIAJ
@@ -92,6 +92,7 @@ public:
 	inline void SetInspectPosOffset(TInspectRegionOffset tInspectRegionOffset) const;
 	inline long long GetElapsedTime() const;
 	inline double GetSaturationResult(int nIndex = 0) const;
+	inline bool GetCertificationResult() const;
 
 private:
 	struct ResolutionImpl;

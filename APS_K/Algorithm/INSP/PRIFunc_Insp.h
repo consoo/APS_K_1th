@@ -70,7 +70,7 @@ public:
 	bool func_Insp_Snr_Vne(BYTE* ChartRaw, BYTE* ChartSecondRaw, bool bAutoMode);
 
 	bool func_Insp_Snr(BYTE* img,bool bAutoMode = false);
-	void CPRIFunc_Insp::DisplaySNRGraphics(IplImage* _cvImgBuf, const TSNRResult* _SNRResult, int _nImageWidth, CvScalar color);
+	//void CPRIFunc_Insp::DisplaySNRGraphics(IplImage* _cvImgBuf, const TSNRResult* _SNRResult, int _nImageWidth, CvScalar color);
 
 	//dark , white , hot
 	bool func_Insp_Defect(BYTE* midImage, BYTE* lowImage, bool bAutoMode = false);

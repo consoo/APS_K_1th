@@ -145,7 +145,7 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Library\Inspection\LGINNOTEK\Include\LibACMISResolution;$(ProjectDir)\Library\Inspection\LGINNOTEK\Include\LibACMISImage;$(ProjectDir)\Library\Inspection\LGINNOTEK\Include\LibACMISSoftISP;$(ProjectDir)\Library\Inspection\LGINNOTEK\Include\XGraphic;$(ProjectDir)\Library\Inspection\LGINNOTEK\Include\LibAtomShading;$(ProjectDir)\Library\Inspection\LGINNOTEK\Include\LibACMISCommon;$(ProjectDir)\Library\Inspection\Include\LibACMISSoftISPBasic;C:\Opencv346\install\x64\vc14\bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Opencv346\install\x64\vc14\bin;$(ProjectDir)\Library\Inspection\Include\LibACMISBlemish;$(ProjectDir)\Library\InspectionK\Include\LibACMISCertification;$(ProjectDir)\Library\Inspection\Include\LibACMISCodec;$(ProjectDir)\Library\Inspection\Include\LibACMISCommon;$(ProjectDir)\Library\Inspection\Include\LibACMISDefect;$(ProjectDir)\Library\Inspection\Include\LibACMISEtc;$(ProjectDir)\Library\Inspection\Include\LibACMISImage;$(ProjectDir)\Library\Inspection\Include\LibACMISNoise;$(ProjectDir)\Library\InspectionK\Include\LibACMISOpticalCenter;$(ProjectDir)\Library\InspectionK\Include\LibACMISParallelInspection;$(ProjectDir)\Library\InspectionK\Include\LibACMISResolution;$(ProjectDir)\Library\InspectionK\Include\LibACMISShading;$(ProjectDir)\Library\InspectionK\Include\LibACMISSoftISP;$(ProjectDir)\Library\InspectionK\Include\LibACMISSoftISPBasic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CallingConvention>Cdecl</CallingConvention>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -156,7 +156,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_core346d.lib;opencv_highgui346d.lib;opencv_imgproc346d.lib;opencv_calib3d346d.lib;opencv_flann346d.lib;opencv_features2d346d.lib;opencv_imgcodecs346d.lib;EECvtColor.lib;LibACMISShading.lib;LibACMISImage.lib;LibACMISResolution.lib;LibACMISSoftISP.lib;LibACMISSoftISPBasic.lib;GrabberDLL.lib;AXL.lib;visa64.lib</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core346d.lib;opencv_highgui346d.lib;opencv_imgproc346d.lib;opencv_calib3d346d.lib;opencv_flann346d.lib;opencv_features2d346d.lib;opencv_imgcodecs346d.lib;EECvtColor.lib;LibACMISBlemish.lib;LibACMISCertification.lib;LibACMISCodec.lib;LibACMISDefect.lib;LibACMISEtc.lib;LibACMISImage.lib;LibACMISNoise.lib;LibACMISOpticalCenter.lib;LibACMISParallelInspection.lib;LibACMISResolution.lib;LibACMISShading.lib;LibACMISSoftISP.lib;LibACMISSoftISPBasic.lib;GrabberDLL.lib;AXL.lib;visa64.lib</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalLibraryDirectories>$(SolutionDir)PRI_INSP;%(AdditionalLibraryDirectories);C:\opencv346\install\x64\vc14\lib;$(SolutionDir)Library\Utility\ximg</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
@@ -323,7 +323,21 @@
     <ClInclude Include="LensLaserAlignTeachingDlg.h" />
     <ClInclude Include="Library\AutoRepeat\AutoRepeatButton.h" />
     <ClInclude Include="Library\AutoRepeat\BtnST.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\ACMISBlemishDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\ACMISImageBlemish.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\ACMISImageStain.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCertification\ACMISCertification.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCertification\ACMISCertificationDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCertification\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCodec\LibACMISCodecCommon.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISCommon\ACMISCommon.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISDefect\ACMISDefectDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISDefect\ACMISImageDarkTest.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISDefect\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISEtc\ACMISEtcAlgorithm.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISEtc\ACMISEtcDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISEtc\export.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISBlemishDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISDefectDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISImageBlemish.h" />
@@ -336,6 +350,15 @@
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISSignalNoiseRatio.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISSignalNoiseRatioDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISNoise\ACMISSignalNoiseRatio.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISNoise\ACMISSignalNoiseRatioDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISNoise\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISOpticalCenter\ACMISImageOpticalCenter.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISOpticalCenter\ACMISOpticalCenterDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISOpticalCenter\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\ACMISParallelInspection.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\ACMISParallelInspectionDef.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\export.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISFiducialMark.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISResolutinDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISResolutionDef.h" />
@@ -364,15 +387,6 @@
     <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\ImageProcessing.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\RawImageProcessing.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\SoftISP.h" />
-    <ClInclude Include="Library\Inspection\Include\Resolution\AtomResolutinDef.h" />
-    <ClInclude Include="Library\Inspection\Include\Resolution\AtomResolutionSFR.h" />
-    <ClInclude Include="Library\Inspection\Include\Resolution\export.h" />
-    <ClInclude Include="Library\Inspection\Include\SoftISP\CDemosaic.h" />
-    <ClInclude Include="Library\Inspection\Include\SoftISP\export.h" />
-    <ClInclude Include="Library\Inspection\Include\SoftISP\ImageProcessing.h" />
-    <ClInclude Include="Library\Inspection\Include\SoftISP\RawImageProcessing.h" />
-    <ClInclude Include="Library\Inspection\Include\SoftISP\SoftISP.h" />
-    <ClInclude Include="Library\Inspection\Include\XGraphic\xDataTypes.h" />
     <ClInclude Include="Library\RS232C\Handler_RS232C.h" />
     <ClInclude Include="Library\Utility\TimeChecker.h" />
     <ClInclude Include="Library\Utility\UtilityFunc.h" />

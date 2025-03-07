@@ -1,15 +1,7 @@
 #pragma once
 
-
 #include "export.h"
-#include <list>
-#include <vector>
-
 #include <LibACMISCommon\ACMISCommon.h>
-
-
-using namespace std;
-
 
 namespace ACMISSoftISP
 {
@@ -17,17 +9,6 @@ namespace ACMISSoftISP
 	{
 		double x, y;
 	} POINTD;
-
-	typedef enum _EMEANTYPE
-	{
-		MEAN_TYPE_ALL,
-		MEAN_TYPE_ROW,
-		MEAN_TYPE_COLUMN,
-		MEAN_TYPE_ALL_BAYER,
-		MEAN_TYPE_ROW_BAYER,
-		MEAN_TYPE_COLUMN_BAYER,
-		MAX_COUNT_MEAN_TYPE
-	} EMEANTYPE;
 
 	class ACMISSOFTISPBASIC_API CStopWatch
 	{
@@ -75,82 +56,6 @@ namespace ACMISSoftISP
 			this->col_length = length;
 			this->visited = FALSE;
 		};
-	};
-
-	class ACMISSOFTISPBASIC_API CRectEx
-	{
-	public:
-		int left, top, right, bottom;
-
-		CRectEx();
-		CRectEx(int l, int t, int r, int b);
-		int Width();
-		int Height();
-		void Offset(int x, int y);
-		void SetRect(int lleft, int ltop, int lright, int lbottom);
-		void SetRectCentered(int centerx, int centery, int width, int height);
-		BOOL EvaluateRect(int width, int height);
-		void AdjustRect(int width, int height);
-		POINT CenterPoint();
-		// POINT가 rect 안에 드는 것인지 검사해서 TRUE 리턴
-		BOOL PointInRect(int x, int y);
-		void InflateRect(int x, int y);
-		RECT ToRECT() const;
-	};
-
-	// blob 하나, BLOB_RUN_LENGTH_DATA 의 리스트로 표현
-	class ACMISSOFTISPBASIC_API CBlobRect : public CRectEx
-	{
-	public:
-		int Area;
-		float Intensity;
-		CBlobRect();
-
-		CBlobRect(int l, int t, int r, int b);
-		// 두개의 blobrect 를 하나로 합침
-		CBlobRect operator + (CBlobRect &rect);
-
-		// POINT 끼리의 거리 연산
-		static inline double GetDistance(POINT A, POINT B);
-
-		static inline float GetDistance(float x1, float y1, float x2, float y2);
-
-		// 두 Blob Rect 간의 거리
-		static inline double GetOuterDistance(CBlobRect &a, CBlobRect &b);
-	};
-
-	class ACMISSOFTISPBASIC_API CBlobList
-	{
-	private:
-		vector <CBlobRect> *m_vecBlob;	// to avoid 'needs to have dll-interface' warning, declare pointer of vector...
-
-	public:
-		CBlobList();
-		~CBlobList();
-
-		CBlobList(const CBlobList& c)
-		{
-			m_vecBlob = new vector<CBlobRect>(c.m_vecBlob->size());
-			std::copy(c.m_vecBlob->begin(), c.m_vecBlob->end(), m_vecBlob->begin());
-		}
-
-		CBlobList& operator=(const CBlobList& c)
-		{
-			m_vecBlob->resize(c.m_vecBlob->size());
-			std::copy(c.m_vecBlob->begin(), c.m_vecBlob->end(), m_vecBlob->begin());
-			return (*this);
-		}
-
-		void Clear();
-		void Add(CBlobRect obj);
-		int Size();
-		CBlobRect Get(int i);
-		void Remove(int index);
-		CBlobList operator + (CBlobList &bloblist);
-
-		// width, height 범위로 Blob 필터링
-		void SelectBlobWidthHeight(int width_low, int width_high, int height_low, int height_high, CBlobList *);
-		void SelectBlobPosition(CRectEx rect, CBlobList *vecBlob);
 	};
 
 	class CRawImageProccessor
@@ -240,6 +145,7 @@ namespace ACMISSoftISP
 	ACMISSOFTISPBASIC_API int CalcAvgSdv(void *pBuffer, int nImageWidth, int nImageHeight, RECT &rtROI, long double *dAvg, long double *dVar, long double *dSdv, EMEANTYPE eMeanType, int Variable_Type);
 	ACMISSOFTISPBASIC_API bool AverageImage(BYTE **pBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec, int nImageCount, BYTE *pDstBuffer);
 	ACMISSOFTISPBASIC_API bool GetIRImage(const BYTE **pSrcBuffer, int nImageWidth, int nImageHeight, TDATASPEC tDataSpec, BYTE *pDstBuffer);
+	ACMISSOFTISPBASIC_API void MakeGammaLUT(EDATAFORMAT eDataFormat, double dGamma, std::vector<double>& vGamma);
 	ACMISSOFTISPBASIC_API void MakeGammaLUT(EDATAFORMAT eDataFormat, double m_dGamma, std::vector<unsigned short> &m_vGamma);
 	ACMISSOFTISPBASIC_API void MakeGammaLUT(EDATAFORMAT eDataFormat, double m_dGamma, std::vector<int> &m_vGamma);
 

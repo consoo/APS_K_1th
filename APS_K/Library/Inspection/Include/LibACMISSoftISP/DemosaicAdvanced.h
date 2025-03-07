@@ -2,7 +2,6 @@
 
 #include "export.h"
 #include <LibACMISCommon\ACMISCommon.h>
-#include <LibACMISSoftISPBasic\Include\DemosaicBasic.h>
 
 
 namespace ACMISSoftISP
@@ -13,13 +12,24 @@ namespace ACMISSoftISP
 	ACMISSOFTISP_API void xInterpolationROI_BayerY(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolationROI2Byte_BayerY(EOUTMODE eOutMode, unsigned short *pRaw, unsigned short *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolationROI4Byte_BayerY(EOUTMODE eOutMode, int *pRaw, int *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
-	ACMISSOFTISP_API void xInterpolation_OpenCV(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolation_OpenCV_BL(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolation2Byte_OpenCV_BL(EOUTMODE eOutMode, unsigned short *pRaw, unsigned short *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolation4Byte_OpenCV_BL(EOUTMODE eOutMode, int *pRaw, int *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolationROI_OpenCV_BL(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolationROI2Byte_OpenCV_BL(EOUTMODE eOutMode, unsigned short *pRaw, unsigned short *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolationROI4Byte_OpenCV_BL(EOUTMODE eOutMode, int *pRaw, int *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolation_OpenCV_VNG(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolation2Byte_OpenCV_VNG(EOUTMODE eOutMode, unsigned short *pRaw, unsigned short *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolation4Byte_OpenCV_VNG(EOUTMODE eOutMode, int *pRaw, int *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolationROI_OpenCV_VNG(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolationROI2Byte_OpenCV_VNG(EOUTMODE eOutMode, unsigned short *pRaw, unsigned short *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolationROI4Byte_OpenCV_VNG(EOUTMODE eOutMode, int *pRaw, int *pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolation_OpenCV_EA(EOUTMODE eOutMode, BYTE* pRaw, BYTE* pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolation2Byte_OpenCV_EA(EOUTMODE eOutMode, unsigned short* pRaw, unsigned short* pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolation4Byte_OpenCV_EA(EOUTMODE eOutMode, int* pRaw, int* pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolationROI_OpenCV_EA(EOUTMODE eOutMode, BYTE* pRaw, BYTE* pBMP, int nWidth, int nHeight, RECT* pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolationROI2Byte_OpenCV_EA(EOUTMODE eOutMode, unsigned short* pRaw, unsigned short* pBMP, int nWidth, int nHeight, RECT* pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
+	ACMISSOFTISP_API void xInterpolationROI4Byte_OpenCV_EA(EOUTMODE eOutMode, int* pRaw, int* pBMP, int nWidth, int nHeight, RECT* pROI, int nROICount, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolation_GBTF(EOUTMODE eOutMode, BYTE *pRaw, BYTE *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolation2Byte_GBTF(EOUTMODE eOutMode, unsigned short *pRaw, unsigned short *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);
 	ACMISSOFTISP_API void xInterpolation4Byte_GBTF(EOUTMODE eOutMode, int *pRaw, int *pBMP, int nWidth, int nHeight, EDATAFORMAT eDataFormat = DATAFORMAT_BAYER_PARALLEL_12BIT);

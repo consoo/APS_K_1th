@@ -6,12 +6,6 @@
 
 namespace ACMISSoftISP
 {
-	typedef struct _COMPLEX
-	{
-		double re;
-		double im;
-	} COMPLEX;
-
 #define HIGH_CLIP(x, limit) (((x) > (limit)) ? (limit) : (x))
 #define LOW_CLIP(x, limit)  (((x) < (limit)) ? (limit) : (x))
 #define CLIP(x, l, h) HIGH_CLIP(LOW_CLIP(x, l), h)

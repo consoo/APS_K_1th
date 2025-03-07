@@ -6,6 +6,13 @@
 #include <iomanip>
 #include <ctime>
 #include <chrono>
+#include <map>
+#include <list>
+#include <algorithm>
+#include <atlstr.h>
+#include <iostream>
+
+using namespace std;
 
 #define DEBUG_FILE_SAVE_PATH	"C:\\Users\\User\\Desktop"
 
@@ -54,6 +61,7 @@ typedef enum _EDATAFORMAT
 	DATAFORMAT_BAYER_PARALLEL_12BIT,
 	DATAFORMAT_BAYER_16BIT,
 	DATAFORMAT_BAYER_16BIT_BE,
+	DATAFORMAT_BAYER_12BIT_PWL_HDR,
 	DATAFORMAT_BAYER_16BIT_PWL_HDR,
 	DATAFORMAT_BAYER_16BIT_PWL_DECOMP,
 	DATAFORMAT_BAYER_24BIT,
@@ -83,7 +91,9 @@ typedef enum _EDEMOSAICMETHOD
 	DEMOSAICMETHOD_NONE = 0,
 	DEMOSAICMETHOD_GRADIENT,
 	DEMOSAICMETHOD_BL33, // Bilinear3x3
+	DEMOSAICMETHOD_OPENCV_BL,
 	DEMOSAICMETHOD_OPENCV_VNG,
+	DEMOSAICMETHOD_OPENCV_EA,
 	DEMOSAICMETHOD_VNG,  // Variable Number of Gradient
 	DEMOSAICMETHOD_GR_ONLY,
 	DEMOSAICMETHOD_GB_ONLY,
@@ -91,6 +101,7 @@ typedef enum _EDEMOSAICMETHOD
 	DEMOSAICMETHOD_BLLC, // Bilinear Laplacian Corrected
 	DEMOSAICMETHOD_RESIDUAL, // Residual Interpolation
 	DEMOSAICMETHOD_BAYER_Y, // Y = (R + Gr + Gb + B) / 4
+	DEMOSAICMETHOD_AHD, // Adaptive Homogeneity-Directed
 	DEMOSAICMETHOD_GRADIENT_RESIDUAL = 101, // G(Gradient) + R/B/IR(RI)
 	DEMOSAICMETHOD_GBTF_RESIDUAL, // G(GBTF) + R/B/IR(RI)
 	DEMOSAICMETHOD_RESIDUAL_RESIDUAL, // G(RI) + R/B/IR(RI)
@@ -234,16 +245,25 @@ struct TColorRatio
 	double RG;
 	double BG;
 	double GrGb;
+	double GrG;
+	double GbG;
 	double R;
 	double G;
 	double B;
 	double Gr;
 	double Gb;
-	TColorRatio(double _RG = 0, double _BG = 0, double _GrGb = 0, double _R = 0, double _G = 0, double _B = 0)
-		: RG(_RG), BG(_BG), GrGb(_GrGb), R(_R), G(_G), B(_B), Gr(_G), Gb(_G)
+	TColorRatio(double _RG = 0.0, double _BG = 0.0, double _GrGb = 0.0, double _GrG = 0.0, double _GbG = 0.0, double _R = 0.0, double _G = 0.0, double _B = 0.0)
+		: RG(_RG), BG(_BG), GrGb(_GrGb), GrG(_GrG), GbG(_GbG), R(_R), G(_G), B(_B), Gr(_G), Gb(_G)
 	{
 	}
 };
+
+typedef struct _TColorReproduction
+{
+	double L;
+	double a;
+	double b;
+} TColorReproduction, TColorLab;
 
 typedef enum _EROIType
 {
@@ -346,6 +366,20 @@ typedef struct _tagInspectionOutput
 } INSPECTION_RESULT;
 
 
+struct DSIZE
+{
+	double	width;
+	double	height;
+};
+
+typedef struct _DBox2D
+{
+	DBPOINT center;
+	DSIZE size;
+	double angle;
+	double saturation;
+} DBox2D;
+
 typedef enum _EFlareTarget
 {
 	FlareTarget_Dot,
@@ -435,7 +469,7 @@ typedef enum _ECircleEnable
 typedef enum _ETypicalValueType
 {
 	TypicalValue_Mean,
-	TypicalValue_Media
+	TypicalValue_Median
 } ETypicalValueType;
 
 typedef enum _EFiducialMarkShape
@@ -460,7 +494,7 @@ typedef enum _ESaturationMethod
 
 typedef struct _TFiducialMarkType
 {
-	POINT ptFiducialMarkPoint;
+	CDPoint ptFiducialMarkPoint;
 	int nFiducialMarkShape; // Shape of Fiducial Mark : BlackCircle(0), WhiteCircle(1), CrossPoint(2), WhiteCircle in Black(3), BlackPatch(4), WhitePatch(5), Vertex(6)
 } TFiducialMarkType;
 
@@ -476,9 +510,155 @@ enum
 	EDGEDIR_HORIZONTAL
 };
 
+typedef struct _THarrisCornerPoint
+{
+	POINT ptCorner;
+	double dValue;
+	int nPatchIndex;
+} THarrisCornerPoint;
+
+enum
+{
+	EPOS_CENTER,
+	EPOS_LEFT,
+	EPOS_TOP,
+	EPOS_RIGHT,
+	EPOS_BOTTOM
+};
+
+typedef struct _TPatchInfo
+{
+	RECT rtROI;
+	POINT ptCenter;
+	POINT ptStartVertex;
+	double dMinPatchSize;
+	double dMaxPatchSize;
+	double dBinaryThreshold;
+	double dAvgBrightThreshold;
+	int nPatchShape;
+	int nVertexCount;
+	int nPatchColor;
+	int nMinDistance;
+	int nSeparateLevel;
+	int nPatchPos;
+	bool bSeparate;
+} TPatchInfo;
+
+typedef struct _TPatchSize
+{
+	int nArea;
+	int nLeft;
+	int nTop;
+	int nWidth;
+	int nHeight;
+} TPatchSize;
+
+typedef enum _EPatchShape
+{
+	PatchShape_Square,
+	PatchShape_Clamp,
+	PatchShape_PacMan,
+	PatchShape_Fan,
+	PatchShape_Polygon
+} EPatchShape;
+
+typedef enum _EMEANTYPE
+{
+	MEAN_TYPE_ALL,
+	MEAN_TYPE_ROW,
+	MEAN_TYPE_COLUMN,
+	MEAN_TYPE_ALL_BAYER,
+	MEAN_TYPE_ROW_BAYER,
+	MEAN_TYPE_COLUMN_BAYER,
+	MAX_COUNT_MEAN_TYPE
+} EMEANTYPE;
+
+typedef struct _COMPLEX
+{
+	double re;
+	double im;
+} COMPLEX;
+
+class CRectEx
+{
+public:
+	int left, top, right, bottom;
+
+	CRectEx();
+	CRectEx(int l, int t, int r, int b);
+	int Width();
+	int Height();
+	void Offset(int x, int y);
+	void SetRect(int lleft, int ltop, int lright, int lbottom);
+	void SetRectCentered(int centerx, int centery, int width, int height);
+	BOOL EvaluateRect(int width, int height);
+	void AdjustRect(int width, int height);
+	POINT CenterPoint();
+	// POINT가 rect 안에 드는 것인지 검사해서 TRUE 리턴
+	BOOL PointInRect(int x, int y);
+	void InflateRect(int x, int y);
+	RECT ToRECT() const;
+};
+
+// blob 하나, BLOB_RUN_LENGTH_DATA 의 리스트로 표현
+class CBlobRect : public CRectEx
+{
+public:
+	int Area;
+	float Intensity;
+	CBlobRect();
+
+	CBlobRect(int l, int t, int r, int b);
+	// 두개의 blobrect 를 하나로 합침
+	CBlobRect operator + (CBlobRect& rect);
+
+	// POINT 끼리의 거리 연산
+	static double GetDistance(POINT A, POINT B);
+
+	static float GetDistance(float x1, float y1, float x2, float y2);
+
+	// 두 Blob Rect 간의 거리
+	static double GetOuterDistance(CBlobRect& a, CBlobRect& b);
+};
+
+class CBlobList
+{
+private:
+	std::vector <CBlobRect>* m_vecBlob;	// to avoid 'needs to have dll-interface' warning, declare pointer of vector...
+
+public:
+	CBlobList();
+	~CBlobList();
+
+	CBlobList(const CBlobList& c)
+	{
+		m_vecBlob = new std::vector<CBlobRect>(c.m_vecBlob->size());
+		std::copy(c.m_vecBlob->begin(), c.m_vecBlob->end(), m_vecBlob->begin());
+	}
+
+	CBlobList& operator=(const CBlobList& c)
+	{
+		m_vecBlob->resize(c.m_vecBlob->size());
+		std::copy(c.m_vecBlob->begin(), c.m_vecBlob->end(), m_vecBlob->begin());
+		return (*this);
+	}
+
+	void Clear();
+	void Add(CBlobRect obj);
+	int Size();
+	CBlobRect Get(int i);
+	void Remove(int index);
+	CBlobList operator + (CBlobList& bloblist);
+
+	// width, height 범위로 Blob 필터링
+	void SelectBlobWidthHeight(int width_low, int width_high, int height_low, int height_high, CBlobList*);
+	void SelectBlobPosition(CRectEx rect, CBlobList* vecBlob);
+};
+
 extern void ConvertRECT2CPoint(RECT tROIRect, TROICPoint& tCenterPoint);
 extern void ConvertRECT2CField(RECT tROIRect, int nImageWidth, int nImageHeight, TROIField& tField);
 extern void ConvertRECT2SPoint(RECT tROIRect, TROISPoint& tStartPoint);
+extern void ConvertRECT2TROIData(std::vector<RECT>& vROI_Rect, int nImageWidth, int nImageHeight, TROIData& tROI);
 
 extern void Convert2RECT(TROICPoint tCenterPoint, RECT& tROIRect);
 extern void Convert2RECT(TROIField tField, int nImageWidth, int nImageHeight, RECT& tROIRect);
@@ -488,6 +668,7 @@ extern void Convert2TROICommon(TROICPoint tCenterPoint, TROIDataCommon& tROIData
 extern void Convert2TROICommon(TROIField tField, TROIDataCommon& tROIData);
 extern void Convert2TROICommon(TROISPoint tStartPoint, TROIDataCommon& tROIData);
 extern void Convert2TROICommon(RECT tRect, TROIDataCommon& tROIData);
+extern void Convert2TROICommon(TROIData& tROI, std::vector<TROIDataCommon>& vROI);
 
 extern void Convert2CPoint(TROIDataCommon tROIData, TROICPoint &tCenterPoint);
 extern void Convert2Field(TROIDataCommon tROIData, TROIField &tField);
@@ -495,8 +676,12 @@ extern void Convert2SPoint(TROIDataCommon tROIData, TROISPoint &tStartPoint);
 extern void Convert2RECT(TROIDataCommon tROIData, RECT& tRect);
 
 extern void Convert2RECT(TROIDataCommon tROIData, int nWidth, int nHeight, RECT &tRect);
+extern void Convert2RECT(TROIData& tROI, int nWidth, int nHeight, std::vector<RECT>& vROIRect);
 
 extern double GetPixelSize(EDATAFORMAT eDataFormat);
+
+extern double Get8BitConversionGamma(EDATAFORMAT eDataFormat);
+extern double Get16BitConversionGamma(EDATAFORMAT eDataFormat);
 
 extern bool LoadFiducialMarkInfo(const char* strFiducialMarkInfoPath, int nImageWidth, int nImageHeight, TInspectRegionOffset& tOffset, std::vector<TFiducialMarkType>& vFiducialMarkPoint, int& nMaxSize);
 
@@ -789,3 +974,17 @@ typedef struct _TInspectResult
 	float fResult[100];
 } TInspectResult;
 
+
+// 싱글톤 패턴 매크로
+#define MAKE_SINGLETON(classname)						\
+private:												\
+	classname() {}										\
+	classname(const classname&) = delete;				\
+	classname& operator=(const classname&) = delete;	\
+public:													\
+	static classname& GetInstance()						\
+	{													\
+		static classname instance;						\
+		return instance;								\
+	}													\
+private:

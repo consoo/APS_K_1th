@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ACMISEtcDef.h"
+#include <LibACMISCommon\ACMISCommon.h>
 
 typedef enum _EPos
 {
@@ -45,7 +45,9 @@ typedef enum _EColorSpaceType
 typedef enum _EMaxDiffType
 {
 	MaxDiff_Total,
-	MaXDiff_Each
+	MaxDiff_Each,
+	MaxRatio_Total,
+	MaxRatio_Each
 } EMaxDiffType;
 
 typedef struct _TColorSensitivitySpec
@@ -121,9 +123,23 @@ typedef enum _RESULT_FLAG_COLOR_SENSITIVITY
 	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_R,
 	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_G,
 	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_B,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_GR,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_GB,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_RG,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_BG,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_GRGB,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_GRG,
+	COLOR_SENSITIVITY_RESULT_COLOR_RATIO_GBG,
 	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_R,
 	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_G,
 	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_B,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_GR,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_GB,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_RG,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_BG,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_GRGB,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_GRG,
+	COLOR_SENSITIVITY_RESULT_ADJUST_COLOR_RATIO_GBG,
 
 	COLOR_SENSITIVITY_RESULT_FLAG_MAX_COUNT
 } RESULT_FLAG_COLOR_SENSITIVITY;
@@ -249,6 +265,8 @@ typedef enum _RESULT_ROI_FLAG_COLOR_SHADING
 	COLOR_SHADING_RESULT_ROI_RG,
 	COLOR_SHADING_RESULT_ROI_BG,
 	COLOR_SHADING_RESULT_ROI_GRGB,
+	COLOR_SHADING_RESULT_ROI_GRG,
+	COLOR_SHADING_RESULT_ROI_GBG,
 	COLOR_SHADING_RESULT_ROI_R,
 	COLOR_SHADING_RESULT_ROI_G,
 	COLOR_SHADING_RESULT_ROI_B,
@@ -898,34 +916,63 @@ typedef struct _TColorUniformityResult
 #define LENS_SHADING_SPEC_FLAG_VERSION_MINOR		0
 typedef enum _SPEC_FLAG_LENS_SHADING
 {
-	LENS_SHADING_GRID_SIZE_X,
-	LENS_SHADING_GRID_SIZE_Y,
+	LENS_SHADING_BLOCK_CNT_X,
+	LENS_SHADING_BLOCK_CNT_Y,
+	LENS_SHADING_TYPICAL_VALUE_TYPE,
+	LENS_SHADING_COLOR_SPACE_TYPE,
+	LENS_SHADING_USE_OVERLAP,
+	LENS_SHADING_CENTER_BLOCK_SIZE,
+	LENS_SHADING_ENABLE_CHANNEL,
 
 	LENS_SHADING_SPEC_FLAG_MAX_COUNT
 } SPEC_FLAG_LENS_SHADING;
 
 typedef struct _TLensShadingSpec
 {
-	int	nGridSizeX;
-	int nGridSizeY;
+	int	nBlockCntX;
+	int nBlockCntY;
+	int nTypicalValueType; // ETypicalValueType : Mean or Median
+	int nColorSpaceType;   // EColorSpaceType : Bayer or RGB
+	int nUseOverlap;
+	int nSpecPixelCntInBlock;
+	int nEnableChannel;
 } TLensShadingSpec;
 
 #define RESULT_LENS_SHADING_VERSION_MAJOR		1
 #define RESULT_LENS_SHADING_VERSION_MINOR		0
 typedef enum _RESULT_FLAG_LENS_SHADING
 {
+	LENS_SHADING_RESULT_ROI_LEFT,
+	LENS_SHADING_RESULT_ROI_TOP,
+	LENS_SHADING_RESULT_ROI_RIGHT,
+	LENS_SHADING_RESULT_ROI_BOTTOM,
+	LENS_SHADING_RESULT_RIR,
+	LENS_SHADING_RESULT_RIG,
+	LENS_SHADING_RESULT_RIB,
+	LENS_SHADING_RESULT_RIGR,
+	LENS_SHADING_RESULT_RIGB,
 	LENS_SHADING_RESULT_R,
 	LENS_SHADING_RESULT_G,
 	LENS_SHADING_RESULT_B,
+	LENS_SHADING_RESULT_GR,
+	LENS_SHADING_RESULT_GB,
 
 	LENS_SHADING_RESULT_FLAG_MAX_COUNT
 } RESULT_FLAG_LENS_SHADING;
 
 typedef struct _TLensShadingResult
 {
+	RECT rtROI;
+	double dRIR;
+	double dRIG;
+	double dRIB;
+	double dRIGr;
+	double dRIGb;
 	double dR;
 	double dG;
 	double dB;
+	double dGr;
+	double dGb;
 } TLensShadingResult;
 
 
@@ -933,7 +980,7 @@ template<typename T, typename TResult, typename DataType = BYTE, typename DataFo
 class IShadingCommon
 {
 public:
-	IShadingCommon() : m_nImageWidth(0), m_nImageHeight(0), m_nUsing8BitOnly(0), m_nPartialDemosaic(0) { memset(&m_tDataSpec, 0, sizeof(TDATASPEC)); memset(&m_stSpec, 0, sizeof(T)); memset(&m_tInspectRegionOffset, 0, sizeof(TInspectRegionOffset)); }
+	IShadingCommon() : m_nImageWidth(0), m_nImageHeight(0), m_nUsing8BitOnly(0), m_nPartialDemosaic(0), m_bIsCertified(false) { memset(&m_tDataSpec, 0, sizeof(TDATASPEC)); memset(&m_stSpec, 0, sizeof(T)); memset(&m_tInspectRegionOffset, 0, sizeof(TInspectRegionOffset)); }
 	virtual ~IShadingCommon() {}
 
 	virtual bool Inspect(const DataType* pBuffer, int nImageWidth, int nImageHeight, T& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, int nUsing8BitOnly = 0, int nPartialDemosaic = 0, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT) = 0;
@@ -951,6 +998,7 @@ public:
 	virtual void SetInspectPosOffset(TInspectRegionOffset tInspectRegionOffset) = 0;
 	virtual void Init() = 0;
 	virtual double GetSaturationResult(int nIndex = 0) = 0;
+	virtual bool GetCertificationResult() = 0;
 
 protected:
 	int m_nImageWidth;
@@ -964,6 +1012,7 @@ protected:
 	T m_stSpec;
 	TInspectRegionOffset m_tInspectRegionOffset;
 	std::vector<double> m_vSaturationResult;
+	bool m_bIsCertified;
 };
 
 template<typename T, typename TResult, typename DataType = BYTE, typename DataFormat = EDATAFORMAT, typename OutMode = EOUTMODE, typename SensorType = ESENSORTYPE, typename DemosaicMethod = EDEMOSAICMETHOD>
@@ -1104,5 +1153,9 @@ public:
 	inline double GetSaturationResult(int nIndex) const
 	{
 		return m_pMethod->GetSaturationResult(nIndex);
+	}
+	inline bool GetCertificationResult()
+	{
+		return m_pMethod->GetCertificationResult();
 	}
 };

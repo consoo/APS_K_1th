@@ -3,10 +3,8 @@
 
 #ifdef LIBACMISSHADING_EXPORTS
 #define ACMISSHADING_API	__declspec(dllexport)
-#define ACMISETC_API		__declspec(dllexport)
 #else
 #define ACMISSHADING_API	__declspec(dllimport)
-#define ACMISETC_API		__declspec(dllimport)
 #endif
 
 

@@ -9,21 +9,21 @@
 
 #include "./Library/Utility/ximg/ximage.h"	//2017101201
 
-
-#include "./Library/Inspection/Include/LibACMISCommon/ACMISCommon.h"
-#include "./Library/Inspection/Include/LibACMISSoftISP/SoftISP.h"
-#include "./Library/Inspection/Include/LibACMISImage/ACMISImageDef.h"
-#include "./Library/Inspection/Include/LibACMISImage/ACMISImageBlemish.h"
-#include "./Library/Inspection/Include/LibACMISImage/ACMISImageDarkTest.h"
-#include "./Library/Inspection/Include/LibACMISImage/ACMISImageOpticalCenter.h"
-#include "./Library/Inspection/Include/LibACMISResolution/ACMISResolutionSFR.h"
-#include "./Library/Inspection/Include/LibACMISShading/ACMISShadingDef.h"
-#include "./Library/Inspection/Include/LibACMISShading/ACMISShadingAlgorithm.h"
-#include "./Library/Inspection/Include/LibACMISImage/ACMISSignalNoiseRatio.h"
-#include "./Library/Inspection/Include/LibACMISResolution/ACMISFiducialMark.h"
-#include "./Library/Inspection/Include/LibACMISImage/ACMISSignalNoiseRatio.h"
-#include "./Library/Inspection/Include/XGraphic/xDataTypes.h"
-#include "./Library/Inspection/Include/LibACMISShading/ACMISEtcAlgorithm.h"
+#include "Library/Inspection/Include/LibACMISCommon/ACMISCommon.h"
+#include "Library/Inspection/Include/LibACMISSoftISP/SoftISP.h"
+#include "Library/Inspection/Include/LibACMISResolution/ACMISResolutionSFR.h"
+#include "Library/Inspection/Include/LibACMISShading/ACMISShadingDef.h"
+#include "Library/Inspection/Include/LibACMISShading/ACMISShadingAlgorithm.h"
+#include "Library/Inspection/Include/LibACMISResolution/ACMISFiducialMark.h"
+#include "Library/Inspection/Include/LibACMISCertification/ACMISCertification.h"
+#include "Library/Inspection/Include/LibACMISCertification/ACMISCertificationDef.h"
+#include "Library/Inspection/Include/LibACMISBlemish/ACMISImageBlemish.h"
+#include "Library/Inspection/Include/LibACMISBlemish/ACMISImageStain.h"
+#include "Library/Inspection/Include/LibACMISBlemish/ACMISBlemishDef.h"
+#include "Library/Inspection/Include/LibACMISEtc/ACMISEtcAlgorithm.h"
+#include "Library/Inspection/Include/LibACMISEtc/ACMISEtcDef.h"
+#include "Library/Inspection/Include/LibACMISSoftISPBasic/RawImageProcessing.h"
+#include "Library/Inspection/Include/LibACMISOpticalCenter/ACMISImageOpticalCenter.h"
 
 #include <math.h>
 #include <float.h>

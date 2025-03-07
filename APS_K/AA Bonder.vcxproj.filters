@@ -94,15 +94,6 @@
     <Filter Include="Aligorithm\LGIT\LibACMISSoftISP">
       <UniqueIdentifier>{94da7035-a119-4580-a2fe-dc33d0c2ed7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Aligorithm\LGIT\Resolution">
-      <UniqueIdentifier>{6a4cee5f-975e-482c-b1eb-05810928b9a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Aligorithm\LGIT\SoftISP">
-      <UniqueIdentifier>{3da7a41b-3579-4a87-8464-b19059e245a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Aligorithm\LGIT\XGraphic">
-      <UniqueIdentifier>{5ffff6ae-45d9-4779-b57a-fecb5067e1d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Aligorithm\INSP">
       <UniqueIdentifier>{79d4c6d4-8aaa-4e50-95d9-f4892e02f3ce}</UniqueIdentifier>
     </Filter>
@@ -114,6 +105,30 @@
     </Filter>
     <Filter Include="Process">
       <UniqueIdentifier>{c4fec855-422f-439f-99af-3d00453528e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISBlemish">
+      <UniqueIdentifier>{b5a1e1eb-99d6-48ec-9e51-7005b6b23173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISCertification">
+      <UniqueIdentifier>{f0838b6f-6e60-4d3e-9621-be62c22237ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISCodec">
+      <UniqueIdentifier>{6fc9ae76-74d3-45ea-a200-4730da885f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISDefect">
+      <UniqueIdentifier>{5a4e8a6f-fb9d-4a47-aabb-ac567520aaf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISEtc">
+      <UniqueIdentifier>{859a5c05-bc67-457f-9051-f156791b15d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISNoise">
+      <UniqueIdentifier>{fb3b86ae-808a-4bc0-b29a-367fed356487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISOpticalCenter">
+      <UniqueIdentifier>{0f1d6bf7-544c-4b3a-8107-5da4dc065814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aligorithm\LGIT\LibACMISParallelInspection">
+      <UniqueIdentifier>{47daf9c5-614c-42e4-9488-329ac014c769}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -492,33 +507,6 @@
     <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\SoftISP.h">
       <Filter>Aligorithm\LGIT\LibACMISSoftISP</Filter>
     </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\Resolution\AtomResolutinDef.h">
-      <Filter>Aligorithm\LGIT\Resolution</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\Resolution\AtomResolutionSFR.h">
-      <Filter>Aligorithm\LGIT\Resolution</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\Resolution\export.h">
-      <Filter>Aligorithm\LGIT\Resolution</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\SoftISP\CDemosaic.h">
-      <Filter>Aligorithm\LGIT\SoftISP</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\SoftISP\export.h">
-      <Filter>Aligorithm\LGIT\SoftISP</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\SoftISP\ImageProcessing.h">
-      <Filter>Aligorithm\LGIT\SoftISP</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\SoftISP\RawImageProcessing.h">
-      <Filter>Aligorithm\LGIT\SoftISP</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\SoftISP\SoftISP.h">
-      <Filter>Aligorithm\LGIT\SoftISP</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Inspection\Include\XGraphic\xDataTypes.h">
-      <Filter>Aligorithm\LGIT\XGraphic</Filter>
-    </ClInclude>
     <ClInclude Include="Algorithm\INSP\PRIFunc_Insp.h">
       <Filter>Aligorithm\INSP</Filter>
     </ClInclude>
@@ -607,6 +595,75 @@
     </ClInclude>
     <ClInclude Include="LogThread.h">
       <Filter>Process</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\ACMISBlemishDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISBlemish</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\ACMISImageBlemish.h">
+      <Filter>Aligorithm\LGIT\LibACMISBlemish</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\ACMISImageStain.h">
+      <Filter>Aligorithm\LGIT\LibACMISBlemish</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISBlemish\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISBlemish</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISCertification\ACMISCertification.h">
+      <Filter>Aligorithm\LGIT\LibACMISCertification</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISCertification\ACMISCertificationDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISCertification</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISCertification\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISCertification</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISCodec\LibACMISCodecCommon.h">
+      <Filter>Aligorithm\LGIT\LibACMISCodec</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISDefect\ACMISDefectDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISDefect</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISDefect\ACMISImageDarkTest.h">
+      <Filter>Aligorithm\LGIT\LibACMISDefect</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISDefect\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISDefect</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISEtc\ACMISEtcAlgorithm.h">
+      <Filter>Aligorithm\LGIT\LibACMISEtc</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISEtc\ACMISEtcDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISEtc</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISEtc\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISEtc</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISNoise\ACMISSignalNoiseRatio.h">
+      <Filter>Aligorithm\LGIT\LibACMISNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISNoise\ACMISSignalNoiseRatioDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISNoise\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISOpticalCenter\ACMISImageOpticalCenter.h">
+      <Filter>Aligorithm\LGIT\LibACMISOpticalCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISOpticalCenter\ACMISOpticalCenterDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISOpticalCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISOpticalCenter\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISOpticalCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\ACMISParallelInspection.h">
+      <Filter>Aligorithm\LGIT\LibACMISParallelInspection</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\ACMISParallelInspectionDef.h">
+      <Filter>Aligorithm\LGIT\LibACMISParallelInspection</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\export.h">
+      <Filter>Aligorithm\LGIT\LibACMISParallelInspection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

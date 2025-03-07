@@ -1,8 +1,6 @@
 #pragma once
-#include "export.h"
+
 #include <LibACMISCommon\ACMISCommon.h>
-#include <algorithm>
-#include <vector>
 
 
 #define MAX_SFR_LIMIT					(100)
@@ -131,8 +129,9 @@ typedef enum _EFOVAlgorithmMethod
 	FOV_METHOD_MODULE_DISTANCE,
 	FOV_METHOD_EFL,
 	FOV_METHOD_MOBIS_MOTIONAL,
-	FOV_METHOD_SHM_H100,
-	FOV_METHOD_SHM_H150
+	FOV_METHOD_SHM_CORNER,
+	FOV_METHOD_SHM_CIRCLE_H150,
+	FOV_METHOD_FORD_L3
 } EFOVAlgorithmMethod;
 #define FOV_METHOD_PIXEL_COUNT FOV_METHOD_MOBIS_MOTIONAL
 
@@ -143,7 +142,9 @@ typedef enum _EFiducialMarkType
 	FIDUCIALMARKTYPE_GRID,				// Fiducial Mark Num = 9
 	FIDUCIALMARKTYPE_MOBIS_MOTIONAL,	// Fiducial Mark Num = 2(H) + 2(V)
 	FIDUCIALMARKTYPE_SINGLE,			// Fiducial Mark Num = 1
-	FIDUCIALMARKTYPE_SHM,				// Fiducial Mark Num = 6 ~ 8
+	FIDUCIALMARKTYPE_SHM_CORNER,		// Fiducial Mark Num = 16(H100), 14(H150)
+	FIDUCIALMARKTYPE_SHM_CIRCLE,		// Fiducial Mark Num = 8
+	FIDUCIALMARKTYPE_FORD_L3,			// Fiducial Mark Num 
 	FIDUCIALMARKTYPE_MAX
 } EFiducialMarkType;
 #define FIDUCIALMARKTYPE_LINE FIDUCIALMARKTYPE_MOBIS_MOTIONAL
@@ -155,39 +156,14 @@ typedef enum _FIDUCIALMARK_INSPECT_ITEM
 	FIDUCIALMARK_INSPECT_ROTATE = 0x04,
 	FIDUCIALMARK_INSPECT_TILT = 0x08,
 	FIDUCIALMARK_INSPECT_OC = 0x10,
-	FIDUCIALMARK_INSPECT_ALL = 0x1F
+	FIDUCIALMARK_INSPECT_ALL = 0x1F,
+	FIDUCIALMARK_INSPECT_MAX = 0x20
 } FIDUCIALMARK_INSPECT_ITEM;
-
-inline int GetFiducialMarkNum(EFiducialMarkType eType)
-{
-	int nCount = 4;
-
-	switch (eType)
-	{
-		case FIDUCIALMARKTYPE_DOT:
-		case FIDUCIALMARKTYPE_CROSSDOT:
-		case FIDUCIALMARKTYPE_MOBIS_MOTIONAL:
-			nCount = 4;
-			break;
-		case FIDUCIALMARKTYPE_GRID:
-			nCount = 9;
-			break;
-		case FIDUCIALMARKTYPE_SINGLE:
-			nCount = 1;
-			break;
-		case FIDUCIALMARKTYPE_SHM:
-			nCount = 16;
-			break;
-		default:
-			nCount = -1;
-	}
-
-	return nCount;
-}
 
 typedef struct _TFiducialMarkInfo
 {
-	char* pszChartType; ///< DOT, CROSSDOT, ...
+	int nInspectItem;			/// 검사 종류. FIDUCIALMARK_INSPECT_ITEM 열거형
+	int nAlgorithmIndex;		/// 알고리즘 인덱스 (EFOVAlgorithmMethod 등 검사별 알고리즘 열거형에 따름)
 	double dDistanceXFromCenter; ///< pixel or relative position of main fiducial mark
 	double dDistanceYFromCenter; ///< pixel or relative position of main fiducial mark
 	int nROIBoxSize;
@@ -195,32 +171,30 @@ typedef struct _TFiducialMarkInfo
 	double dRadius;
 	double dRealGapX; ///< cm, between horizontal bases
 	double dRealGapY;  ///< cm between vertical bases
-	int nFiducialMarkNum;
 	int nFiducialMarkType;
 	double dModuleChartDistance; ///< distance between module and chart
-	int nDistortionAlrotithmType;	///< algorithm for Distortion : RealRatio and TV Distortion.
 } TFiducialMarkInfo;
 
 typedef struct _TFiducialMarkInfoN
 {
-	char* pszChartType; ///< DOT, CROSSDOT, ...
-	double dDistanceXFromCenter; ///< pixel or relative position of main fiducial mark
-	double dDistanceYFromCenter; ///< pixel or relative position of main fiducial mark
-	int nROIBoxSize;
-	int nMaxROIBoxSize;
-	double dRadius;
+	int nFiducialMarkType; /// EFiducialMarkType의 멤버(DOT, CROSSDOT,...)
+	int nInspectItem;      /// 검사 종류. FIDUCIALMARK_INSPECT_ITEM 열거형
+	int nAlgorithmIndex;   /// 알고리즘 인덱스 (EFOVAlgorithmMethod 등 검사별 알고리즘 열거형에 따름)
+	double* pVecParamData; /// 알고리즘에 추가적으로 필요한 값들은 담은 벡터의 시작 주소
+	size_t  nVecParamSize; /// 알고리즘에 추가적으로 필요한 값들을 담은 벡터의 크기
+
 	double dRealGapX; ///< cm, between horizontal bases
 	double dRealGapY;  ///< cm between vertical bases
-	double dRealSubGapX; ///< cm, between horizontal bases
-	double dRealSubGapY;  ///< cm between vertical bases
-	int nFiducialMarkNum;
-	int nFiducialMarkType;
+
 	double dModuleChartDistance; ///< distance between module and chart
-	int nDistortionAlrotithmType;	///< algorithm for Distortion : RealRatio and TV Distortion.
-	double dBinaryThreshold; /// threshold for Binary of image
-	double dMaxDeviation; /// maximum deviation from ROI center
 	double dPixelSize; /// Pixel size of Image Sensor
 	double dEFL; /// Effective Focal Length of Lens
+
+	double dRadius;
+	double dBinaryThreshold; /// threshold for Binary of image
+	double dMaxDeviation; /// maximum deviation from ROI center
+	int nROIBoxSize;
+	int nMaxROIBoxSize;
 } TFiducialMarkInfoN;
 
 typedef struct _TFiducialMarkSpec
@@ -230,7 +204,7 @@ typedef struct _TFiducialMarkSpec
 
 	// Fiducial Mark Info
 	TFiducialMarkInfoN stFiducialMark;
-	POINT *ptRefFiducialMark;
+	std::vector<POINT> vRefFiducialMark;
 
 	// Spec
 	double dXTiltSpecMin;
@@ -385,7 +359,7 @@ typedef struct _TFiducialMarkSpecN
 
 	// Fiducial Mark Info
 	TFiducialMarkInfoN stFiducialMark;
-	TFiducialMarkType *ptRefFiducialMark;
+	std::vector<TFiducialMarkType> vRefFiducialMark;
 
 	// Spec
 	double dXTiltSpecMin;
@@ -499,8 +473,9 @@ typedef struct _TChartSpec
 
 	char* strFiducialMarkInfoPath;
 
-	// FOV Algorithm
+	// Inspection Algorithm
 	int nFOVAlgorithmMethod; // EFOVAlgorithmMethod
+	int nDistortionAlgorithmMethod; // EDistortionAlgorithmType
 
 	_TChartSpec() : strDetailInfoPath(NULL), strDetailDeltaSpecInfoPath(NULL), nDeltaAlgorithmType(0), nAlgorithmType(0), strFiducialMarkInfoPath(NULL)
 	{
@@ -666,6 +641,7 @@ typedef enum _ROI_FLAG_SFR
 	SFR_ROI_SFR,
 	SFR_ROI_COSINE_CORRECTION,
 	SFR_ROI_POLY_FIT_ORDER,
+	SFR_ROI_DIFF_GROUP_INDEX,
 
 	SFR_ROI_FLAG_MAX_COUNT
 } ROI_FLAG_SFR;
@@ -926,7 +902,7 @@ public:
 	const TDATASPEC& GetDataSpec() const { return m_tDataSpec; }
 };
 
-class ACMISRESOLUTION_API ResolutionImageBufferManager
+class ResolutionImageBufferManager
 {
 	std::shared_ptr<IResolutionBuffer> m_Ptr;
 

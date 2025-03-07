@@ -1,13 +1,11 @@
 #pragma once
-#include <vector>
-#include <ppl.h>
-#include <map>
-#include <algorithm>
-#include <tuple>
-#include <atlstr.h>
 
 #include "export.h"
-#include "ACMISParallelInspectionDef.h"
+#include <LibACMISParallelInspection\ACMISParallelInspectionDef.h>
+#include <LibACMISResolution\Include\ACMISFiducialMark.h>
+
+extern bool CalculateMCRotate(std::shared_ptr<CACMISFiducialMark> m_pFiducialMarkProc, TBufferInfo* pImageInfo, TFiducialMarkSpecN& tFiducialMarkSpec, int nPartialDemosaic, TInspectRegionOffset tOffset, std::vector<CDPoint>& vFiducialMark, CDPoint& ptCenter, double& dRotation);
+extern bool CalculateCompensateMCRotate(std::shared_ptr<CACMISFiducialMark> m_pFiducialMarkProc, TBufferInfo* pImageInfo, TFiducialMarkSpecN& tFiducialMarkSpec, int nPartialDemosaic, TInspectRegionOffset tOffset, int isCompensateMC, int isCompensateRotate, TROIData& tROI, std::vector<CDPoint>& vFiducialMark, CDPoint& ptCenter, double& dRotation);
 
 class ACMISPARALLELINSPECTION_API CLibACMISParallelInspection
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "export.h"
-#include "ACMISResolutionDef.h"
+#include <LibACMISResolution\ACMISResolutionDef.h>
 
 
 class ACMISRESOLUTION_API CACMISFiducialMark
@@ -14,25 +14,33 @@ public:
 	CACMISFiducialMark(void);
 	~CACMISFiducialMark(void);
 
+	// TFiducialMarkSpec 구조체 사용
 	bool Inspect(const BYTE* pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpec& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, bool bUsing8BitOnly = false, bool bPartialDemosaic = false, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
 	bool Inspect(TBufferInfo& tBufferInfo, TFiducialMarkSpec& _Spec);
 	bool Inspect(TFileInfo& tFileInfo, TFiducialMarkSpec& _Spec);
+
+	// TFiducialMarkSpecN 구조체 사용
 	bool Inspect(const BYTE* pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecN& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, bool bUsing8BitOnly = false, bool bPartialDemosaic = false, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
 	bool Inspect(TBufferInfo& tBufferInfo, TFiducialMarkSpecN& _Spec);
 	bool Inspect(TFileInfo& tFileInfo, TFiducialMarkSpecN& _Spec);
 	bool Inspect(const BYTE* pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecN& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, int nUsing8BitOnly = 0, int nPartialDemosaic = 0, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
 	bool InspectAlgorithm(const int* pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecN& _Spec, TDATASPEC& tDataSpec, int nUsing8BitOnly = 0, int nPartialDemosaic = 0);
+
+	// TFiducialMarkSpecM 구조체 사용
 	bool Inspect(TBufferInfo& tBufferInfo, TFiducialMarkSpecM& _Spec);
 	bool Inspect(TFileInfo& tFileInfo, TFiducialMarkSpecM& _Spec);
 	bool Inspect(const BYTE* pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecM& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, int nUsing8BitOnly = 0, int nPartialDemosaic = 0, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
 	bool InspectAlgorithm(const int* pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecM& _Spec, TDATASPEC& tDataSpec, int nUsing8BitOnly = 0, int nPartialDemosaic = 0);
+
 	bool InspectM(const BYTE** pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecN& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, bool bUsing8BitOnly = false, int nImageCount = 1, bool bPartialDemosaic = false, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
 	bool InspectM(TBufferInfoM& tBufferInfo, TFiducialMarkSpecN& _Spec);
 	bool InspectM(TFileInfoM& tFileInfo, TFiducialMarkSpecN& _Spec);
 	bool InspectM(const BYTE** pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecN& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, int nUsing8BitOnly = 0, int nImageCount = 1, int nPartialDemosaic = 0, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
+	
 	bool InspectM(TBufferInfoM& tBufferInfo, TFiducialMarkSpecM& _Spec);
 	bool InspectM(TFileInfoM& tFileInfo, TFiducialMarkSpecM& _Spec);
 	bool InspectM(const BYTE** pBuffer, int nImageWidth, int nImageHeight, TFiducialMarkSpecM& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, int nUsing8BitOnly = 0, int nImageCount = 1, int nPartialDemosaic = 0, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
+	
 	bool InspectC(const BYTE* pBuffer, int nImageWidth, int nImageHeight, TInspectSpec& _Spec, EDATAFORMAT nDataFormat, EOUTMODE nOutMode, ESENSORTYPE nSensorType, int nBlackLevel, int nUsing8BitOnly = 0, int nPartialDemosaic = 0, EDEMOSAICMETHOD nDemosaicMethod = DEMOSAICMETHOD_GRADIENT);
 	bool InspectC(TBufferInfo& tBufferInfo, TInspectSpec& _Spec);
 	bool InspectC(TFileInfo& tFileInfo, TInspectSpec& _Spec);
@@ -55,28 +63,35 @@ public:
 	const char* GetVersion();
 
 	/// Chart Process
-	bool SetFiducialMarkSpec(TFiducialMarkInfo* p, RECT *ptRect, int nImageWidth, int nImageHeight);
-	bool SetFiducialMarkSpec(TFiducialMarkInfoN* p, RECT *ptRect, int nImageWidth, int nImageHeight);
-	bool SetFiducialMarkSpec(TFiducialMarkInfoN* p, POINT *ptMark, int nImageWidth, int nImageHeight);
-	bool SetFiducialMarkSpec(TFiducialMarkInfoN* p, TROICPoint *ptMark, int nImageWidth, int nImageHeight);
-	bool SetFiducialMarkSpec(TFiducialMarkInfoN* p, TROIField *ptMark, int nImageWidth, int nImageHeight);
-	bool SetFiducialMarkSpec(TFiducialMarkInfoN* p, TROISPoint *ptMark, int nImageWidth, int nImageHeight);
+#if 0   // STL 컨테이너의 Release - Debug 호환성 문제로 비활성화
+	bool SetFiducialMarkSpec(TFiducialMarkInfo&  stMarkInfo,  std::vector<RECT>&       vRect, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, std::vector<RECT>&       vRect, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, std::vector<POINT>&      vMark, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, std::vector<CDPoint>&    vMark, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, std::vector<TROICPoint>& vMark, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, std::vector<TROIField>&  vMark, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, std::vector<TROISPoint>& vMark, int nImageWidth, int nImageHeight);
 	bool SetFiducialMarkSpec(TFiducialMarkSpecM& stMarkSpec, int nImageWidth, int nImageHeight);
+#endif
 
-	int GetMaxFiducialMarkCount(FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_ALL) const;
-	const CDRect& GetFiducialMarkROI(int nIndex, FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_ALL) const;
-	const CDPoint& GetFiducialMarkPoint(int nIndex, FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_ALL) const;
-	const CDRect& GetFiducialMarkRadius(int nIndex, FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_ALL) const;
-	const TFindROIResult* GetSFRAutoROI(int nIndex) const;
-	int GetSFRAutoROICount() const;
+	bool SetFiducialMarkSpec(TFiducialMarkInfo&  stMarkInfo,  RECT*       pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, RECT*       pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, POINT*      pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, CDPoint*    pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, TROICPoint* pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, TROIField*  pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
+	bool SetFiducialMarkSpec(TFiducialMarkInfoN& stMarkInfoN, TROISPoint* pVecMarkData, size_t nVecMarkSize, int nImageWidth, int nImageHeight);
 
-	const CDPoint& GetRefChartLength() const;
+	int GetMaxFiducialMarkCount(FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_MAX) const;
+	const CDRect& GetFiducialMarkROI(int nIndex, FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_MAX) const;
+	const CDPoint& GetFiducialMarkPoint(int nIndex, FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_MAX) const;
+	const CDRect& GetFiducialMarkRadius(int nIndex, FIDUCIALMARK_INSPECT_ITEM eItem = FIDUCIALMARK_INSPECT_MAX) const;
 
-	bool CalcDFOV(int nImageWidth, int nImageHeight);
-	bool CalcTiltAndRotation(int nImageWidth, int nImageHeight);
+	bool CalcDFOV();
+	bool CalcTiltAndRotation();
 	bool CalcRotation();
 	bool CalcDistortion();
-	bool CalcTilt(int nImageWidth, int nImageHeight);
+	bool CalcTilt();
 
 	double GetDFOV() const;
 	double GetHFOV() const;
@@ -84,9 +99,10 @@ public:
 	double GetRotation() const;
 	double GetDistortion() const;
 
-	const CDPoint& GetTilt() const;
-	const CDPoint& GetRealCenter() const; // it's NOT an Image Center. Chart center
-	const CDPoint& GetCmPerPixel() const;
+	const CDPoint GetTilt() const;
+	const CDPoint GetRealCenter() const; // it's NOT an Image Center. Chart center
+	const CDPoint GetCmPerPixel() const;
+	const CDPoint GetRefChartLength() const;
 
 	/// Check Spec
 	bool InSpecDFOV(double dValue = UNDEFINED_RESOLUTION_VALUE);
@@ -113,15 +129,13 @@ public:
 	const double& GetSpecDistortionMax() const;
 
 	/// forced Setting data
-	void SetFiducialMarkPoint(CDPoint* ptData, int nMaxIndex);
-	void SetDFOV(double dDFOV);
-	void SetTilt(double dTiltX, double dTiltY);
-	void SetRotation(double dRotation);
+	void SetFiducialMarkPoint(std::vector<CDPoint>& vData);
 
 	inline void SetInspectPosOffset(int nStartOffsetX, int nStartOffsetY, int nEndOffsetX, int nEndOffsetY) const;
 	inline void SetInspectPosOffset(TInspectRegionOffset tInspectRegionOffset) const;
 	inline long long GetElapsedTime() const;
 	inline double GetSaturationResult(int nIndex = 0) const;
+	inline bool GetCertificationResult() const;
 
 private:
 	std::chrono::system_clock::time_point m_startTime;
@@ -132,6 +146,7 @@ private:
 
 	std::string m_strLogHeader;
 	std::string m_strLogData;
+	std::vector<CDPoint> m_vMarkPoint;
 };
 
 

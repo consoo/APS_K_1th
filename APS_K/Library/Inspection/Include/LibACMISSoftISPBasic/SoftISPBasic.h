@@ -66,19 +66,35 @@ typedef enum _ACMIS_DLL_TYPE
 	DLL_ACMISResolution,
 	DLL_ACMISShading,
 	DLL_ACMISSoftISP,
-	DLL_ACMISParallelInspection
+	DLL_ACMISParallelInspection,
+	DLL_ACMISSoftISPBasic,
+	DLL_ACMISCodec,
+	DLL_ACMISCertification,
+	DLL_ACMISEtc,
+	DLL_ACMISBlemish,
+	DLL_ACMISDefect,
+	DLL_ACMISOpticalCenter,
+	DLL_ACMISNoise,
+	MAX_COUNT_DLL_TYPE
 } ACMIS_DLL_TYPE;
+
+typedef enum _ACMIS_DLL_VERSION_TYPE
+{
+	DLL_VERSION_PRODUCT,
+	DLL_VERSION_FILE,
+	MAX_COUNT_DLL_VERSION_TYPE
+} ACMIS_DLL_VERSION_TYPE;
 
 namespace ACMISSoftISP
 {
 	ACMISSOFTISPBASIC_API bool xChangeFormatBasic(TDATASPEC &tDataSpec, const BYTE* pOrgBuffer, int nWidth, int nHeight,
-										unsigned short* p2ByteBuffer, BYTE* p8BitBuffer, unsigned short* pY12BitBuffer, BYTE* pYBuffer);
+										unsigned short* p2ByteBuffer, BYTE* p8BitBuffer, unsigned short* pY12BitBuffer, BYTE* pYBuffer, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API bool xChangeFormatBasic(TDATASPEC &tDataSpec, const BYTE* pOrgBuffer, int nWidth, int nHeight,
-										unsigned short* p2ByteBuffer, BYTE* p8BitBuffer, unsigned short* pY12BitBuffer, BYTE* pYBuffer, RECT *pROI, int nROICount);
+										unsigned short* p2ByteBuffer, BYTE* p8BitBuffer, unsigned short* pY12BitBuffer, BYTE* pYBuffer, RECT *pROI, int nROICount, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API bool xChangeFormatBasic(TDATASPEC &tDataSpec, const BYTE* pOrgBuffer, int nWidth, int nHeight,
-										short* p2ByteBuffer, BYTE* p8BitBuffer, short* pY12BitBuffer, BYTE* pYBuffer);
+										short* p2ByteBuffer, BYTE* p8BitBuffer, short* pY12BitBuffer, BYTE* pYBuffer, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API bool xChangeFormatBasic(TDATASPEC &tDataSpec, const BYTE* pOrgBuffer, int nWidth, int nHeight,
-										short* p2ByteBuffer, BYTE* p8BitBuffer, short* pY12BitBuffer, BYTE* pYBuffer, RECT *pROI, int nROICount);
+										short* p2ByteBuffer, BYTE* p8BitBuffer, short* pY12BitBuffer, BYTE* pYBuffer, RECT *pROI, int nROICount, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API bool xChangeFormatBasic(TDATASPEC &tDataSpec, const BYTE* pOrgBuffer, int nWidth, int nHeight, int* pBuffer, int* pYBuffer);
 	ACMISSOFTISPBASIC_API bool xChangeFormatBasic(TDATASPEC &tDataSpec, const BYTE* pOrgBuffer, int nWidth, int nHeight, int* pBuffer, int* pYBuffer, RECT *pROI, int nROICount);
 
@@ -120,18 +136,20 @@ namespace ACMISSoftISP
 	ACMISSOFTISPBASIC_API void xMake12to8Buffer(BYTE* p8BitBuffer, const short* p12bitBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, int nMargin = 0);
 	ACMISSOFTISPBASIC_API void xMake16to8Buffer(BYTE* p8BitBuffer, const unsigned short* p16bitBuffer, int nWidth, int nHeight);
 	ACMISSOFTISPBASIC_API void xMake16to8Buffer(BYTE* p8BitBuffer, const unsigned short* p16bitBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, int nMargin = 0);
-	ACMISSOFTISPBASIC_API void xMake24to8Buffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight);
-	ACMISSOFTISPBASIC_API void xMake24to8Buffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, int nMargin = 0);
-	ACMISSOFTISPBASIC_API void xMake8bitBuffer(int* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, EDATAFORMAT eDataFormat);
-	ACMISSOFTISPBASIC_API void xMake8bitBuffer(int* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat, int nMargin = 0);
-	ACMISSOFTISPBASIC_API void xMake8bitBuffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, EDATAFORMAT eDataFormat);
-	ACMISSOFTISPBASIC_API void xMake8bitBuffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat, int nMargin = 0);
-	ACMISSOFTISPBASIC_API void xMakePackedBuffer(BYTE* p8BitBuffer, unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakePackedBuffer(BYTE* p8BitBuffer, unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0);
-	ACMISSOFTISPBASIC_API void xMake8bitPackedBuffer(BYTE* p8BitBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec);
-	ACMISSOFTISPBASIC_API void xMake8bitPackedBuffer(BYTE* p8BitBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0);
-	ACMISSOFTISPBASIC_API void xMake16bitPackedBuffer(unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec);
-	ACMISSOFTISPBASIC_API void xMake16bitPackedBuffer(unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0);
+	ACMISSOFTISPBASIC_API void xMake24to8Buffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake24to8Buffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, int nMargin = 0, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake24to16Buffer(unsigned short* p16BitBuffer, const int* pBuffer, int nWidth, int nHeight, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake24to16Buffer(unsigned short* p16BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT* pROI, int nROICount, int nMargin = 0, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake8bitBuffer(int* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, EDATAFORMAT eDataFormat, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake8bitBuffer(int* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat, int nMargin = 0, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake8bitBuffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, EDATAFORMAT eDataFormat, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake8bitBuffer(BYTE* p8BitBuffer, const int* pBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, EDATAFORMAT eDataFormat, int nMargin = 0, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakePackedBuffer(BYTE* p8BitBuffer, unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakePackedBuffer(BYTE* p8BitBuffer, unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake8bitPackedBuffer(BYTE* p8BitBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake8bitPackedBuffer(BYTE* p8BitBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake16bitPackedBuffer(unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMake16bitPackedBuffer(unsigned short* p2ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API void xMake24bitPackedBuffer(int* p4ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, TDATASPEC tDataSpec);
 	ACMISSOFTISPBASIC_API void xMake24bitPackedBuffer(int* p4ByteBuffer, const BYTE* pOrgBuffer, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC tDataSpec, int nMargin = 0);
 
@@ -146,19 +164,19 @@ namespace ACMISSoftISP
 	ACMISSOFTISPBASIC_API void xBMPtoY(int* pY, const BYTE* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EOUTMODE eOutMode = OUTMODE_RGB_BGR);
 	ACMISSOFTISPBASIC_API void xBMPtoY(int* pY, const unsigned short* pBMP, int nWidth, int nHeight, EOUTMODE eOutMode = OUTMODE_RGB_BGR);
 	ACMISSOFTISPBASIC_API void xBMPtoY(int* pY, const unsigned short* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, EOUTMODE eOutMode = OUTMODE_RGB_BGR);
-	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, BYTE* pBMP, int nWidth, int nHeight, TDATASPEC& tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, BYTE* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, unsigned short* pBMP, int nWidth, int nHeight, TDATASPEC& tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, unsigned short* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
+	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, BYTE* pBMP, int nWidth, int nHeight, TDATASPEC& tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, BYTE* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, unsigned short* pBMP, int nWidth, int nHeight, TDATASPEC& tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, unsigned short* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, int* pBMP, int nWidth, int nHeight, TDATASPEC& tDataSpec);
 	ACMISSOFTISPBASIC_API void xMakeBMPBasic(BYTE* pRaw, int* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
 	ACMISSOFTISPBASIC_API void xMakeBMPBasic(int* pRaw, int* pBMP, int nWidth, int nHeight, TDATASPEC& tDataSpec);
 	ACMISSOFTISPBASIC_API void xMakeBMPBasic(int* pRaw, int* pBMP, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
 
-	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, BYTE* pY, int nWidth, int nHeight, TDATASPEC& tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, BYTE* pY, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, unsigned short* pY, int nWidth, int nHeight, TDATASPEC& tDataSpec);
-	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, unsigned short* pY, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
+	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, BYTE* pY, int nWidth, int nHeight, TDATASPEC& tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, BYTE* pY, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, unsigned short* pY, int nWidth, int nHeight, TDATASPEC& tDataSpec, double dGamma = 0.0);
+	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, unsigned short* pY, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec, double dGamma = 0.0);
 	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, int* pY, int nWidth, int nHeight, TDATASPEC& tDataSpec);
 	ACMISSOFTISPBASIC_API void xMakeYBasic(BYTE* pRaw, int* pY, int nWidth, int nHeight, RECT *pROI, int nROICount, TDATASPEC& tDataSpec);
 	ACMISSOFTISPBASIC_API void xMakeYBasic(unsigned short* pRaw, unsigned short* pY, int nWidth, int nHeight, TDATASPEC& tDataSpec);
@@ -228,8 +246,9 @@ namespace ACMISSoftISP
 	ACMISSOFTISPBASIC_API void xCreateLensShadingCorrectionGainTable(int nWidth, int nHeight, int nScaleLevel, double dGain);
 	ACMISSOFTISPBASIC_API void xLensShadingCorrection(BYTE* pRaw, int nWidth, int nHeight, int nScaleLevel);
 
-	ACMISSOFTISPBASIC_API bool GetDLLVersionInfo(char *LibName, unsigned short *versionInfo);
-	ACMISSOFTISPBASIC_API bool GetDLLVersionInfo(ACMIS_DLL_TYPE LibName, unsigned short *versionInfo);
+	ACMISSOFTISPBASIC_API char* GetDLLName(ACMIS_DLL_TYPE LibName);
+	ACMISSOFTISPBASIC_API bool GetDLLVersionInfo(char *LibName, unsigned short *versionInfo, ACMIS_DLL_VERSION_TYPE eVersionType = DLL_VERSION_PRODUCT);
+	ACMISSOFTISPBASIC_API bool GetDLLVersionInfo(ACMIS_DLL_TYPE LibName, unsigned short *versionInfo, ACMIS_DLL_VERSION_TYPE eVersionType = DLL_VERSION_PRODUCT);
 
 	ACMISSOFTISPBASIC_API void GetBuildTime(const char *FileName, char *strLastBuildDate, char *strLastBuildTime);
 

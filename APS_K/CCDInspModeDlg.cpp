@@ -403,13 +403,13 @@ void CCCDInspModeDlg::OnBnClickedBtnInspColorUniformity()
 
 	vision.clearOverlay(CCD);
 
-	if (g_clPriInsp.func_Insp_Uniformity(MIU.vDefectMidBuffer_6500K, false) == false)
+	/*if (g_clPriInsp.func_Insp_Uniformity(MIU.vDefectMidBuffer_6500K, false) == false)
 	{
 		pFrame->putListLog(_T("[수동검사] COLOR UNIFORMITY 검사 실패"));
 		return;
 	}
 	vision.drawOverlay(CCD);
-	pFrame->putListLog(_T("[수동검사] COLOR UNIFORMITY 검사 완료"));
+	pFrame->putListLog(_T("[수동검사] COLOR UNIFORMITY 검사 완료"));*/
 }
 //-----------------------------------------------------------------------------
 //
@@ -563,7 +563,7 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 
 
 	// _type = DOT_TYPE;
-	_type = GRID_TYPE;
+	/*_type = GRID_TYPE;
 	if (g_clPriInsp.func_Insp_Fov_Distortion_Rotate(MIU.m_pFrameRawBuffer, _type, false) == false)
 	{
 		pFrame->putListLog(_T("[수동검사] Fov 검사 실패"));
@@ -571,7 +571,7 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 		return;
 	}
 	vision.drawOverlay(CCD);
-	pFrame->putListLog(_T("[수동검사] Fov 검사 완료"));
+	pFrame->putListLog(_T("[수동검사] Fov 검사 완료"));*/
 }
 
 //-----------------------------------------------------------------------------
@@ -608,14 +608,14 @@ void CCCDInspModeDlg::OnBnClickedBtnInspDistortion()
 
     vision.clearOverlay(CCD);
 
-    if (g_clPriInsp.func_Insp_Fov_Distortion_Rotate(MIU.m_pFrameRawBuffer, GRID_TYPE, false) == false)
+   /* if (g_clPriInsp.func_Insp_Fov_Distortion_Rotate(MIU.m_pFrameRawBuffer, GRID_TYPE, false) == false)
     {
         pFrame->putListLog(_T("[수동검사] Distortion 검사 실패"));
 		vision.drawOverlay(CCD);
         return;
     }
     vision.drawOverlay(CCD);
-    pFrame->putListLog(_T("[수동검사] Distortion 검사 완료"));
+    pFrame->putListLog(_T("[수동검사] Distortion 검사 완료"));*/
 }
 
 

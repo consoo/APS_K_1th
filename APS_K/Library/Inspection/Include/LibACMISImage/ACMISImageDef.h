@@ -125,7 +125,12 @@ typedef struct _TMarkROISpec
 	RECT rt;
 } TMarkROISpec;
 
-#include "ACMISBlemishDef.h"
-#include "ACMISDefectDef.h"
-#include "ACMISOpticalCenterDef.h"
-#include "ACMISSignalNoiseRatioDef.h"
+typedef struct _TBadPixelTable
+{
+	//	int nBadPixelBrightSpec;
+	int nMaxBadPixelBlobSpec;
+	int nBlockSizeX;
+	int nBlockSizeY;
+	double dConstantMultipeBrightSpec;
+	double dConstantPlusBrightSpec;
+} TBadPixelTable;

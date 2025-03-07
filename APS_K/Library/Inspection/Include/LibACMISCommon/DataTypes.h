@@ -26,8 +26,8 @@ struct DBPOINT
 class CDPoint : public DBPOINT
 {
 public:
-	CDPoint( double _x, double _y ) { x = _x; y = _y; }
-	CDPoint() {}
+	CDPoint( double _x=0, double _y=0 ) { x = _x; y = _y; }
+	//CDPoint() {}
 
 	CDPoint( const CDPoint& Other )
 	{
@@ -41,7 +41,7 @@ public:
 		y = Other.y;
 	}
 
-	CDPoint( const POINT Other )
+	CDPoint( const POINT& Other )
 	{
 		x = (double)Other.x;
 		y = (double)Other.y;
@@ -58,7 +58,7 @@ public:
 		return point;
 	}
 
-	void FromPOINT( const POINT other )
+	void FromPOINT( const POINT& other )
 	{
 		x = (double)other.x;
 		y = (double)other.y;
@@ -96,6 +96,36 @@ public:
 		return CDPoint( x-point.x, y-point.y );
 	}
 
+	CDPoint operator/(double d) const
+	{
+		return CDPoint(x / d, y / d);
+	}
+
+	void operator/=(double d)
+	{
+		x /= d; y /= d;
+	}
+
+	bool operator>(const CDPoint& point) const
+	{
+		return x > point.x && y > point.y;
+	}
+
+	bool operator>=(const CDPoint& point) const
+	{
+		return x >= point.x && y >= point.y;
+	}
+
+	bool operator<(const CDPoint& point) const
+	{
+		return x < point.x && y < point.y;
+	}
+
+	bool operator<=(const CDPoint& point) const
+	{
+		return x <= point.x && y <= point.y;
+	}
+
 	const CDPoint& operator = ( const CDPoint& point )
 	{
 		(*this).x = point.x;
@@ -107,6 +137,12 @@ public:
 	{
 		(*this).x = point.x;
 		(*this).y = point.y;
+	}
+
+	void operator = (const POINT& other)
+	{
+		x = (double)other.x;
+		y = (double)other.y;
 	}
 };
 
@@ -133,7 +169,7 @@ struct DBRECT
 class CDRect : public DBRECT
 {
 public:
-	CDRect() {}
+	//CDRect() {}
 	CDRect( const DBRECT& OtherRect )
 	{
 		left	= OtherRect.left;
@@ -166,7 +202,7 @@ public:
 		return rect;	
 	}
 
-	CDRect( double l, double t, double r, double b ) { left = l; top = t; right = r; bottom = b; }
+	CDRect( double l=0, double t=0, double r=0, double b=0 ) { left = l; top = t; right = r; bottom = b; }
 
 	double Width() const { return fabs(right-left); }
 	double Height() const { return fabs(bottom-top); }

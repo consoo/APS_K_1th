@@ -1,8 +1,7 @@
 #pragma once
 
 #include "export.h"
-#include "ACMISShadingDef.h"
-#include "ACMISEtcAlgorithm.h"
+#include <LibACMISShading\ACMISShadingDef.h>
 
 // DO NOT INCLUDE HEADER FILE!
 
@@ -75,6 +74,12 @@ public:
 	const RECT* GetInspectionROI(int nIndex) const;
 	bool InSpec(TColorShadingSpecN& _Spec);
 	bool InSpec(TColorShadingSpec& _Spec);
+	bool GetInspectionRIResult(std::vector< std::vector<double> >& vRI);
+	bool GetInspectionRIResult(double** pRI, int nChannelCount, int nROICount);
+	bool GetInspectionRIBalance(std::vector<double>& vRIBalance);
+	bool GetInspectionRIBalance(double* pRIBalance, int nCount);
+	bool GetInspectionRIBalance(std::vector<double>& vRIBalance_LR, std::vector<double>& vRIBalance_UB);
+	bool GetInspectionRIBalance(double* pRIBalance_LR, double* pRIBalance_UB, int nCount);
 
 private:
 	bool ConvertSpec(TColorShadingSpec _Spec, int nImageWidth, int nImageHeight, TColorShadingSpecN& _NewSpec);
@@ -307,6 +312,7 @@ public:
 	bool ConvertCommon2EachSpec(TInspectSpec& _Spec, TLensShadingSpec& _NewSpec);
 	bool GetInspectionResultC(TInspectResult &tResult, int nIndex = 0);
 
-	const TLensShadingResult* GetInspectionResult() const;
-	const RECT* GetInspectionROI() const;
+	const TLensShadingResult* GetInspectionResult(int nIndex) const;
+	const RECT* GetInspectionROI(int nIndex) const;
+	const TLensShadingResult* GetInspectionCenterResult() const;
 };
