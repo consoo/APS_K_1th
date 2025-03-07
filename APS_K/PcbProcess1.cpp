@@ -583,8 +583,6 @@ int CPcbProcess1::RunProc_ProductLoading(int iUseStep)
 	case 10500:
 		iRtnFunction = 10900;
 		break;
-
-		break;
 	//case 10550:
 	//	//그립확인
 	//	if (Dio.PcbGripCheck(true, false) == true)
