@@ -88,39 +88,62 @@ bool CPRIFunc_Insp::func_Insp_Fov_Distortion_Rotate(BYTE* img, int _TYPE, bool b
 
 	//g_clModelData[nUnit].sfrElem.m_clRectCircle
 	int specCount = 0;
-	TFiducialMarkInfo tFiducialMarkInfo;
+	TFiducialMarkInfoN tFiducialMarkInfo;
     //
     //-----ui로 빼야할 항목
 
 	//tFiducialMarkInfo.pszChartType = "GRID";//네모박스 모양 고정  //광각 = "DOT" , 협각 = "GRID"
-	tFiducialMarkInfo.dDistanceXFromCenter = 220;//Default 고정 // 장비에서 추출한 Fiducial Mark 와 Center 와의 차이 입력
-	tFiducialMarkInfo.dDistanceYFromCenter = 160;//Default 고정 // 장비에서 추출한 Fiducial Mark 와 Center 와의 차이 입력
+	//tFiducialMarkInfo.dDistanceXFromCenter = 220;//Default 고정 // 장비에서 추출한 Fiducial Mark 와 Center 와의 차이 입력
+	//tFiducialMarkInfo.dDistanceYFromCenter = 160;//Default 고정 // 장비에서 추출한 Fiducial Mark 와 Center 와의 차이 입력
 	//
-    tFiducialMarkInfo.dRealGapX =           model.m_ChartSpec[specCount++];//23.514;			// chart 입수 후 Fiducial Mark 간거리(cm) 측정 후 입력
-    tFiducialMarkInfo.dRealGapY =           model.m_ChartSpec[specCount++];//20.47;			// chart 입수 후 Fiducial Mark 간거리(cm) 측정 후 입력
+    tFiducialMarkInfo.dRealGapX = model.m_ChartSpec[specCount++];//23.514;			// chart 입수 후 Fiducial Mark 간거리(cm) 측정 후 입력
+    tFiducialMarkInfo.dRealGapY = model.m_ChartSpec[specCount++];//20.47;			// chart 입수 후 Fiducial Mark 간거리(cm) 측정 후 입력
     specCount++;
-    tFiducialMarkInfo.nFiducialMarkType = _TYPE;// (int)model.m_ChartSpec[specCount++];//0;		//원형마크수 4~9
-    tFiducialMarkInfo.dModuleChartDistance = model.m_ChartSpec[specCount++];//2.0;	// 장비와 모듈 간의 거리 값 입력
-	tFiducialMarkInfo.nDistortionAlrotithmType = (int)model.m_ChartSpec[specCount++];//2;	//EDistortionAlgorithmType 참조
+
+	tFiducialMarkInfo.nFiducialMarkType = (int)MandoSfrSpec.FiducialMarkType;//FIDUCIALMARKTYPE_SHM_CORNER;// (int)model.m_ChartSpec[specCount++];//0;		//원형마크수 4~9 
+	tFiducialMarkInfo.nInspectItem = (int)MandoSfrSpec.FiducialMarkInspItem;//FIDUCIALMARK_INSPECT_FOV;
+	tFiducialMarkInfo.nAlgorithmIndex = (int)MandoSfrSpec.FiducialMarkAlgorithmIndex;//FOV_METHOD_SHM_CORNER;
+
+	//tFiducialMarkInfo.dModulecChartDistance = model.m_ChartSpec[specCount++];//2.0;	// 장비와 모듈 간의 거리 값 입력
+	//tFiducialMarkInfo.nDistortionAlrotithmType = (int)model.m_ChartSpec[specCount++];//2;	//EDistortionAlgorithmType 참조
 
 
-	tFiducialMarkInfo.nROIBoxSize = 50;				//장비에서 추출한 Fiducial Mark 의ROI 사이즈 입력
-	tFiducialMarkInfo.nMaxROIBoxSize = 100;			//장비에서 추출한 Fiducial Mark 의ROI 사이즈 입력
-	tFiducialMarkInfo.dRadius = 0.7;				
+
+
+	std::vector<double> vParam = { 82.83, 84.4, 118.11, 112.58, 133.8, 83.8, 145.7 };
+	tFiducialMarkInfo.pVecParamData = vParam.data();
+	tFiducialMarkInfo.nVecParamSize = vParam.size();
+	tFiducialMarkInfo.dRealGapX = 0.0;
+	tFiducialMarkInfo.dRealGapY = 0.0;
+	tFiducialMarkInfo.dModuleChartDistance = 0.0;
+	tFiducialMarkInfo.dPixelSize = 3.0;
+	tFiducialMarkInfo.dEFL = 8400.0;
+	tFiducialMarkInfo.dRadius = 0.7;
+	tFiducialMarkInfo.dBinaryThreshold = 70.0;
+	tFiducialMarkInfo.dMaxDeviation = 50.0;
+	tFiducialMarkInfo.nROIBoxSize = 10;
+	tFiducialMarkInfo.nMaxROIBoxSize = 100;
+
+
+
+	//tFiducialMarkInfo.nROIBoxSize = 50;				//장비에서 추출한 Fiducial Mark 의ROI 사이즈 입력
+	//tFiducialMarkInfo.nMaxROIBoxSize = 100;			//장비에서 추출한 Fiducial Mark 의ROI 사이즈 입력
+	//tFiducialMarkInfo.dRadius = 0.7;				
 	std::shared_ptr<CACMISFiducialMark> m_pChartProc = std::make_shared<CACMISFiducialMark>();
     bool bFindAlign = false;
-    if (_TYPE == GRID_TYPE)
-    {
-        tFiducialMarkInfo.nFiducialMarkNum = 9;
-        tFiducialMarkInfo.pszChartType = "GRID";//원형마크 = "DOT" , fov마크 = "GRID"
-        bFindAlign = m_pChartProc->SetFiducialMarkSpec(&tFiducialMarkInfo, Task.m_FindFovRect, nWidth, nHeight);//model.sfrElem.m_clRectFov, nWidth, nHeight);
-    }
-    else
-    {
-        tFiducialMarkInfo.nFiducialMarkNum = 4;
-        tFiducialMarkInfo.pszChartType = "DOT"; //원형마크 = "DOT" , fov마크 = "GRID"
-        bFindAlign = m_pChartProc->SetFiducialMarkSpec(&tFiducialMarkInfo, Task.m_FindCircleRect, nWidth, nHeight);//model.sfrElem.m_CircleRoi, nWidth, nHeight);
-    }
+
+    //if (_TYPE == GRID_TYPE)
+    //{
+    //    tFiducialMarkInfo.nFiducialMarkNum = 9;
+    //    tFiducialMarkInfo.pszChartType = "GRID";//원형마크 = "DOT" , fov마크 = "GRID"
+    //    bFindAlign = m_pChartProc->SetFiducialMarkSpec(&tFiducialMarkInfo, Task.m_FindFovRect, nWidth, nHeight);//model.sfrElem.m_clRectFov, nWidth, nHeight);
+    //}
+    //else
+    //{
+    //    tFiducialMarkInfo.nFiducialMarkNum = 4;
+    //    tFiducialMarkInfo.pszChartType = "DOT"; //원형마크 = "DOT" , fov마크 = "GRID"
+    //    bFindAlign = m_pChartProc->SetFiducialMarkSpec(&tFiducialMarkInfo, Task.m_FindCircleRect, nWidth, nHeight);//model.sfrElem.m_CircleRoi, nWidth, nHeight);
+    //}
 
 	
     //3,4,5 좌표는 0으로
@@ -176,7 +199,8 @@ bool CPRIFunc_Insp::func_Insp_Fov_Distortion_Rotate(BYTE* img, int _TYPE, bool b
 	cvLine(cvImg, cvPoint(0, nHeight / 2 - 1), cvPoint(nWidth - 1, nHeight / 2 - 1), CV_GREEN, 1);
 	cvLine(cvImg, cvPoint(nWidth / 2 - 1, 0), cvPoint(nWidth / 2 - 1, nHeight - 1), CV_GREEN, 1);
 
-	const CxDPoint& ptCenter = m_pChartProc->GetRealCenter();
+	//const CDPoint& ptCenter = m_pChartProc->GetRealCenter();
+	CDPoint ptCenter = m_pChartProc->GetRealCenter();
 	cvLine(cvImg, cvPoint(0, (int)(ptCenter.y)), cvPoint(nWidth - 1, (int)(ptCenter.y)), CV_LAVENDER, 1);
 	cvLine(cvImg, cvPoint((int)(ptCenter.x), 0), cvPoint((int)(ptCenter.x), nHeight - 1), CV_LAVENDER, 1);
 
@@ -266,6 +290,175 @@ bool CPRIFunc_Insp::func_Insp_Fov_Distortion_Rotate(BYTE* img, int _TYPE, bool b
 
 #endif
 	return bRes; 
+}
+
+bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
+{
+	TCHAR szLog[SIZE_OF_1K];
+	int i = 0;
+
+	int nPitch = (int)MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
+	int nSizeX = (int)MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
+	int nSizeY = (int)MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
+
+	//g_CalcImageAlign(m_nUnit);
+
+	int n_Width = gMIUDevice.nWidth;;
+	int n_Height = gMIUDevice.nHeight;
+
+	std::shared_ptr<CACMISFiducialMark> m_pChartProc = std::make_shared<CACMISFiducialMark>();
+
+	//_stprintf_s(szLog, SIZE_OF_1K, _T("[FOV]CACMISFiducialMark Version: %s"), m_pChartProc->GetVersion());
+	//AddLog(szLog, 0, m_nUnit);
+
+
+	TFiducialMarkInfoN spec;
+	spec.nFiducialMarkType = (int)MandoSfrSpec.FiducialMarkType;
+	spec.nInspectItem = (int)MandoSfrSpec.FiducialMarkInspItem;
+	spec.nAlgorithmIndex = (int)MandoSfrSpec.FiducialMarkAlgorithmIndex;
+
+	
+	std::vector<double> vParam = { 82.83, 84.4, 118.11, 122.58, 133.8, 83.8, 145.7 };
+
+	spec.pVecParamData = vParam.data();
+	spec.nVecParamSize = vParam.size();
+
+	/*spec.dRealGapX = 0.0;
+	spec.dRealGapY = 0.0;
+	spec.dModuleChartDistance = 0.0;
+	spec.dPixelSize = 0.0;
+	spec.dEFL = 0.0;
+	spec.dRadius = 0.0;
+	spec.dBinaryThreshold = 0.0;
+	spec.dMaxDeviation = 0.0;
+	spec.nROIBoxSize = 0;
+	spec.nMaxROIBoxSize = 0;*/
+
+
+	spec.dRealGapX = 0.0;
+	spec.dRealGapY = 0.0;
+	spec.dModuleChartDistance = 0.0;
+	spec.dPixelSize = 3.0;
+	spec.dEFL = 8400.0;
+	spec.dRadius = 0.7;
+	spec.dBinaryThreshold = 70.0;
+	spec.dMaxDeviation = 50.0;
+	spec.nROIBoxSize = 10;
+	spec.nMaxROIBoxSize = 100;
+
+
+	std::vector<POINT> vMark(MAX_FOV_FIND_COUNT);
+
+	int forIndex[MAX_FOV_FIND_COUNT] = { 1,2,5,6,0,3,4,7,12,13,8,9,10,11 };
+
+	int cnt = 0;
+	for (i = 0; i < MAX_FOV_FIND_COUNT; i++)
+	{
+		cnt = forIndex[i];
+
+		vMark[i].x = MESCommunication.m_ShmFovPoint[cnt].x;
+		vMark[i].y = MESCommunication.m_ShmFovPoint[cnt].y;
+	}
+
+	//bool ret = m_pChartProc->SetFiducialMarkSpec(spec, vMark, nWidth, nHeight);
+
+
+	m_pChartProc->SetInspectPosOffset(0, 0, 0, 0);
+
+	bool ret = m_pChartProc->SetFiducialMarkSpec(spec, vMark.data(), vMark.size(), n_Width, n_Height);
+
+	if (ret == false)
+	{
+		MESCommunication.m_dMesFov[0] = 0.0;
+		MESCommunication.m_dMesFov[1] = 0.0;
+
+		//MESCommunication.m_nMesFinalResult = 0;	//HFOV
+		MESCommunication.m_dMesFovResult[0] = 0;
+		MESCommunication.m_dMesFovResult[1] = 0;
+		_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] Test Fail"));
+		theApp.MainDlg->putListLog(szLog);
+		return false;
+	}
+	m_pChartProc->CalcDFOV();
+
+	////m_pChartProc->CalcDistortion();
+	////m_pChartProc->CalcTiltAndRotation();
+
+
+	bool bFovRtn = true;
+
+	MESCommunication.m_dMesFov[0] = m_pChartProc->GetHFOV();
+	MESCommunication.m_dMesFov[1] = m_pChartProc->GetVFOV();
+
+
+	double mFovValue = 0.0;
+	double mFovMin = 0.1;
+	double mFovMax = 10.0;
+
+	//mFovValue = MESCommunication.m_dMesFov[0];
+	//mFovMin = (_ttof(EEpromVerifyData.vMinData[18]));
+	//mFovMax = (_ttof(EEpromVerifyData.vMaxData[18]));
+
+
+	//if (mFovValue < mFovMin || mFovValue > mFovMax)
+	//{
+	//	g_clMesCommunication[m_nUnit].m_nMesFinalResult = 0;	//HFOV
+	//	g_clMesCommunication[m_nUnit].m_dMesFovResult[0] = 0;
+
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] HFov Spec Out: %.6lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//	AddLog(szLog, 0, m_nUnit);
+	//	g_clMandoInspLog[m_nUnit].m_sNGList += _T(" [HFov NG]");
+	//	if (g_clMandoInspLog[m_nUnit].m_nNGCnt < 30)
+	//	{
+	//		g_clMandoInspLog[m_nUnit].m_sDispNG[g_clMandoInspLog[m_nUnit].m_nNGCnt].Format(_T("NG HFov :%.3lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//		g_clMandoInspLog[m_nUnit].m_nNGCnt++;
+	//	}
+
+	//	g_clMandoInspLog[m_nUnit].m_bInspRes = false;
+	//	g_clTaskWork[m_nUnit].m_bOutputCheck[2] = false;	//OC
+
+	//}
+	//else
+	//{
+	//	g_clMesCommunication[m_nUnit].m_dMesFovResult[0] = 1;
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] HFov Spec In: %.3lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//	AddLog(szLog, 0, m_nUnit);
+	//}
+
+	//mFovValue = g_clMesCommunication[m_nUnit].m_dMesFov[1];
+	//mFovMin = (_ttof(EEpromVerifyData.vMinData[19]));
+	//mFovMax = (_ttof(EEpromVerifyData.vMaxData[19]));
+
+
+	//if (mFovValue < mFovMin || mFovValue > mFovMax)
+	//{
+	//	g_clMesCommunication[m_nUnit].m_nMesFinalResult = 0;	//VFOV
+	//	g_clMesCommunication[m_nUnit].m_dMesFovResult[1] = 0;
+
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] VFov Spec Out: %.6lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//	AddLog(szLog, 0, m_nUnit);
+	//	g_clMandoInspLog[m_nUnit].m_sNGList += _T(" [VFov NG]");
+	//	if (g_clMandoInspLog[m_nUnit].m_nNGCnt < 30)
+	//	{
+	//		g_clMandoInspLog[m_nUnit].m_sDispNG[g_clMandoInspLog[m_nUnit].m_nNGCnt].Format(_T("NG VFov :%.3lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//		g_clMandoInspLog[m_nUnit].m_nNGCnt++;
+	//	}
+
+	//	g_clMandoInspLog[m_nUnit].m_bInspRes = false;
+	//	g_clTaskWork[m_nUnit].m_bOutputCheck[2] = false;	//OC
+
+	//}
+	//else
+	//{
+	//	g_clMesCommunication[m_nUnit].m_dMesFovResult[1] = 1;
+	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] VFov Spec In: %.3lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//	AddLog(szLog, 0, m_nUnit);
+	//}
+	//g_clVision.DrawOverlayAll(m_nUnit);
+	g_SaveLGITLog(m_nUnit, "FOV", m_pChartProc->GetLogHeader(), m_pChartProc->GetLogData());
+	//g_SaveLGITLog(m_nUnit, "FOV", m_pChartProc->GetLogHeader(), m_pChartProc->GetLogData(), m_pChartProc->GetVersion());
+
+	return false;
 }
 
 

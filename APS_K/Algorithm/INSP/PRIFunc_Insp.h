@@ -47,6 +47,9 @@ public:
 	int FDFInsp(BYTE* img, bool bAutoMode);
 	//oc
 	bool func_Insp_Fov_Distortion_Rotate(BYTE* img, int _TYPE, bool bAutoMode = false);
+	//FOV FiducailMark
+	bool func_Insp_Shm_Fov_Distortion(BYTE* img, bool bAutoMode = false);
+
 
 	//R/C,B/C,Cr/Cb
 	bool func_Insp_ColorSensitivity(BYTE* stainImg, int index, bool bAutoMode);

@@ -76,4 +76,10 @@ public:
 	afx_msg void OnCbnSelchangeCombo3();
 	afx_msg void OnCbnSelchangeCombo4();
 	afx_msg void OnCbnSelchangeCombo5();
+	CComboBox m_LGIT_Algo_Select_FiducialMarkType;
+	CComboBox m_LGIT_Algo_Select_FiducialMarkInspectItem;
+	CComboBox m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex;
+	afx_msg void OnCbnSelchangeCombo6();
+	afx_msg void OnCbnSelchangeCombo7();
+	afx_msg void OnCbnSelchangeCombo8();
 };

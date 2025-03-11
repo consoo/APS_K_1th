@@ -1407,6 +1407,11 @@ public:
 	int INSP_SfrAlgorithmMethod;
 	int INSP_SfrFrequencyUnit;
 
+	int FiducialMarkType;
+	int FiducialMarkInspItem;
+	int FiducialMarkAlgorithmIndex;
+
+
 	double INSP_SfrInspOffset[4];   //0 = left 1 = top 2 = right 3 = bottom
 	
 	double INSP_OCCenterSpecX;
@@ -1474,6 +1479,7 @@ public:
 	double	m_dMesFov[3];	//0 = HFov , 1 = VFov , 2 = DFov
 	double	m_dMesRotate;
 
+	CPoint m_ShmFovPoint[MAX_FOV_FIND_COUNT];
 
 	double	m_nMesBlemishMaxDefect[9];
 	//---------------------------------------------------------------
@@ -1493,6 +1499,7 @@ public:
 	int		m_dMesDrResult;
 	int		m_dMesFovResult[3];
 	int		m_dMesRotateResult;
+	int		m_nMesFinalResult;			// гу╨н
 
 	//---------------------------------------------------------------
 	//---------------------------------------------------------------

@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-//#define		NORINDA_MODE
+#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0
@@ -330,6 +330,7 @@ enum MTF_INSP_MODE { MTF_17P = 0, MTF_24P };
 
 
 #define MAX_FOV_COUNT				9       //Çù°¢
+#define MAX_FOV_FIND_COUNT			14
 
 #define MAX_SNR_COUNT				3       //Èò,»¡,°Ë¼ø¼­
 

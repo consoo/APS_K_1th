@@ -872,7 +872,7 @@ bool CTask::_OpencvFindCirclePos(BYTE* ChartRawImage, CRect* clRectRoi, bool bAu
 bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi)
 {
 	int maxSize = 800;
-	
+	bool Fov = false;
 	CString sLog;
 
 	if ( ucImage == NULL )
@@ -943,8 +943,14 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (y=iSy ; y<iEy ; y++)
 			{
-//				iSum += (ucImage[iPos]*ucImage[iPos]);
-				iSum += (ucImage[iPos]);
+				if (Fov == false)
+				{
+					iSum += (ucImage[iPos]);
+				}
+				else
+				{
+					iSum += 255 - (ucImage[iPos]);
+				}
 				iPos += pitch;
 			}
 
@@ -1097,7 +1103,14 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (x=iMinX ; x<iMaxX; x++)
 			{
-				iSum += ucImage[iPos++];
+				if (Fov == false)
+				{
+					iSum += ucImage[iPos++];
+				}
+				else
+				{
+					iSum += 255 - ucImage[iPos++];
+				}
 			}
 
 			aiHistY[y-iSy] = iSum;
@@ -8511,6 +8524,11 @@ CMandoSfrSpec::CMandoSfrSpec()
 	INSP_SfrAlgorithmType = 0;
 	INSP_SfrAlgorithmMethod = 0;
 	INSP_SfrFrequencyUnit = 0;
+
+	FiducialMarkType = 0;
+	FiducialMarkInspItem = 0;
+	FiducialMarkAlgorithmIndex = 0;
+
 	for (int i = 0; i > 4; i++)
 	{
 		INSP_SfrInspOffset[i] = 0.0;
@@ -8601,6 +8619,15 @@ void CMandoSfrSpec::NewSfrSave()
 
 	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), INSP_SfrFrequencyUnit);
 	WritePrivateProfileString(_T("SFR"), _T("FREQUENCY_UNIT"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), FiducialMarkType);
+	WritePrivateProfileString(_T("FiducialMark"), _T("TYPE"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), FiducialMarkInspItem);
+	WritePrivateProfileString(_T("FiducialMark"), _T("InspItem"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%d"), FiducialMarkAlgorithmIndex);
+	WritePrivateProfileString(_T("FiducialMark"), _T("AlgorithmIndex"), szData, szPath);
 
 	for (i = 0; i < 4; i++)
 	{
@@ -8706,6 +8733,15 @@ void CMandoSfrSpec::NewSfrLoad()
 
 	GetPrivateProfileString(_T("SFR"), _T("FREQUENCY_UNIT"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
 	INSP_SfrFrequencyUnit = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("FiducialMark"), _T("TYPE"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	FiducialMarkType = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("FiducialMark"), _T("InspItem"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	FiducialMarkInspItem = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("FiducialMark"), _T("AlgorithmIndex"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	FiducialMarkAlgorithmIndex = _ttof(szIniBuff);
 
 	for (i = 0; i < 4; i++)
 	{
@@ -9137,6 +9173,12 @@ CMESCommunication::CMESCommunication()
 			m_dMesDeltaOC[i] = 0.0;
 			m_dMesOCResult[i] = 0;
 			m_dMesDeltaOCResult[i] = 0;
+		}
+
+		for (i = 0; i < MAX_FOV_FIND_COUNT; i++)
+		{
+			m_ShmFovPoint[i].x = 0;
+			m_ShmFovPoint[i].y = 0;
 		}
 
 		for (i = 0; i < 3; i++)

@@ -36,6 +36,9 @@ void CSfrSpec::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO3, m_LGIT_Algo_Select_AlgorithmType);
 	DDX_Control(pDX, IDC_COMBO4, m_LGIT_Algo_Select_AlgorithmMethod);
 	DDX_Control(pDX, IDC_COMBO5, m_LGIT_Algo_Select_FrequencyUnit);
+	DDX_Control(pDX, IDC_COMBO6, m_LGIT_Algo_Select_FiducialMarkType);
+	DDX_Control(pDX, IDC_COMBO7, m_LGIT_Algo_Select_FiducialMarkInspectItem);
+	DDX_Control(pDX, IDC_COMBO8, m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex);
 }
 
 
@@ -56,6 +59,9 @@ BEGIN_MESSAGE_MAP(CSfrSpec, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO3, &CSfrSpec::OnCbnSelchangeCombo3)
 	ON_CBN_SELCHANGE(IDC_COMBO4, &CSfrSpec::OnCbnSelchangeCombo4)
 	ON_CBN_SELCHANGE(IDC_COMBO5, &CSfrSpec::OnCbnSelchangeCombo5)
+	ON_CBN_SELCHANGE(IDC_COMBO6, &CSfrSpec::OnCbnSelchangeCombo6)
+	ON_CBN_SELCHANGE(IDC_COMBO7, &CSfrSpec::OnCbnSelchangeCombo7)
+	ON_CBN_SELCHANGE(IDC_COMBO8, &CSfrSpec::OnCbnSelchangeCombo8)
 END_MESSAGE_MAP()
 
 
@@ -78,6 +84,7 @@ BOOL CSfrSpec::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+
 	//DeltaAlgorithmType
 	this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.AddString(TEXT("ESFRDelta_Diff"));
 	this->m_LGIT_Algo_Select_SFR_DeltaAlgorithm.AddString(TEXT("ESFRDelta_Ratio"));
@@ -99,6 +106,37 @@ BOOL CSfrSpec::OnInitDialog()
 	this->m_LGIT_Algo_Select_FrequencyUnit.AddString(TEXT("ESFRFreq_LinePairPerMilliMeter"));
 	this->m_LGIT_Algo_Select_FrequencyUnit.AddString(TEXT("ESFRFreq_LineWidthPerPictureHeight"));
 	
+
+	//FiducialMarkType
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_DOT"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_CROSSDOT"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_GRID"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_MOBIS_MOTIONAL"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_SINGLE"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_SHM_CORNER"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_SHM_CIRCLE"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_FORD_L3"));
+	this->m_LGIT_Algo_Select_FiducialMarkType.AddString(TEXT("FIDUCIALMARKTYPE_MAX"));
+
+	//FiducialMarkInspectItem
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_FOV"));
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_DISTORTION"));
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_ROTATE"));
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_TILT"));
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_OC"));
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_ALL"));
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.AddString(TEXT("FIDUCIALMARK_INSPECT_MAX"));
+	
+	//FiducialMark AlgorithmIndex
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_MODULE_DISTANCE"));
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_EFL"));
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_MOBIS_MOTIONAL"));
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_SHM_CORNER"));
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_SHM_CIRCLE_H150"));
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_FORD_L3"));
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.AddString(TEXT("FOV_METHOD_FIGURE_AI"));
+
+
 	setInterface();
 	InitGridCtrl_Oc();
 	InitGridCtrl_Sfr();
@@ -234,6 +272,10 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 	this->m_LGIT_Algo_Select_AlgorithmType.SetCurSel(MandoSfrSpec.INSP_SfrAlgorithmType);
 	this->m_LGIT_Algo_Select_AlgorithmMethod.SetCurSel(MandoSfrSpec.INSP_SfrAlgorithmMethod);
 	this->m_LGIT_Algo_Select_FrequencyUnit.SetCurSel(MandoSfrSpec.INSP_SfrFrequencyUnit);
+
+	this->m_LGIT_Algo_Select_FiducialMarkType.SetCurSel(MandoSfrSpec.FiducialMarkType);
+	this->m_LGIT_Algo_Select_FiducialMarkInspectItem.SetCurSel(MandoSfrSpec.FiducialMarkInspItem);
+	this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.SetCurSel(MandoSfrSpec.FiducialMarkAlgorithmIndex);
 
 	for (int i = 0; i < 4; i++)	
 	{
@@ -757,4 +799,25 @@ void CSfrSpec::OnCbnSelchangeCombo5()
 {
 	// TODO: Add your control notification handler code here
 	MandoSfrSpec.INSP_SfrFrequencyUnit = this->m_LGIT_Algo_Select_FrequencyUnit.GetCurSel();
+}
+
+
+void CSfrSpec::OnCbnSelchangeCombo6()
+{
+	// TODO: Add your control notification handler code here
+	MandoSfrSpec.FiducialMarkType = this->m_LGIT_Algo_Select_FiducialMarkType.GetCurSel();
+}
+
+
+void CSfrSpec::OnCbnSelchangeCombo7()
+{
+	// TODO: Add your control notification handler code here
+	MandoSfrSpec.FiducialMarkInspItem = this->m_LGIT_Algo_Select_FiducialMarkInspectItem.GetCurSel();
+}
+
+
+void CSfrSpec::OnCbnSelchangeCombo8()
+{
+	// TODO: Add your control notification handler code here
+	MandoSfrSpec.FiducialMarkAlgorithmIndex = this->m_LGIT_Algo_Select_FiducialMarkAlgorithmIndex.GetCurSel();
 }

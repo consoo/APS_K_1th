@@ -10881,7 +10881,6 @@ void CAABonderDlg::OnClickedLabelTitle()
 	//vision.bmpImageSaveFn(0, 0);
 	
 #ifdef NORINDA_MODE
-
 	//CDPoint cpLeftPos;
 	//CDPoint cpRighttPos;
 	//bool bCircleFind = vision.FnShmEdgeFind(MIU.m_pFrameRawBuffer, false);
