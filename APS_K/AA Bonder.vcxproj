@@ -145,7 +145,7 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Opencv346\install\x64\vc14\bin;$(ProjectDir)\Library\Inspection\Include\LibACMISBlemish;$(ProjectDir)\Library\InspectionK\Include\LibACMISCertification;$(ProjectDir)\Library\Inspection\Include\LibACMISCodec;$(ProjectDir)\Library\Inspection\Include\LibACMISCommon;$(ProjectDir)\Library\Inspection\Include\LibACMISDefect;$(ProjectDir)\Library\Inspection\Include\LibACMISEtc;$(ProjectDir)\Library\Inspection\Include\LibACMISImage;$(ProjectDir)\Library\Inspection\Include\LibACMISNoise;$(ProjectDir)\Library\InspectionK\Include\LibACMISOpticalCenter;$(ProjectDir)\Library\InspectionK\Include\LibACMISParallelInspection;$(ProjectDir)\Library\InspectionK\Include\LibACMISResolution;$(ProjectDir)\Library\InspectionK\Include\LibACMISShading;$(ProjectDir)\Library\InspectionK\Include\LibACMISSoftISP;$(ProjectDir)\Library\InspectionK\Include\LibACMISSoftISPBasic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Opencv346\install\x64\vc14\bin;$(ProjectDir)\Library\Inspection\Include\LibACMISBlemish;$(ProjectDir)\Library\Inspection\Include\LibACMISCertification;$(ProjectDir)\Library\Inspection\Include\LibACMISCodec;$(ProjectDir)\Library\Inspection\Include\LibACMISCommon;$(ProjectDir)\Library\Inspection\Include\LibACMISDefect;$(ProjectDir)\Library\Inspection\Include\LibACMISEtc;$(ProjectDir)\Library\Inspection\Include\LibACMISImage;$(ProjectDir)\Library\Inspection\Include\LibACMISNoise;$(ProjectDir)\Library\Inspection\Include\LibACMISOpticalCenter;$(ProjectDir)\Library\Inspection\Include\LibACMISParallelInspection;$(ProjectDir)\Library\Inspection\Include\LibACMISResolution;$(ProjectDir)\Library\InspectionK\Include\LibACMISShadin;$(ProjectDir)\Library\Inspection\Include\LibACMISSoftISP;$(ProjectDir)\Library\Inspection\Include\LibACMISSoftISPBasic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CallingConvention>Cdecl</CallingConvention>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -332,23 +332,22 @@
     <ClInclude Include="Library\Inspection\Include\LibACMISCertification\export.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISCodec\LibACMISCodecCommon.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISCommon\ACMISCommon.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\CommonClass.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\CommonEnum.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\CommonStruct.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\CSVParser.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\DataTypes.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\InspectionErrorCode.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISCommon\Timer.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISDefect\ACMISDefectDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISDefect\ACMISImageDarkTest.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISDefect\export.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISEtc\ACMISEtcAlgorithm.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISEtc\ACMISEtcDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISEtc\export.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISBlemishDef.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISDefectDef.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISImageBlemish.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISImageDarkTest.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISImageDef.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISImageOpticalCenter.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISMechanicalOpticalCenter.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISOpticalCenterDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISRotateUsingFiducialMark.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISSignalNoiseRatio.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISImage\ACMISSignalNoiseRatioDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISImage\export.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISNoise\ACMISSignalNoiseRatio.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISNoise\ACMISSignalNoiseRatioDef.h" />
@@ -360,32 +359,33 @@
     <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\ACMISParallelInspectionDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISParallelInspection\export.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISFiducialMark.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISResolutinDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISResolutionDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISResolutionEIAJ.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\ACMISResolutionSFR.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISResolution\export.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISColorReproduction.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingAlgorithm.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingColorSensitivity.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingColorShading.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingColorShadingDef.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingDef.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingDevDef.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingDeviation.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingIRFilter.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingLowLight.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingRelativeIllumination.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingRelativeUniformity.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingVerifyEEPROM.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingVerifyEEPROM9x7.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISShading\ACMISShadingVignetting.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISShading\export.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\CDemosaic.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\CDemosaic_RGGB.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\CDemosaic.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\CDemosaic_AHD.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\CDemosaic_BL33.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\CDemosaic_RCCB.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\CDemosaic_RGGB.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\CDemosaic_VNG.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\DataLog.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\DemosaicBasic.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\export.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\ImageProcessing.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\RawImageProcessing.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISPBasic\SoftISPBasic.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\CDemosaic_BLLC.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\CDemosaic_GBTF.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\CDemosaic_Residual.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\CDemosaic_RGBIR_P2.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\DemosaicAdvanced.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\DetectObject.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\export.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\ImageProcessing.h" />
-    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\RawImageProcessing.h" />
+    <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\ImageFileProcessing.h" />
     <ClInclude Include="Library\Inspection\Include\LibACMISSoftISP\SoftISP.h" />
     <ClInclude Include="Library\RS232C\Handler_RS232C.h" />
     <ClInclude Include="Library\Utility\TimeChecker.h" />

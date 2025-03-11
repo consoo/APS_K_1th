@@ -1228,7 +1228,7 @@ int	CPcbProcess1::RunProc_LaserMeasure(int iUseStep)
 
 		Keyence.func_CL3000_Scan(Task.m_Laser_Point[iLaser_Pos]);
 		Sleep(100);
-		logStr.Format("변 위센서 %lf - %d 위치[%d]", Task.m_Laser_Point[iLaser_Pos], iLaser_Pos + 1, iUseStep);
+		logStr.Format("변위센서 %lf - %d 위치[%d]", Task.m_Laser_Point[iLaser_Pos], iLaser_Pos + 1, iUseStep);
 		putListLog(logStr);
 		LaserPos[iLaser_Pos].x = motor.GetEncoderPos(Motor_PCB_X);
 		LaserPos[iLaser_Pos].y = motor.GetEncoderPos(Motor_PCB_Y);

@@ -5664,7 +5664,7 @@ int CAABonderDlg::_getMTF(int Mode, bool LogView)
 		{
 			bRet = m_pSFRProc->Inspect(MIU.m_pFrameRawBuffer, nWidth, nHeight, m_stSFRSpec,
 				gMIUDevice.dTDATASPEC_n.eDataFormat, gMIUDevice.dTDATASPEC_n.eOutMode,
-				(_ESENSORTYPE)SENSORTYPE_RGGB_G_ONLY,
+				(ESENSORTYPE)SENSORTYPE_RGGB_G_ONLY,
 				nBlackLevel, false, false, gMIUDevice.dTDATASPEC_n.eDemosaicMethod);
 		}
 		else
@@ -8432,7 +8432,7 @@ bool CAABonderDlg::func_MTF(BYTE* ChartRawImage, bool bAutoMode, int dindex)
 			{
 				bRet = m_pSFRProc->Inspect(ChartRawImage, nWidth, nHeight, m_stSFRSpec,
 					gMIUDevice.dTDATASPEC_n.eDataFormat, gMIUDevice.dTDATASPEC_n.eOutMode,
-					(_ESENSORTYPE)SENSORTYPE_RGGB_G_ONLY,
+					(ESENSORTYPE)SENSORTYPE_RGGB_G_ONLY,
 					nBlackLevel, false, false, gMIUDevice.dTDATASPEC_n.eDemosaicMethod);
 			}
 			else
@@ -8449,7 +8449,7 @@ bool CAABonderDlg::func_MTF(BYTE* ChartRawImage, bool bAutoMode, int dindex)
 			{
 				bRet = m_pSFRProc->Inspect(MIU.vChartBuffet, nWidth, nHeight, m_stSFRSpec,
 					gMIUDevice.dTDATASPEC_n.eDataFormat, gMIUDevice.dTDATASPEC_n.eOutMode,
-					(_ESENSORTYPE)SENSORTYPE_RGGB_G_ONLY,
+					(ESENSORTYPE)SENSORTYPE_RGGB_G_ONLY,
 					nBlackLevel, false, false, gMIUDevice.dTDATASPEC_n.eDemosaicMethod);
 			}
 			else

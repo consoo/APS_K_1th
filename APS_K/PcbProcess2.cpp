@@ -1082,15 +1082,7 @@ int	CPcbProcess2::RunProc_SensorAlign(int iUseStep)
 		}
 		iRtnFunction = 26990;
 		break;
-	case 26990:				//IM
-		//if (!motor.INSP_Motor_MoveX(Wait_Pos))
-		//{
-		//	sLangChange.LoadStringA(IDS_STRING1499);	//PCB부 z축 모터 위치 이동 실패[%d]
-		//	logStr.Format(sLangChange, MotorPosName[Wait_Pos], iUseStep);
-		//	delayMsg(logStr.GetBuffer(99), 3000, M_COLOR_RED);
-		//	iRtnFunction = -26990;
-		//	break;
-		//}
+	case 26990:				
 		iRtnFunction = 26991;
 		break;
 	case 26991://! Lens-Z축 대기 위치 이동
@@ -1223,7 +1215,7 @@ int	CPcbProcess2::RunProc_LaserMeasure(int iUseStep)
 	case 27250:
 		Keyence.func_CL3000_Scan(Task.m_Laser_Point[iLaser_Pos]);
 		Sleep(100);
-		logStr.Format("변 위센서 %lf - %d 위치[%d]", Task.m_Laser_Point[iLaser_Pos], iLaser_Pos + 1, iUseStep);
+		logStr.Format("변위센서 %lf - %d 위치[%d]", Task.m_Laser_Point[iLaser_Pos], iLaser_Pos + 1, iUseStep);
 		putListLog(logStr);
 		LaserPos[iLaser_Pos].x = motor.GetEncoderPos(Motor_PCB_X);
 		LaserPos[iLaser_Pos].y = motor.GetEncoderPos(Motor_PCB_Y);
