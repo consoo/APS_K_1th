@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-#define		NORINDA_MODE
+//#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0
@@ -17,25 +17,28 @@
 //
 #define	__MACHINE_MODEL			MACHINE_1ST
 
+
+
+
+const int M1_TANGERING_5M = 200800;		//김동훈 책임, 
+const int M2_M = 200700;		// 최종철 선임, 
+
+
 const int M1_LSI_5M = 200600;			//241126 최승필 책임, 원형도포 기존 썬더 제품에서 개별 콜리메터 에서 평차트로 변경제품
-
-const int M2_VB1940_5M = 200400;			//241017 LG 신용진선임신용진선임 ,  (Sensor : VB1940)  5개 패턴 , 십자가 원형마크 , 원형도포 도포 무게 0.032 , 0.004 , 0.01 로 uv offset테스트
-
-
-
-const int M2_OV9284_5M = 200300;			//240826 LG 강찬구 책임, 신용진선임 ,  (Sensor : OV9284)  11개 패턴 , 십자가 원형마크
-
+const int M2_VB1940_5M = 200400;		//241017 LG 신용진선임신용진선임 ,  (Sensor : VB1940)  5개 패턴 , 십자가 원형마크 , 원형도포 도포 무게 0.032 , 0.004 , 0.01 로 uv offset테스트
+const int M2_OV9284_5M = 200300;		//240826 LG 강찬구 책임, 신용진선임 ,  (Sensor : OV9284)  11개 패턴 , 십자가 원형마크
 const int M2_FF_MODULE = 200200;		//240726 박동찬, 김세영 선임, 사각도포 얇은 제품 사격형 도포 차트 9개 LGIT_GRABBER_20240715_01_v2.2.3  epoxy무게 = 0.035
 const int M2_RFPCB_5M = 200100;			//240721 최승필 책임 얇은 제품 원형 도포  차트 9개 LGIT_GRABBER_20240715_01_v2.2.3
-//
 const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0F, 05F, 07F
+//
 
 									//
 
-static int LGIT_MODEL_INDEX = M1_LSI_5M;
+static int LGIT_MODEL_INDEX = M1_TANGERING_5M;
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-#define					VER_STR		"250307_1"			//DLL 변경
+#define					VER_STR		"250311_1"			//DLL 변경
+//#define					VER_STR		"250307_1"			//DLL 변경
 //#define					VER_STR		"250304_1"			//SFR Algorithm 그리드 -> 콤보 박스로 변경
 //#define					VER_STR		"250227_1"			//Tangering AA - 해상력, 이물, OC
 
@@ -99,128 +102,6 @@ static int LGIT_MODEL_INDEX = M1_LSI_5M;
 
 //opencv dll 추가
 //PATH=$(ProjectDir)\Library\lib64;C:\Opencv346\install\x64\vc14\bin;%PATH%
-
-//#if (__MACHINE_MODEL == MACHINE_1ST)
-//
-//#else
-//
-//#endif
-////
-//#if (__MACHINE_MODEL == MACHINE_1ST)
-//
-//#endif
-////
-//#if (__MACHINE_MODEL == MACHINE______2ST)
-//
-//#endif
-//io , 조명,레이저 남음
-
-//-----------------------------------------------------------------------------------------------------------------------------------
-//240721
-//#define  M1_RFPCB_5M					6300			
-//
-//-----------------------------------------------------------------------------------------------------------------------------------
-//240721
-//#define  M1_HEATING_GEN2				5300			
-//
-
-//#define					VER_STR		"2400716_1"				//2호기 소스에 1호기 합치는중 , process 1,2 모두 추가
-
-
-//#define					VER_STR		"2400625_1"			//shm 혼다 모델 [20240605]Distribute_V2.6.8.9_VS2015 로 dll 변경
-//
-//#define					VER_STR		"240205_etc"				//pcb th 축 고장으로 임시 렌즈레이져얼라인 th 없앰
-//#define					VER_STR		"240205_1"				//RI 검사 점프된거 다시 추가 STAIN 검사 이후
-//#define					VER_STR		"240202_2"				//ASK UI 탭 순서 임시 변경 '아니오'가 1 번
-//#define					VER_STR		"240202_1"				//ChipID 모델명 고정 번호 자동 변경함수 ChipIDCountPlus(); -> UI 설정으로 뺌
-//#define					VER_STR		"240201_4"				//ChipID 모델명 고정 번호 자동 변경함수 ChipIDCountPlus();
-//#define					VER_STR		"240201_1"				//바코드 SHM100_150 고정 입력, sfr log view 옵션추가
-//#define					VER_STR		"240131_1"				//완제품 레이저 위치 이동시 pcb tx,ty도 이동, 완제품시 로테이션 측정후 th 보정
-//
-//#define					VER_STR		"240126_2"		//완제품 쓰레드로 눈띄우기, shm모델 꼬짓점 수정
-//#define					VER_STR		"240126_1"
-//#define					VER_STR		"240117_1"			//sfr 연속 하락시 초기화 코드 추가 case 60070: <- 확인전 , 조명 다이얼로그 팝업으로 변경, 설정창 빼기
-//#define					VER_STR		"240116_1"			//동시 이동 추가 , dryrun 추가
-//#define					VER_STR		"240109_1"				//렌즈축 동시 이동 추가 , 파라미터 자동중에도 저장되게 수정
-//#define					VER_STR		"240105_1"		// 도포 인터락 INSP X 축
-//#define					VER_STR		"240104_1"		// insp x 버튼, 프로그램 on 동시에 Motor ON/OFF
-//#define					VER_STR		"231228_1"		// SHM 100, 150 AA, EOL 각 90EA
-//#define					VER_STR		"231221_2"		// COMP_MAX save min 랑 같은 이름으로 저장 불러오기 하고있었음.
-//#define					VER_STR		"231221_1"		// COMP_MAX save min 랑 같은 이름으로 저장 불러오기 하고있었음.
-//#define					VER_STR		"231220_4"		//fov, ri 엑셀 로그 수정 
-//#define					VER_STR		"231220_1"		//자동 LED 
-//#define					VER_STR		"231219_1"		//완제품 이미지 2번 세이브 점프
-//#define					VER_STR		"231218_1"		//shm current , voltage 검사 추가
-//#define					VER_STR		"231214_1"			//김성봉 shm 검사 추가 , mtf(aa/el), ri(eol) , voltage_current(aa/eol)
-//#define					VER_STR		"231129_1"			//shm_100/150 각 2ea AA진행
-//#define					VER_STR		"231127_3"			//ALIGN CAM PASS 옵션 추가 AA, 완제품 -> 확인 완료
-//#define					VER_STR		"231127_2"			//ALIGN CAM PASS 옵션 추가 AA, 완제품
-//#define					VER_STR		"231127_1"			//SHM 김성봉 모델 EOL 에서 차트 좌표 찾기 추가
-//#define					VER_STR		"231123_1"				//좌표 계산 완료 , 로그 추가해야된다 , 
-//#define					VER_STR		"231121_1"				//opencv 3 대로 변경 , 꼭짓점 정렬하는 코드 짜야됨
-//#define					VER_STR		"231106_2"			//CAM SKIP 해제
-//#define					VER_STR		"231106_1"			//pcb, lens tx,ty 순서변경 - (_calcLaserTilt 함수 TX, TY 인자 순서 원복)
-//#define					VER_STR		"231024_1"			//CAM 연결 확인
-//#define					VER_STR		"231019_2"			//eol 001~020 진행
-//#define					VER_STR		"231019_1"			//dll 변경 2.6.5.6
-//#define					VER_STR		"231018_3"				//	SHM_001~020 AA진행
-
-//#define					VER_STR		"231018_2"				//	_calcLaserTilt 함수 TX, TY 인자 순서 변경
-
-//#define					VER_STR		"231018_1"				//	case 13500:			//IM case 26616: Cam Align 점프
-//#define					VER_STR		"231017_4"				//pcb x 파라메타 위치제어 모드로 도포 확인
-//#define					VER_STR		"231017_1"				//
-//#define					VER_STR		"231016_1"				//
-//#define					VER_STR		"231015_1"				//원점 LensAlgin 추가, LensAlign 모터 이동 함수 추가
-//#define					VER_STR		"231013_1"				//원점, 운전준비 렌즈 얼라인부 빼고
-//#define					VER_STR		"231012_1"				//lee sfr , 이물검사 수정, [20230310]Distribute_V2.6.4.6_VS2015 변경, raw캡처 수정
-//
-//
-//
-//#define					VER_STR		"231011_2"			//ALING / OC 조명 확인.
-//#define					VER_STR		"231011_1"			//차트 조명 메뉴얼버튼 확인 완료.
-//#define					VER_STR		"231006_1"			//검사 스레드 INSP X 축들어오고 나가고 추가.
-//#define					VER_STR		"230930_1"			//Lens AA 검사 스레드에 INSP X 이동 추가 //IM 검색, INSP X 메뉴얼 버튼 3개 부분 모두 생성, 차트 포트 1개더 추가
-//#define					VER_STR		"230929_1"			//Lens_Motor_Move 함수에 th 축 추가?..
-//#define					VER_STR		"230928_1"			//INSP_X 축 이동 함수, pcb 수동 버튼 생성.
-//#define					VER_STR		"230921_1"			//INSP_X 축 pcb 그리드에 추가 중
-//#define					VER_STR		"230920_1"			//Motor Lens Th 그리드 추가,Save DataHandler Motor 0~20 축 POS 추가 (save, load) [pcb, lens 부 OK ERR LIMIT X Y Z TX TY TH 6개씩 모두 추가 
-//#define					VER_STR		"230919_1"			//APS_PAJU_230913_5_f 파일에서 AXL파일 통째로 
-//#define					VER_STR		"230918_1"			//APS_PAJU_230913_5_f 파일에서 AXL파일 통째로 
-//#define					VER_STR		"230904_1_PCB AA"			//m_pSFRProc->Inspect 옵션수정
-//#define					VER_STR		"230831_1_LENS AA"				//LGD2M
-//#define					VER_STR		"230831_1_PCB AA"			//mGlobalSmallChartCount 개수 오류 수정 , 바그래프 이름 변경
-//#define					VER_STR		"230830_1_PCB AA"					//안명진책임 모델 빌드 pcb aa , 사각도포, 사이드 차트 조명 버튼 살림
-//#define					VER_STR		"20230817_1"			//우승원 책임 모델 빌드 Lens aa, circle epoxy, bl33
-//#define					VER_STR		"20230816_2"			//dll 변경 우승원 책임 모델 mini 리비안과 동일 조건 요구 bl33 적용위해
-//[20230118]Distribute_V2.6.4.5_VS2015
-//#define					VER_STR		"20230816_1"
-//#define					VER_STR		"20230720_1"			//새로운 버전 추가중, 설정 경로 변경 , 모델 그리 생성까지 완료 삭제 안됨
-
-
-
-
-
-//#define					VER_STR		"20230620_1"			//트리니티 배정영 선임 roi 5개에서 9개로 추가
-//#define					VER_STR		"20230619_1"
-//#define					VER_STR		"20230616_1"			//트리니티 모델  , x,y,tx,ty, th 차느 90도 회전 옵션 추가
-//#define					VER_STR		"20230131_1"
-//#define					VER_STR		"20230103_1"			//mpc
-//#define					VER_STR		"20221107_1"				//저장할때 index 개수 안맞는거 수리, 센터 패턴 찾는거 수정
-//#define					VER_STR		"20221103_1"				//cob8m 빌드 마무리
-//#define					VER_STR		"20221102_1"			//cob8m 세팅완료 gen2와 동일하게 세팅(리비안)
-//#define					VER_STR		"20221031_1"			//CMandoSfrSpec::load() 변수 개수 오류 수정
-//#define					VER_STR		"20221026_1"
-//#define					VER_STR		"20221024_1"
-//#define					VER_STR		"20221012_2"				//iplimage release
-//#define					VER_STR		"20221012_2"			//SENSORTYPE_RGGB_G_ONLY gen2모델 적용 //석승원선임은 g안쓴다..확인필요 진행시
-//#define					VER_STR		"20221011_1_Auto"
-//#define					VER_STR		"20221011_1"				//gen2 전류측정 추가
-//#define					VER_STR		"20220929_1"				//define 정리
-//#define					VER_STR		"20220928_1"					//M_MODULE_2m,5m은패턴 매칭으로
-//#define					VER_STR		"20220927_1"				//M_MODULE_IR제품때문 dll변경
-//#define					VER_STR		"20220926_1"					//M_MODULE_IR 모델 추가
-//#define					VER_STR		"20220919_1"					//M_AF_CM 빌드 진행
 //=======================================================================
 
 
