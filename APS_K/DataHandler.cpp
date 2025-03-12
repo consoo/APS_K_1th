@@ -872,7 +872,6 @@ bool CTask::_OpencvFindCirclePos(BYTE* ChartRawImage, CRect* clRectRoi, bool bAu
 bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi)
 {
 	int maxSize = 800;
-	bool Fov = false;
 	CString sLog;
 
 	if ( ucImage == NULL )
@@ -943,7 +942,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (y=iSy ; y<iEy ; y++)
 			{
-				if (Fov == false)
+				if (sysData.m_iCircleColorWhite == false)
 				{
 					iSum += (ucImage[iPos]);
 				}
@@ -1103,7 +1102,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (x=iMinX ; x<iMaxX; x++)
 			{
-				if (Fov == false)
+				if (sysData.m_iCircleColorWhite == false)
 				{
 					iSum += ucImage[iPos++];
 				}
@@ -4170,6 +4169,7 @@ CSystemData::CSystemData()
 	m_iSmoothness[0] = m_iSmoothness[1] = 50;
 	m_iDicChange = 0;
 	m_iIrChartUse = 0;
+	m_iCircleColorWhite = 0;
 	m_iLaserInspPass = 0;
 	m_iAlignCamInspPass = 0;
 	m_iEpoxyLaserInspPass = 0;
@@ -4402,7 +4402,7 @@ void CSystemData::Save()
 		
 		fprintf_s(out, "CONTI_ASK_PASS	%d\n", m_iDicChange);
 		fprintf_s(out, "IR_CHART_USE	%d\n", m_iIrChartUse);
-		
+		fprintf_s(out, "FOV_CIRCLE_COLOR_WHITE	%d\n", m_iCircleColorWhite);
 
 		
 		fprintf_s(out, "FIRST_AA_FINISH_ENABLE	%d\n", m_i1stAaEbable);
@@ -4568,6 +4568,10 @@ void CSystemData::Load()
 			else if (strcmp(Title, "IR_CHART_USE") == 0)
 			{
 				sscanf_s(Line, "%s %d", Title, 499, &m_iIrChartUse);
+			}
+			else if (strcmp(Title, "FOV_CIRCLE_COLOR_WHITE") == 0)
+			{
+				sscanf_s(Line, "%s %d", Title, 499, &m_iCircleColorWhite);
 			}
 			else if(strcmp(Title, "FIRST_AA_FINISH_ENABLE")==0)
 			{

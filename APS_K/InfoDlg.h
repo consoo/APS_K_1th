@@ -128,6 +128,8 @@ public:
 	BOOL m_bEpoxyLaserInspPass;
 	BOOL m_bDicChange;
 	BOOL m_bIrChartUse;
+	BOOL m_bCircleColorWhite;
+
 	afx_msg void OnStnClickedRoughStepAf1();
 	afx_msg void OnStnClickedRoughVelAf1();
 	afx_msg void OnStnClickedRoughDisAf1();
@@ -279,4 +281,5 @@ public:
 	CComboBox m_ComboLightPort4;
 	CComboBox m_ComboLightPort5;
 	CComboBox m_ComboLightPort6;
+	afx_msg void OnBnClickedCheckFovCirclecolor();
 };

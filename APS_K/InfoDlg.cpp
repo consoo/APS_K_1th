@@ -13,6 +13,7 @@ CInfoDlg::CInfoDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CInfoDlg::IDD, pParent)
 	, m_bDicChange(FALSE)
 	, m_bIrChartUse(FALSE)
+	, m_bCircleColorWhite(FALSE)
 	, m_bLaserInsp(FALSE)
 	, m_bStainInspPass(FALSE)
     , m_bDefectInspPass(FALSE)
@@ -52,7 +53,9 @@ void CInfoDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_LASER_INSP, m_bLaserInsp);
 	DDX_Check(pDX, IDC_CHECK_XY_CHANGE, m_bDicChange);
 	DDX_Check(pDX, IDC_CHECK_IR_CHART_USE, m_bIrChartUse);
-	
+	DDX_Check(pDX, IDC_CHECK_FOV_CIRCLECOLOR, m_bCircleColorWhite);
+
+
 	DDX_Check(pDX, IDC_CHECK_PASS_ALIGN_CAM, m_bAlignCamInsp);
 	//
 	DDX_Check(pDX, IDC_CHECK_1ST_AA_ENABLE, m_b1stAaEnable);
@@ -294,6 +297,7 @@ BEGIN_MESSAGE_MAP(CInfoDlg, CDialogEx)
 		ON_STN_CLICKED(IDC_TILT_DIRECTION5, &CInfoDlg::OnStnClickedTiltDirection5)
 		ON_BN_CLICKED(IDC_CHECK_XY_CHANGE, &CInfoDlg::OnBnClickedCheckXyChange)
 		ON_BN_CLICKED(IDC_CHECK_IR_CHART_USE, &CInfoDlg::OnBnClickedCheckIrChartUse)
+		ON_BN_CLICKED(IDC_CHECK_FOV_CIRCLECOLOR, &CInfoDlg::OnBnClickedCheckFovCirclecolor)
 		END_MESSAGE_MAP()
 
 
@@ -530,7 +534,7 @@ void CInfoDlg::getData()
 	sysData.m_iAlignCamInspPass = m_bAlignCamInsp;
 	sysData.m_iDicChange = m_bDicChange;
 	sysData.m_iIrChartUse = m_bIrChartUse;
-	
+	sysData.m_iCircleColorWhite = m_bCircleColorWhite;
 	sysData.m_i1stAaEbable	= m_b1stAaEnable;
 
 	model.m_iCnt_Check_SFR = GetDlgItemInt(IDC_CHECKCNT);
@@ -779,6 +783,7 @@ void CInfoDlg::putData()
 	m_bEpoxyLaserInspPass = sysData.m_iEpoxyLaserInspPass ? TRUE : FALSE;
 	m_bDicChange = sysData.m_iDicChange ? TRUE : FALSE;
 	m_bIrChartUse = sysData.m_iIrChartUse ? TRUE : FALSE;
+	m_bCircleColorWhite = sysData.m_iCircleColorWhite ? TRUE : FALSE;
 
 	SetDlgItemInt(IDC_CHECKCNT, model.m_iCnt_Check_SFR);
 	sEditData.Format("%.03lf", model.m_dMove_Offset_Z);
@@ -2591,5 +2596,12 @@ void CInfoDlg::OnBnClickedCheckXyChange()
 void CInfoDlg::OnBnClickedCheckIrChartUse()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(true);
+}
+
+
+void CInfoDlg::OnBnClickedCheckFovCirclecolor()
+{
+	// TODO: Add your control notification handler code here
 	UpdateData(true);
 }

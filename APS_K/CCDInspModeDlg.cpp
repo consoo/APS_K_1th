@@ -549,19 +549,20 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 
 	vision.clearOverlay(CCD);
 
-	/*int nPitch, nSizeX, nSizeY;
+	int nPitch, nSizeX, nSizeY;
 	TCHAR szPos[SIZE_OF_100BYTE];
-	nPitch = (int)MbufInquire(g_clVision.m_MilCcdProcChild[m_nUnit][1], M_PITCH, M_NULL);
-	nSizeX = (int)MbufInquire(g_clVision.m_MilCcdProcChild[m_nUnit][1], M_SIZE_X, M_NULL);
-	nSizeY = (int)MbufInquire(g_clVision.m_MilCcdProcChild[m_nUnit][1], M_SIZE_Y, M_NULL);
-	if (g_FindFovPos(m_nUnit, g_clVision.m_pImgBuff[m_nUnit][1], nPitch, nSizeX, nSizeY, g_clModelData[m_nUnit].m_clSfrInfo.m_clRectFov) == false)
+	nPitch = (int)MbufInquire(vision.MilProcImageChild[1], M_PITCH, M_NULL);
+	nSizeX = (int)MbufInquire(vision.MilProcImageChild[1], M_SIZE_X, M_NULL);
+	nSizeY = (int)MbufInquire(vision.MilProcImageChild[1], M_SIZE_Y, M_NULL);
+	CRect FovRectTemp[MAX_FOV_COUNT];
+	memcpy(FovRectTemp, model.sfrElem.m_clRectFov, sizeof(FovRectTemp));
+	
+	if(Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, FovRectTemp) == false)
 	{
 		return;
-	}*/
+	}
 
-    int _type = 0;
-
-
+    //int _type = 0;
 	// _type = DOT_TYPE;
 	//_type = GRID_TYPE;
 	if (g_clPriInsp.func_Insp_Shm_Fov_Distortion(MIU.m_pFrameRawBuffer, false) == false)

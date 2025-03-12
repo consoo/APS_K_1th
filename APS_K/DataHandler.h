@@ -621,7 +621,8 @@ public:
 	int m_iDicChange;
 	int m_iIrChartUse;
 	int m_iSminiOQMOde;			//Smini OQ¸ðµå
-	
+	int m_iCircleColorWhite;	//FOV CircleColorWhite
+
 	int		m_FreeRun;
 	int		m_iAlignMode;
 
