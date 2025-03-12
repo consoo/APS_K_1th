@@ -8739,6 +8739,7 @@ bool CAABonderDlg::func_MTF(BYTE* ChartRawImage, bool bAutoMode, int dindex)
 }
 
 
+
 //20170214 이물검사 관련추가 lee
 double CAABonderDlg::calcColorBalance(cv::Mat src, int nColorOrder)
 {

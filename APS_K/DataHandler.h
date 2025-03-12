@@ -328,7 +328,7 @@ public:
 	bool	getPatchCenterAndSFR(int iInspPos);
 	bool	getROI_SFR(int mode);
 
-    bool	_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi);
+    bool	_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi, int BlackCircle = 0);
 	bool	_OpencvFindCirclePos(BYTE* ChartRawImage, CRect* clRectRoi, bool bAutoMode);		//int nPitch, int nSizeX, int nSizeY,
 	bool	_Trinity_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi);		//강상준 선임 240611 원형마크 없어서
 																												//차트로 원형마트 대신

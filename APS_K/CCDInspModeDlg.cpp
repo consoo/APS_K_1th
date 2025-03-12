@@ -531,7 +531,7 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 {
 	CAABonderDlg* pFrame = (CAABonderDlg*)AfxGetApp()->m_pMainWnd;
 
-	if (!func_Check_MIU_Mode())	return;
+	//if (!func_Check_MIU_Mode())	return;
 
 	if (Task.AutoFlag == MODE_AUTO)
 	{
@@ -545,19 +545,20 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 		return;
 	}
 
-	MandoInspLog.func_InitData();	//-- Log 초기화
+	//MandoInspLog.func_InitData();	//-- Log 초기화
 
 	vision.clearOverlay(CCD);
 
-	int nPitch, nSizeX, nSizeY;
+	//int nPitch, nSizeX, nSizeY;
 	TCHAR szPos[SIZE_OF_100BYTE];
-	nPitch = (int)MbufInquire(vision.MilProcImageChild[1], M_PITCH, M_NULL);
-	nSizeX = (int)MbufInquire(vision.MilProcImageChild[1], M_SIZE_X, M_NULL);
-	nSizeY = (int)MbufInquire(vision.MilProcImageChild[1], M_SIZE_Y, M_NULL);
-	CRect FovRectTemp[MAX_FOV_COUNT];
-	memcpy(FovRectTemp, model.sfrElem.m_clRectFov, sizeof(FovRectTemp));
+	int nPitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
+	int nSizeX = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
+	int nSizeY = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
+
+	Task.getROI();
+	vision.MilBufferUpdate();
 	
-	if(Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, FovRectTemp) == false)
+	if(Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, Task.SFR.rcROI, 1) == false)
 	{
 		return;
 	}
@@ -565,6 +566,7 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
     //int _type = 0;
 	// _type = DOT_TYPE;
 	//_type = GRID_TYPE;
+
 	if (g_clPriInsp.func_Insp_Shm_Fov_Distortion(MIU.m_pFrameRawBuffer, false) == false)
 	{
 		pFrame->putListLog(_T("[수동검사] Fov 검사 실패"));

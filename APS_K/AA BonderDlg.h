@@ -227,7 +227,6 @@ public:
 
 	bool	func_MTF(BYTE* ChartRawImage, bool bAutoMode = true, int dindex = 0);
 
-
 	int   totalStainNum;
 
 

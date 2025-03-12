@@ -869,11 +869,11 @@ bool CTask::_OpencvFindCirclePos(BYTE* ChartRawImage, CRect* clRectRoi, bool bAu
 	return true;
 }
 
-bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi)
+bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int sizeY, CRect* rcRoi, int BlackCircle)
 {
-	int maxSize = 800;
+	int maxSize = 1500;//800;
 	CString sLog;
-
+	TCHAR szLog[SIZE_OF_1K];
 	if ( ucImage == NULL )
 	{
 		sLangChange.LoadStringA(IDS_STRING1303);
@@ -895,7 +895,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 	CAABonderDlg* pFrame = (CAABonderDlg*)AfxGetApp()->m_pMainWnd;
 	int _MinGap = 20;
-	int _CIRCLE_MARK_GAP=800;	// 800
+	int _CIRCLE_MARK_GAP = 1500;// 800;	// 800
 
 	for (int i=0 ; i<4 ; i++)
 	{
@@ -942,7 +942,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (y=iSy ; y<iEy ; y++)
 			{
-				if (sysData.m_iCircleColorWhite == false)
+				if (BlackCricle == 0)
 				{
 					iSum += (ucImage[iPos]);
 				}
@@ -1102,7 +1102,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (x=iMinX ; x<iMaxX; x++)
 			{
-				if (sysData.m_iCircleColorWhite == false)
+				if (BlackCricle == 0)
 				{
 					iSum += ucImage[iPos++];
 				}
@@ -1276,9 +1276,9 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 		m_CirclePos_x[i] = (iMaxX+iMinX)/2;
 		m_CirclePos_y[i]  = (iMaxY+iMinY)/2;
+
 		vision.crosslist[CCD].addList(m_CircleP[i], 100, M_COLOR_RED); 
 	}
-		
 	return true;
 }
 
@@ -3661,7 +3661,7 @@ bool CTask::getROI_SFR(int mode)
 #else
 
 
-	bRtn = _findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, SFR.rcROI);
+	bRtn = _findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, SFR.rcROI, 0);
 	//bRtn = _OpencvFindCirclePos(MIU.m_pFrameRawBuffer, SFR.rcROI, true);
 
 	

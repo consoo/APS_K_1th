@@ -297,10 +297,6 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	TCHAR szLog[SIZE_OF_1K];
 	int i = 0;
 
-	int nPitch = (int)MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
-	int nSizeX = (int)MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
-	int nSizeY = (int)MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
-
 	//g_CalcImageAlign(m_nUnit);
 
 	int n_Width = gMIUDevice.nWidth;;
@@ -322,18 +318,6 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 
 	spec.pVecParamData = vParam.data();
 	spec.nVecParamSize = vParam.size();
-
-	/*spec.dRealGapX = 0.0;
-	spec.dRealGapY = 0.0;
-	spec.dModuleChartDistance = 0.0;
-	spec.dPixelSize = 0.0;
-	spec.dEFL = 0.0;
-	spec.dRadius = 0.0;
-	spec.dBinaryThreshold = 0.0;
-	spec.dMaxDeviation = 0.0;
-	spec.nROIBoxSize = 0;
-	spec.nMaxROIBoxSize = 0;*/
-
 
 	spec.dRealGapX = 0.0;
 	spec.dRealGapY = 0.0;
@@ -359,8 +343,6 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 		vMark[i].x = MESCommunication.m_ShmFovPoint[cnt].x;
 		vMark[i].y = MESCommunication.m_ShmFovPoint[cnt].y;
 	}
-
-	//bool ret = m_pChartProc->SetFiducialMarkSpec(spec, vMark, nWidth, nHeight);
 
 
 	m_pChartProc->SetInspectPosOffset(0, 0, 0, 0);
@@ -435,8 +417,7 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	//	g_clMesCommunication[m_nUnit].m_nMesFinalResult = 0;	//VFOV
 	//	g_clMesCommunication[m_nUnit].m_dMesFovResult[1] = 0;
 
-	//	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] VFov Spec Out: %.6lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
-	//	AddLog(szLog, 0, m_nUnit);
+	
 	//	g_clMandoInspLog[m_nUnit].m_sNGList += _T(" [VFov NG]");
 	//	if (g_clMandoInspLog[m_nUnit].m_nNGCnt < 30)
 	//	{
@@ -455,6 +436,8 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	//	AddLog(szLog, 0, m_nUnit);
 	//}
 	//g_clVision.DrawOverlayAll(m_nUnit);
+	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] VFov Spec Out: %.6lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	theApp.MainDlg->putListLog(szLog);
 	g_SaveLGITLog(m_nUnit, "FOV", m_pChartProc->GetLogHeader(), m_pChartProc->GetLogData());
 	//g_SaveLGITLog(m_nUnit, "FOV", m_pChartProc->GetLogHeader(), m_pChartProc->GetLogData(), m_pChartProc->GetVersion());
 

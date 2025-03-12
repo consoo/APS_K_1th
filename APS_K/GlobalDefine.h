@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-#define		NORINDA_MODE
+//#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0
@@ -37,7 +37,8 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 static int LGIT_MODEL_INDEX = M2_MBOX081D_8M;
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-#define					VER_STR		"250312_1"			//
+#define					VER_STR		"250312_4"			//_findCirclePos 원 찾음 Fov 검사 =  실패 
+//#define					VER_STR		"250312_2"			//원점, 영상 확인
 //#define					VER_STR		"250311_1"			//DLL 변경
 //#define					VER_STR		"250307_1"			//DLL 변경
 //#define					VER_STR		"250304_1"			//SFR Algorithm 그리드 -> 콤보 박스로 변경
