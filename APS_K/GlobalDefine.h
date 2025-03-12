@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-//#define		NORINDA_MODE
+#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0

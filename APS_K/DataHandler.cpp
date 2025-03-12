@@ -942,7 +942,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (y=iSy ; y<iEy ; y++)
 			{
-				if (BlackCricle == 0)
+				if (BlackCircle == 0)
 				{
 					iSum += (ucImage[iPos]);
 				}
@@ -1102,7 +1102,7 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 
 			for (x=iMinX ; x<iMaxX; x++)
 			{
-				if (BlackCricle == 0)
+				if (BlackCircle == 0)
 				{
 					iSum += ucImage[iPos++];
 				}
