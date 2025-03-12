@@ -563,15 +563,15 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 
 
 	// _type = DOT_TYPE;
-	/*_type = GRID_TYPE;
-	if (g_clPriInsp.func_Insp_Fov_Distortion_Rotate(MIU.m_pFrameRawBuffer, _type, false) == false)
+	//_type = GRID_TYPE;
+	if (g_clPriInsp.func_Insp_Shm_Fov_Distortion(MIU.m_pFrameRawBuffer, false) == false)
 	{
 		pFrame->putListLog(_T("[수동검사] Fov 검사 실패"));
 		vision.drawOverlay(CCD);
 		return;
 	}
 	vision.drawOverlay(CCD);
-	pFrame->putListLog(_T("[수동검사] Fov 검사 완료"));*/
+	pFrame->putListLog(_T("[수동검사] Fov 검사 완료"));
 }
 
 //-----------------------------------------------------------------------------

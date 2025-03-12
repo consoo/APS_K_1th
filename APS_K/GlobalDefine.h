@@ -15,13 +15,13 @@
 #define	MACHINE_1ST				110
 #define MACHINE______2ST		304
 //
-#define	__MACHINE_MODEL			MACHINE_1ST
+#define	__MACHINE_MODEL			MACHINE______2ST
 
 
 
 
 const int M1_TANGERING_5M = 200800;		//김동훈 책임, 
-const int M2_M = 200700;		// 최종철 선임, 
+const int M2_MBOX081D_8M = 200700;		// 최종철 선임, 
 
 
 const int M1_LSI_5M = 200600;			//241126 최승필 책임, 원형도포 기존 썬더 제품에서 개별 콜리메터 에서 평차트로 변경제품
@@ -32,12 +32,13 @@ const int M2_RFPCB_5M = 200100;			//240721 최승필 책임 얇은 제품 원형 도포  차트
 const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0F, 05F, 07F
 //
 
-									//
 
-static int LGIT_MODEL_INDEX = M1_TANGERING_5M;
+
+static int LGIT_MODEL_INDEX = M2_MBOX081D_8M;
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-#define					VER_STR		"250311_1"			//DLL 변경
+#define					VER_STR		"250312_1"			//
+//#define					VER_STR		"250311_1"			//DLL 변경
 //#define					VER_STR		"250307_1"			//DLL 변경
 //#define					VER_STR		"250304_1"			//SFR Algorithm 그리드 -> 콤보 박스로 변경
 //#define					VER_STR		"250227_1"			//Tangering AA - 해상력, 이물, OC
