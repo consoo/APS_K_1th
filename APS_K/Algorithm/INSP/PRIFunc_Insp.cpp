@@ -366,7 +366,8 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	////m_pChartProc->CalcDistortion();
 	////m_pChartProc->CalcTiltAndRotation();
 
-	m_pChartProc->SetFOVOffset();
+	m_pChartProc->SetFOVOffset(MandoSfrSpec.HFOVOffset, MandoSfrSpec.VFOVOffset, MandoSfrSpec.DFOVOffset);
+
 	bool bFovRtn = true;
 
 	MESCommunication.m_dMesFov[0] = m_pChartProc->GetHFOV();

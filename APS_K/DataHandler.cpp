@@ -8549,6 +8549,9 @@ CMandoSfrSpec::CMandoSfrSpec()
 		INSP_OCInspOffset[i] = 0.0;
 	}
 	
+	HFOVOffset = 1.0;
+	VFOVOffset = 1.0;
+	DFOVOffset = 1.0;
 }
 void CMandoSfrSpec::NewSfrSave()
 {
@@ -8664,6 +8667,16 @@ void CMandoSfrSpec::NewSfrSave()
 		_stprintf_s(szIniIndex, SIZE_OF_100BYTE, _T("OFFSET %d"), i);
 		WritePrivateProfileString(_T("OC_INSP_OFFSET"), szIniIndex, szData, szPath);
 	}
+	//FOV OFFSET
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), HFOVOffset);
+	WritePrivateProfileString(_T("FOV"), _T("HFOVOFFSET"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), VFOVOffset);
+	WritePrivateProfileString(_T("FOV"), _T("VFOVOFFSET"), szData, szPath);
+
+	_stprintf_s(szData, SIZE_OF_1K, _T("%lf"), DFOVOffset);
+	WritePrivateProfileString(_T("FOV"), _T("DFOVOFFSET"), szData, szPath);
+
 }
 void CMandoSfrSpec::NewSfrLoad()
 {
@@ -8778,6 +8791,16 @@ void CMandoSfrSpec::NewSfrLoad()
 		GetPrivateProfileString(_T("OC_INSP_OFFSET"), szIniIndex, _T(""), szIniBuff, sizeof(szIniBuff), szPath);
 		INSP_OCInspOffset[i] = _ttof((TCHAR*)(LPCTSTR)szIniBuff);
 	}
+
+	GetPrivateProfileString(_T("FOV"), _T("HFOVOFFSET"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	HFOVOffset = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("FOV"), _T("VFOVOFFSET"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	VFOVOffset = _ttof(szIniBuff);
+
+	GetPrivateProfileString(_T("FOV"), _T("DFOVOFFSET"), _T(""), szIniBuff, sizeof(szIniBuff), szPath);
+	DFOVOffset = _ttof(szIniBuff);
+
 
 }
 

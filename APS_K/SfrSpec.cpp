@@ -301,6 +301,12 @@ void CSfrSpec::ShowGridCtrl_Sfr()
 		tmpStr.Format("%.03f", MandoSfrSpec.INSP_OCInspOffset[i]);
 		m_clGridOcSpec.SetItemText(22 + i, 1, tmpStr);
 	}
+	tmpStr.Format("%.03f", MandoSfrSpec.HFOVOffset);
+	m_clGridOcSpec.SetItemText(26, 1, tmpStr);
+	tmpStr.Format("%.03f", MandoSfrSpec.VFOVOffset);
+	m_clGridOcSpec.SetItemText(27, 1, tmpStr);
+	tmpStr.Format("%.03f", MandoSfrSpec.DFOVOffset);
+	m_clGridOcSpec.SetItemText(28, 1, tmpStr);
 
 	tmpStr.Format("%.04f", sysData.m_dOcSpec.x);
 	SetDlgItemText(IDC_LIMIT_OC_ALIGN, tmpStr);
@@ -398,7 +404,7 @@ void CSfrSpec::InitGridCtrl_Oc()
 	//Picture Ctr 사이즈 구하기
 	CRect rect;
 	CWnd *pWnd= (CWnd*)GetDlgItem(IDC_STATIC_OCSPEC_GRID); 
-	ocRow = 26;// 8;// 7;// 5;
+	ocRow = 29;// 8;// 7;// 5;
 	ocCol = 2;
 	int margin = 4;
 	int gridHeight = 28;
@@ -461,6 +467,12 @@ void CSfrSpec::InitGridCtrl_Oc()
 	m_clGridOcSpec.SetItemText(23, 0, "OC Insp.Offset Top");
 	m_clGridOcSpec.SetItemText(24, 0, "OC Insp.Offset Right");
 	m_clGridOcSpec.SetItemText(25, 0, "OC Insp.Offset Bottom");
+
+
+	//HFOVOffset
+	m_clGridOcSpec.SetItemText(26, 0, "FOV HFOVOffset");
+	m_clGridOcSpec.SetItemText(27, 0, "FOV VFOVOffset");
+	m_clGridOcSpec.SetItemText(28, 0, "FOV DFOVOffset");
 
 	for (i = 0; i < ocRow; i++)
 	{
@@ -652,7 +664,15 @@ void CSfrSpec::getData()
 		tmpStr = m_clGridOcSpec.GetItemText(22 + i, 1);
 		MandoSfrSpec.INSP_OCInspOffset[i] = atof(tmpStr);
 	}
+	//FOV OFFSET
+	tmpStr = m_clGridOcSpec.GetItemText(26, 1);
+	MandoSfrSpec.HFOVOffset = (float)atof(tmpStr);
 
+	tmpStr = m_clGridOcSpec.GetItemText(27, 1);
+	MandoSfrSpec.VFOVOffset = (float)atof(tmpStr);
+
+	tmpStr = m_clGridOcSpec.GetItemText(28, 1);
+	MandoSfrSpec.DFOVOffset = (float)atof(tmpStr);
 
 	GetDlgItemText(IDC_LIMIT_OC_ALIGN, tmpStr);
 	sysData.m_dOcSpec.x = sysData.m_dOcSpec.y = atof(tmpStr);

@@ -3099,6 +3099,16 @@ void CAABonderDlg::SetInterface_Label()
 		temp.Format(_T("M2_VB1940_5M"));
 		ModelSelect = true;
 	}
+	else if (LGIT_MODEL_INDEX == M2_MBOX081D_8M)
+	{
+		temp.Format(_T("M2_MBOX081D_8M"));
+		ModelSelect = true;
+	}
+	else if (LGIT_MODEL_INDEX == M1_TANGERING_5M)
+	{
+		temp.Format(_T("M1_TANGERING_5M"));
+		ModelSelect = true;
+	}
 	// || LGIT_MODEL_INDEX == M2_VB1940_5M
 #endif
 	

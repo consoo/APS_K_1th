@@ -1423,6 +1423,9 @@ public:
 	int INSP_OCBlockSize;
 	double INSP_OCInspOffset[4];   //0 = left 1 = top 2 = right 3 = bottom
 
+	double HFOVOffset;
+	double VFOVOffset;
+	double DFOVOffset;
 
 	double		Rotation_Spec;
 

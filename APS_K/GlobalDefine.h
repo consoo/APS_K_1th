@@ -36,7 +36,8 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 
 static int LGIT_MODEL_INDEX = M2_MBOX081D_8M;
 //-----------------------------------------------------------------------------------------------------------------------------------
-#define					VER_STR		"250312_4"			//_findCirclePos 원 찾음 Fov 검사 =  실패 
+#define					VER_STR		"250313_1"			// SetFOVOffset(HFOVOffset, VFOVOffset, DFOVOffset) UI SfrSpec 그리드로 
+//#define					VER_STR		"250312_4"			//_findCirclePos 원 찾음 Fov 검사 =  실패 
 //#define					VER_STR		"250312_2"			//원점, 영상 확인
 //#define					VER_STR		"250311_1"			//DLL 변경
 //#define					VER_STR		"250307_1"			//DLL 변경
