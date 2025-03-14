@@ -458,7 +458,7 @@ void CCCDSFRDlg::drawRectFOV(int iRectNo /*=999*/)
     vision.clearOverlay(CCD);
     for (int i = 0; i<MAX_FOV_COUNT; i++)
     {
-        if (i > 2 && i < 6)continue;
+        //if (i > 2 && i < 6)continue;
         vision.boxlist[CCD].addList(m_clRectDrawFov[i], PS_DOT, M_COLOR_MAGENTA);
         sprintf_s(szTmp, "%d", i);
         vision.textlist[CCD].addList(m_clRectDrawFov[i].left + 10, m_clRectDrawFov[i].top + 10, szTmp, M_COLOR_RED, 15, 10, "Arial");
@@ -3383,7 +3383,7 @@ void CCCDSFRDlg::RegistFovMark()
     int markNumber = MAX_FOV_COUNT;         //광각은 4개 , 협각은 6개
     for (i = 0; i < markNumber; i++)
     {
-        if (i > 2 && i < 6)continue;//가운데 3개 제외
+        //if (i > 2 && i < 6)continue;//가운데 3개 제외
                                    
         vision.boxlist[CCD].addList(m_clRectDrawFov[i], PS_SOLID, M_COLOR_BLUE);
     }

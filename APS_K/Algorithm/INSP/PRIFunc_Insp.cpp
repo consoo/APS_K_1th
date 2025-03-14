@@ -297,6 +297,19 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	TCHAR szLog[SIZE_OF_1K];
 	int i = 0;
 
+	TCHAR szPos[SIZE_OF_100BYTE];
+	int nPitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
+	int nSizeX = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
+	int nSizeY = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
+
+	Task.getROI();
+	vision.MilBufferUpdate();
+
+	if (Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, model.sfrElem.m_clRectFov, 1) == false)
+	{
+		return false;
+	}
+
 	//g_CalcImageAlign(m_nUnit);
 
 	int n_Width = gMIUDevice.nWidth;;
@@ -309,42 +322,44 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 
 
 	TFiducialMarkInfoN spec;
-	spec.nFiducialMarkType = (int)MandoSfrSpec.FiducialMarkType;
-	spec.nInspectItem = (int)MandoSfrSpec.FiducialMarkInspItem;
-	spec.nAlgorithmIndex = (int)MandoSfrSpec.FiducialMarkAlgorithmIndex;
+	spec.nFiducialMarkType = 0;//FIDUCIALMARKTYPE_SHM_CORNER;// (int)MandoSfrSpec.FiducialMarkType;
+	spec.nInspectItem = FIDUCIALMARK_INSPECT_FOV;// (int)MandoSfrSpec.FiducialMarkInspItem;
+	spec.nAlgorithmIndex = FOV_METHOD_EFL;//FOV_METHOD_SHM_CORNER;// (int)MandoSfrSpec.FiducialMarkAlgorithmIndex;
 
 	
 	std::vector<double> vParam = { 82.83, 84.4, 118.11, 122.58, 133.8, 83.8, 145.7 };
 
-	spec.pVecParamData = vParam.data();
-	spec.nVecParamSize = vParam.size();
-
-	spec.dRealGapX = 0.0;
-	spec.dRealGapY = 0.0;
-	spec.dModuleChartDistance = 0.0;
-	spec.dPixelSize = 3.0;
-	spec.dEFL = 8400.0;
-	spec.dRadius = 0.7;
-	spec.dBinaryThreshold = 70.0;
-	spec.dMaxDeviation = 50.0;
+	spec.pVecParamData = 0;// vParam.data();
+	spec.nVecParamSize = NULL; // vParam.size();
 	spec.nROIBoxSize = 10;
 	spec.nMaxROIBoxSize = 100;
+	spec.dRadius = 0.7;
+	spec.dRealGapX = 1.0;
+	spec.dRealGapY = 1.0;
+	spec.dModuleChartDistance = 1.0;
+	spec.dPixelSize = 2.1;// 3.0;
+	spec.dEFL = 15340.0;
+	spec.dBinaryThreshold = 70.0;
+	spec.dMaxDeviation = 50.0;
 
 
-	std::vector<POINT> vMark(MAX_FOV_FIND_COUNT);
+	std::vector<POINT> vMark(4);// MAX_FOV_FIND_COUNT);
 
-	int forIndex[MAX_FOV_FIND_COUNT] = { 1,2,5,6,0,3,4,7,12,13,8,9,10,11 };
+	//int forIndex[MAX_FOV_FIND_COUNT] = { 1,2,5,6,0,3,4,7,12,13,8,9,10,11 };
 
 	int cnt = 0;
-	for (i = 0; i < MAX_FOV_FIND_COUNT; i++)
+	for (i = 0; i < 4; i++)//for (i = 0; i < MAX_FOV_FIND_COUNT; i++)
 	{
-		cnt = forIndex[i];
+		//cnt = forIndex[i];
 
-		vMark[i].x = MESCommunication.m_ShmFovPoint[cnt].x;
-		vMark[i].y = MESCommunication.m_ShmFovPoint[cnt].y;
+		//vMark[i].x = MESCommunication.m_ShmFovPoint[cnt].x;
+		//vMark[i].y = MESCommunication.m_ShmFovPoint[cnt].y;
+
+		vMark[i].x = Task.m_FovPos_x[i];
+		vMark[i].y = Task.m_FovPos_y[i];
 	}
 
-
+	
 	m_pChartProc->SetInspectPosOffset(0, 0, 0, 0);
 
 	bool ret = m_pChartProc->SetFiducialMarkSpec(spec, vMark.data(), vMark.size(), n_Width, n_Height);
@@ -363,16 +378,16 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	}
 	m_pChartProc->CalcDFOV();
 
-	////m_pChartProc->CalcDistortion();
-	////m_pChartProc->CalcTiltAndRotation();
+	m_pChartProc->CalcDistortion();
+	m_pChartProc->CalcTiltAndRotation();
 
-	m_pChartProc->SetFOVOffset(MandoSfrSpec.HFOVOffset, MandoSfrSpec.VFOVOffset, MandoSfrSpec.DFOVOffset);
+	//m_pChartProc->SetFOVOffset(MandoSfrSpec.HFOVOffset, MandoSfrSpec.VFOVOffset, MandoSfrSpec.DFOVOffset);
 
 	bool bFovRtn = true;
 
 	MESCommunication.m_dMesFov[0] = m_pChartProc->GetHFOV();
 	MESCommunication.m_dMesFov[1] = m_pChartProc->GetVFOV();
-
+	MESCommunication.m_dMesFov[2] = m_pChartProc->GetDFOV();
 
 	double mFovValue = 0.0;
 	double mFovMin = 0.1;
@@ -437,12 +452,14 @@ bool CPRIFunc_Insp::func_Insp_Shm_Fov_Distortion(BYTE * img, bool bAutoMode)
 	//	AddLog(szLog, 0, m_nUnit);
 	//}
 	//g_clVision.DrawOverlayAll(m_nUnit);
-	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] VFov Spec Out: %.6lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	//_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] VFov Spec Out: %.6lf [%.3lf~%.3lf]"), mFovValue, mFovMin, mFovMax);
+	_stprintf_s(szLog, SIZE_OF_1K, _T("[Fov] GetFov : H %.6lf V %.6lf,D %.6lf"), MESCommunication.m_dMesFov[0], MESCommunication.m_dMesFov[1], MESCommunication.m_dMesFov[2]);
 	theApp.MainDlg->putListLog(szLog);
+
 	g_SaveLGITLog(m_nUnit, "FOV", m_pChartProc->GetLogHeader(), m_pChartProc->GetLogData());
 	//g_SaveLGITLog(m_nUnit, "FOV", m_pChartProc->GetLogHeader(), m_pChartProc->GetLogData(), m_pChartProc->GetVersion());
 
-	return false;
+	return true;
 }
 
 

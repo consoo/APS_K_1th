@@ -505,42 +505,42 @@ int CPcbProcess2::RunProc_ProductLoading(int iUseStep)
 		sBarCode.Format("%s", Task.ChipID);
 		g_ADOData.func_AATaskToRecordID(modelList.curModelName, Task.ChipID);
 
-		//		if (sBarCode == "EMPTY")//바코드정보가 없을 경우 확인 Message
-		//		{
-		//			logStr.Format("바코드 정보가 없습니다. \n [ %s ]명으로 진행 하시겠습니까?", Task.ChipID);
-		//			if (askMsg(logStr) == IDOK)
-		//			{
-		//				sBarCode.Format("%s", Task.ChipID);
-		//			}
-		//			else
-		//			{
-		//				iRtnFunction = 10100;
-		//				logStr.Format("		loading Step [%d]", iRtnFunction);
-		//				putListLog(logStr);
-		//				break;
-		//			}
-		//		}
-		//		else
-		//		{
-		//			if (!g_ADOData.func_AATaskToRecordID(modelList.curModelName, Task.ChipID)) 
-		//			{
-		//				logStr.Format("		loading Step [%d]", iRtnFunction);
-		//				putListLog(logStr);
-		//#if (____AA_WAY == PCB_TILT_AA)
-		//				/*if(sysData.m_iProductComp==1)
-		//				{
-		//					logStr.Format("일치하는 아이디가 없습니다.[%d]", iUseStep);
-		//				}else
-		//				{
-		//					logStr.Format("DataBase 생성 실패.[%d]\n MS Office를 닫아주세요.", iUseStep);
-		//				}
-		//				errMsg2(Task.AutoFlag,logStr);
-		//				iRtnFunction = -10400;
-		//				break;*/
-		//#endif		
-		//
-		//			}
-		//		}
+//		if (sBarCode == "EMPTY")//바코드정보가 없을 경우 확인 Message
+//		{
+//			logStr.Format("바코드 정보가 없습니다. \n [ %s ]명으로 진행 하시겠습니까?", Task.ChipID);
+//			if (askMsg(logStr) == IDOK)
+//			{
+//				sBarCode.Format("%s", Task.ChipID);
+//			}
+//			else
+//			{
+//				iRtnFunction = 10100;
+//				logStr.Format("		loading Step [%d]", iRtnFunction);
+//				putListLog(logStr);
+//				break;
+//			}
+//		}
+//		else
+//		{
+//			if (!g_ADOData.func_AATaskToRecordID(modelList.curModelName, Task.ChipID)) 
+//			{
+//				logStr.Format("		loading Step [%d]", iRtnFunction);
+//				putListLog(logStr);
+//#if (____AA_WAY == PCB_TILT_AA)
+//				/*if(sysData.m_iProductComp==1)
+//				{
+//					logStr.Format("일치하는 아이디가 없습니다.[%d]", iUseStep);
+//				}else
+//				{
+//					logStr.Format("DataBase 생성 실패.[%d]\n MS Office를 닫아주세요.", iUseStep);
+//				}
+//				errMsg2(Task.AutoFlag,logStr);
+//				iRtnFunction = -10400;
+//				break;*/
+//#endif		
+//		
+//			}
+//		}
 
 
 		iRtnFunction = 10440;
@@ -3142,11 +3142,12 @@ int	CPcbProcess2::procAutoFocus(int iStep)
 				}
 
 				bool bMtfCheck2 = true;
+				g_clPriInsp.func_Insp_Shm_Fov_Distortion(MIU.m_pFrameRawBuffer, false);
 				MIU.func_Set_InspImageCopy(UV_BEFORE_CHART, MIU.m_pFrameRawBuffer);			//========  AA UV BEFORE===
 				Task.sfrResult = theApp.MainDlg->func_MTF(MIU.vChartBuffet);				// [AA UV BEFORE] #1
 				MandoInspLog.func_LogSave_UVBefore();	// UV전 Log Data 저장
 
-				theApp.MainDlg->autodispDlg->DrawBarGraph();	//65000
+				theApp.MainDlg->autodispDlg->DrawBarGraph();	//65000 
 				if (!Task.sfrResult && bMtfCheck2)
 				{ 
 					saveInspImage(AA_NG_IMAGE_SAVE, Task.m_iCnt_Step_AA_Total);
@@ -3704,7 +3705,7 @@ int	CPcbProcess2::Complete_FinalInsp(int iStep)
 		break;
 
 	case 122550:
-		
+		g_clPriInsp.func_Insp_Shm_Fov_Distortion(MIU.m_pFrameRawBuffer, false);
 		iRtnFunction = 122560;
 		break;
 	case 122560:
@@ -3965,14 +3966,15 @@ int	CPcbProcess2::Complete_FinalInsp(int iStep)
 		{
 			sLog.Format(_T("[PASS] Stain Insp"), iStep);
 			putListLog(sLog);
-
 		}
 		else
 		{
-			if (LGIT_MODEL_INDEX == M2_FF_MODULE)
+			if (LGIT_MODEL_INDEX == M2_MBOX081D_8M)
 			{
 				//이물광원에서 oc 측정 요청240725
 				g_clPriInsp.g_GetIllumination(MIU.vDefectMidBuffer_6500K);
+				Sleep(100);
+				g_clPriInsp.func_Insp_Shm_Illumination(MIU.vDefectMidBuffer_6500K);
 				Sleep(100);
 			}
 			if (g_clPriInsp.func_Insp_Stain(MIU.vDefectMidBuffer_6500K) == true)
@@ -4362,6 +4364,7 @@ int	CPcbProcess2::func_MandoFinalSFR(int iStep)
 		}
 		Task.m_iDrawBarStep = Task.m_iCnt_Step_AA_Total;
 		theApp.MainDlg->autodispDlg->DrawBarGraph();
+		g_clPriInsp.func_Insp_Shm_Fov_Distortion(MIU.m_pFrameRawBuffer, false);
 		iRtnFunction = 122550;
 
 		break;
@@ -4584,10 +4587,11 @@ int	CPcbProcess2::func_MandoFinalSFR(int iStep)
 		}
 		else
 		{
-
-			if (LGIT_MODEL_INDEX == M2_FF_MODULE)
+			if (LGIT_MODEL_INDEX == M2_MBOX081D_8M)
 			{
 				//이물광원에서 oc 측정 요청240725
+				g_clPriInsp.func_Insp_Shm_Illumination(MIU.vDefectMidBuffer_6500K);
+				Sleep(100);
 				g_clPriInsp.g_GetIllumination(MIU.vDefectMidBuffer_6500K);
 				Sleep(100);
 			}
@@ -5686,7 +5690,7 @@ int CPcbProcess2::procProductComplete(int iStep)
 			iRtnFunction = -12000;
 			break;
 		}
-		iRtnFunction = 12900;			//laser 변위로 점프
+		iRtnFunction = 12800;// 12900;			//laser 변위로 점프
 		break;
 		
 		

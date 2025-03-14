@@ -1274,8 +1274,12 @@ bool CTask::_findCirclePos(unsigned char* ucImage, int pitch, int sizeX, int siz
 		m_FindCircleRect[i].top = iMinY;
 		m_FindCircleRect[i].bottom = iMaxY;
 
-		m_CirclePos_x[i] = (iMaxX+iMinX)/2;
-		m_CirclePos_y[i]  = (iMaxY+iMinY)/2;
+		m_CirclePos_x[i] = (iMaxX + iMinX) / 2;
+		m_CirclePos_y[i] = (iMaxY + iMinY) / 2;
+
+		m_FovPos_x[i] = (iMaxX + iMinX) / 2;
+		m_FovPos_y[i] = (iMaxY + iMinY) / 2;
+
 
 		vision.crosslist[CCD].addList(m_CircleP[i], 100, M_COLOR_RED); 
 	}
@@ -3683,7 +3687,7 @@ bool CTask::getROI_SFR(int mode)
 			vision.MilBufferUpdate();	
 			Task.getROI();
 			Sleep(100);
-			bRtn = _findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, SFR.rcROI);
+			bRtn = _findCirclePos(vision.MilImageBuffer[4], pitch, width, Height, SFR.rcROI, 0);
 			//bRtn = _OpencvFindCirclePos(MIU.m_pFrameRawBuffer, SFR.rcROI, true);
 			if ( !bRtn )
 			{
@@ -8380,10 +8384,13 @@ void CMandoInspLog::func_LogSave_UVAfter(int index)		//Final_완제품(화상검사) 로
 				_ftprintf_s(out, _T(",[SFR] Roi-%d"), i);
 			}
 
-			fprintf_s(out, ",[Laser] Point1 LT,[Laser] Point2 RT,[Laser] Point3 RB,[Laser] Point4 LB,");
-			fprintf_s(out, ",[Laser] Side Point1 LT,[Laser] Side Point2 RT,[Laser] Side Point3 RB,[Laser] Side Point4 LB,");
-			fprintf_s(out, ",[Laser] Tilt Tx,[Laser] Tilt Ty");
-			fprintf_s(out, ",[OC] X,[OC] Y,");
+			if (sysData.m_iProductComp == 0)
+			{
+				fprintf_s(out, ",[Laser] Point1 LT,[Laser] Point2 RT,[Laser] Point3 RB,[Laser] Point4 LB,");
+				fprintf_s(out, ",[Laser] Side Point1 LT,[Laser] Side Point2 RT,[Laser] Side Point3 RB,[Laser] Side Point4 LB,");
+				fprintf_s(out, ",[Laser] Tilt Tx,[Laser] Tilt Ty");
+			}
+			fprintf_s(out, ",[OC] X,[OC] Y");
 			//_T("TOP_CHART_L"), _T("TOP_CHART_T"), _T("TOP_CHART_R"), 	_T("LEFT_SIDE_CHART_4F_T") ,
 			//_T("LEFT_SIDE_CHART_7F_T"),
 			//	_T("LEFT_SIDE_CHART_7F_M")
@@ -8396,7 +8403,8 @@ void CMandoInspLog::func_LogSave_UVAfter(int index)		//Final_완제품(화상검사) 로
 			////
 
 			//fprintf_s(out, ",Diff4F,Diff7F,RIDiff");
-			//fprintf_s(out, ",RIconer0,RIconer1,RIconer2,RIconer3");
+			fprintf_s(out, ",RIconer0,RIconer1,RIconer2,RIconer3");
+			fprintf_s(out, ",HFov,VFov,DFov");
 			//fprintf_s(out, ",Voltage,Current");
 			//fprintf_s(out, ",ColorReproduction ROI 1,ColorReproduction ROI 2,ColorReproduction ROI 3,ColorReproduction ROI 4");
 
@@ -8427,18 +8435,20 @@ void CMandoInspLog::func_LogSave_UVAfter(int index)		//Final_완제품(화상검사) 로
 		{
 			fprintf_s(out, ",%.06lf",dMTF_PostUV[i]);//완제품일때 12포인트 MTF
 		}
-		for (i = 0; i < 4; i++)
+		if (sysData.m_iProductComp == 0)
 		{
-			fprintf_s(out, ",%.06lf", dLaserTestPoint[i]);
-		}
-		for (i = 0; i < 4; i++)
-		{
-			fprintf_s(out, ",%.06lf", dLaserTestComPoint[i]);
-		}
-		
-		fprintf_s(out, ",%.06lf", dLaserTestTilt[0]);
-		fprintf_s(out, ",%.06lf", dLaserTestTilt[1]);
+			for (i = 0; i < 4; i++)
+			{
+				fprintf_s(out, ",%.06lf", dLaserTestPoint[i]);
+			}
+			for (i = 0; i < 4; i++)
+			{
+				fprintf_s(out, ",%.06lf", dLaserTestComPoint[i]);
+			}
 
+			fprintf_s(out, ",%.06lf", dLaserTestTilt[0]);
+			fprintf_s(out, ",%.06lf", dLaserTestTilt[1]);
+		}
 		fprintf_s(out, ",%.06lf,%.06lf", dOpticalOc[0], dOpticalOc[1]);
 		
 		/*fprintf_s(out, ",%d,%d,%d", MESCommunication.m_nMesBlemish[0], MESCommunication.m_nMesBlemish[1], MESCommunication.m_nMesBlemish[2]);
@@ -8448,7 +8458,8 @@ void CMandoInspLog::func_LogSave_UVAfter(int index)		//Final_완제품(화상검사) 로
 		}*/
 
 		//fprintf_s(out, ",%.06lf,%.06lf,%.06lf", dMtfDiff4F, dMtfDiff7F, dRiDiff);
-		//fprintf_s(out, ",%.06lf,%.06lf,%.06lf,%.06lf", dRicorner[0], dRicorner[1], dRicorner[2], dRicorner[3]);
+		fprintf_s(out, ",%.06lf,%.06lf,%.06lf,%.06lf", dRicorner[0], dRicorner[1], dRicorner[2], dRicorner[3]);
+		fprintf_s(out, ",%.06lf,%.06lf,%.06lf", MESCommunication.m_dMesFov[0], MESCommunication.m_dMesFov[1], MESCommunication.m_dMesFov[2]);
 		//fprintf_s(out, ",%.06lf,%.06lf", dVoltage, dCurrent);
 		//fprintf_s(out, ",%.06lf,%.06lf,%.06lf,%.06lf", dColorReproduction[0], dColorReproduction[1], dColorReproduction[2], dColorReproduction[3]);
 

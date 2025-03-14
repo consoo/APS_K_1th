@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-#define		NORINDA_MODE
+//#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0
@@ -21,7 +21,7 @@
 
 
 const int M1_TANGERING_5M = 200800;		//김동훈 책임, 
-const int M2_MBOX081D_8M = 200700;		// 최종철 선임, 
+const int M2_MBOX081D_8M = 200700;		// 최종철 선임, OC, SFR, 이물, Rotation, RI, Fov, Distortion
 
 
 const int M1_LSI_5M = 200600;			//241126 최승필 책임, 원형도포 기존 썬더 제품에서 개별 콜리메터 에서 평차트로 변경제품
@@ -36,7 +36,9 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 
 static int LGIT_MODEL_INDEX = M2_MBOX081D_8M;
 //-----------------------------------------------------------------------------------------------------------------------------------
-#define					VER_STR		"250313_1"			// SetFOVOffset(HFOVOffset, VFOVOffset, DFOVOffset) UI SfrSpec 그리드로 
+#define					VER_STR		"250314_1"			// AA,EOL 
+//#define					VER_STR		"250313_2"			// SetFOVOffset(HFOVOffset, VFOVOffset, DFOVOffset) -> 오류 
+//#define					VER_STR		"250313_1"			// SetFOVOffset(HFOVOffset, VFOVOffset, DFOVOffset) UI SfrSpec 그리드로 
 //#define					VER_STR		"250312_4"			//_findCirclePos 원 찾음 Fov 검사 =  실패 
 //#define					VER_STR		"250312_2"			//원점, 영상 확인
 //#define					VER_STR		"250311_1"			//DLL 변경
@@ -331,7 +333,7 @@ enum MTF_INSP_MODE { MTF_17P = 0, MTF_24P };
 #define		COMMON_MTF_INSP_CNT				50		//버퍼 공간 , 저장 개수로만 사용
 
 
-#define MAX_FOV_COUNT				9       //협각
+#define MAX_FOV_COUNT				4//9       //협각
 #define MAX_FOV_FIND_COUNT			14
 
 #define MAX_SNR_COUNT				3       //흰,빨,검순서

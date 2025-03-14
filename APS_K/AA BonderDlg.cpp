@@ -5898,6 +5898,7 @@ int CAABonderDlg::_checkMaxSfrPos(int iMode)
 	{
 		sfrLimit = 0.1;
 	}
+	sfrLimit = 0.6;   //250313
 	if ( Task.m_iCnt_Step_AA < 4 ){
 		return 0;
 	}
@@ -11927,7 +11928,6 @@ void CAABonderDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		int width = 0;
 		int val = 0;
 		char szTmp[256];
-
 		vision.clearOverlay(m_iCurCamNo);
 
 		if(m_iCurCamNo<3) 
@@ -11942,7 +11942,7 @@ void CAABonderDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 			sprintf_s(szTmp, "(%d, %d) %d", p.x, p.y, val);
 			vision.textlist[m_iCurCamNo].addList(50, 700, szTmp, M_COLOR_RED, 17, 7, "Arial");
-
+			
 			if( Task.bManual_FindEpoxy == true)
 			{
 				Task.cpMEpoxyPos.x = p.x;

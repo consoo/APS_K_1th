@@ -550,18 +550,23 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 	vision.clearOverlay(CCD);
 
 	//int nPitch, nSizeX, nSizeY;
-	TCHAR szPos[SIZE_OF_100BYTE];
-	int nPitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
-	int nSizeX = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
-	int nSizeY = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
+	//TCHAR szPos[SIZE_OF_100BYTE];
+	//int nPitch = MbufInquire(vision.MilProcImageChild[4], M_PITCH, NULL);
+	//int nSizeX = MbufInquire(vision.MilProcImageChild[4], M_SIZE_X, NULL);
+	//int nSizeY = MbufInquire(vision.MilProcImageChild[4], M_SIZE_Y, NULL);
 
-	Task.getROI();
-	vision.MilBufferUpdate();
-	
-	if(Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, Task.SFR.rcROI, 1) == false)
-	{
-		return;
-	}
+	//Task.getROI();
+	//vision.MilBufferUpdate();
+	//
+	//CRect FovRectTemp[MAX_FOV_COUNT];
+	//memcpy(FovRectTemp, model.sfrElem.m_clRectFov, sizeof(FovRectTemp));
+
+	////if(Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, Task.SFR.rcROI, 1) == false
+	////if (Task._findFovPos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, FovRectTemp) == false)
+	//if (Task._findCirclePos(vision.MilImageBuffer[4], nPitch, nSizeX, nSizeY, model.sfrElem.m_clRectFov, 1) == false)
+	//{
+	//	return; 
+	//}
 
     //int _type = 0;
 	// _type = DOT_TYPE;
@@ -575,6 +580,7 @@ void CCCDInspModeDlg::OnBnClickedBtnInspFovDistortion()
 	}
 	vision.drawOverlay(CCD);
 	pFrame->putListLog(_T("[수동검사] Fov 검사 완료"));
+
 }
 
 //-----------------------------------------------------------------------------
