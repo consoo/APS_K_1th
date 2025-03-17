@@ -3,7 +3,7 @@
 #define __GLOBAL_DEFINE
 
 
-//#define		NORINDA_MODE
+#define		NORINDA_MODE
 
 //=======================================================================
 #define	PCB_TILT_AA				0
@@ -15,7 +15,7 @@
 #define	MACHINE_1ST				110
 #define MACHINE______2ST		304
 //
-#define	__MACHINE_MODEL			MACHINE______2ST
+#define	__MACHINE_MODEL			MACHINE_1ST
 
 
 
@@ -34,9 +34,10 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 
 
 
-static int LGIT_MODEL_INDEX = M2_MBOX081D_8M;
+static int LGIT_MODEL_INDEX = M1_TANGERING_5M;
 //-----------------------------------------------------------------------------------------------------------------------------------
-#define					VER_STR		"250314_1"			// AA,EOL 
+#define					VER_STR		"250317_1"			// 1호기 Tengring
+//#define					VER_STR		"250314_1"			// AA,EOL 
 //#define					VER_STR		"250313_2"			// SetFOVOffset(HFOVOffset, VFOVOffset, DFOVOffset) -> 오류 
 //#define					VER_STR		"250313_1"			// SetFOVOffset(HFOVOffset, VFOVOffset, DFOVOffset) UI SfrSpec 그리드로 
 //#define					VER_STR		"250312_4"			//_findCirclePos 원 찾음 Fov 검사 =  실패 

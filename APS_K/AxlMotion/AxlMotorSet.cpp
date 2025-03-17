@@ -7103,8 +7103,28 @@ bool CAxlMotorSet::Pcb_Motor_Move(int index, double offsetX, double offsetY, dou
 
 		case 101:
 #if (__MACHINE_MODEL == MACHINE_1ST)
-			pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - model.axis[Motor_PCB_X].pos[index] - offsetX);
-			pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - model.axis[Motor_PCB_Y].pos[index] - offsetY);
+			if (index == Bonding_Pos && sysData.m_iProductComp == 1)
+			{
+				if (Task.AutoFlag == 1)
+				{
+
+					//pos[0] = Task.dAAPcbMotor[0] + offsetX;	//PCB X access 저장된 값
+					//pos[1] = Task.dAAPcbMotor[1] + offsetY;	//PCB Y
+					//pos[2] = Task.dAAPcbMotor[2] + offsetTh;	//PCB TH 
+					pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - Task.dAAPcbMotor[0] + offsetX);
+					pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - Task.dAAPcbMotor[1] + offsetY);
+				}
+				else
+				{
+					pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - model.axis[Motor_PCB_X].pos[index] + offsetX);
+					pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - model.axis[Motor_PCB_Y].pos[index] + offsetY);
+				}
+		}
+			else
+			{
+				pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - model.axis[Motor_PCB_X].pos[index] - offsetX);
+				pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - model.axis[Motor_PCB_Y].pos[index] - offsetY);
+			}
 #else
 			if (index == Bonding_Pos && sysData.m_iProductComp == 1)
 			{
