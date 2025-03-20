@@ -1221,7 +1221,7 @@ int	CPcbProcess2::RunProc_LaserMeasure(int iUseStep)
 		LaserPos[iLaser_Pos].y = motor.GetEncoderPos(Motor_PCB_Y);
 		LaserValue[iLaser_Pos] = Task.m_Laser_Point[iLaser_Pos];
 
-		MandoInspLog.dLaserTestPoint[iLaser_Pos] = Task.m_Laser_Point[iLaser_Pos];
+		MandoInspLog.dLaserTestPoint[iLaser_Pos] = LaserValue[iLaser_Pos]; //Task.m_Laser_Point[iLaser_Pos];
 		
 		if (Task.m_Laser_Point[iLaser_Pos] != 0)
 		{
@@ -3691,8 +3691,7 @@ int	CPcbProcess2::Complete_FinalInsp(int iStep)
 		}
 		Task.m_iDrawBarStep = Task.m_iCnt_Step_AA_Total;
 		theApp.MainDlg->autodispDlg->DrawBarGraph();	//122520	Complete_FinalInsp
-		vision.clearOverlay(CCD);
-		vision.drawOverlay(CCD, true);
+		
 
 		//vision.FnShmEdgeFind(MIU.m_pFrameRawBuffer);
 		//g_clPriInsp.func_Insp_Color_reproduction(MIU.vTempBuffer);		//240625 shm ColorReproduction
@@ -3712,7 +3711,8 @@ int	CPcbProcess2::Complete_FinalInsp(int iStep)
 		iRtnFunction = 122565;
 		break;
 	case 122565:
-		//Sleep(500);
+		vision.clearOverlay(CCD);
+		vision.drawOverlay(CCD, true);
 		iRtnFunction = 122570;
 		break;
 	case 122570:
