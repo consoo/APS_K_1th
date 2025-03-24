@@ -15,10 +15,12 @@
 #define	MACHINE_1ST				110
 #define MACHINE______2ST		304
 //
-#define	__MACHINE_MODEL			MACHINE______2ST
+#define	__MACHINE_MODEL			MACHINE_1ST
 
 
 
+const int M2_OX01H1B = 200900;		//윤경목 선임 SFR, RI, 이물
+const int M2_VB56G4A = 201000;		//윤경목 선임 SFR, RI, 이물
 
 const int M1_TANGERING_5M = 200800;		//김동훈 책임, 
 const int M2_MBOX081D_8M = 200700;		// 최종철 선임, OC, SFR, 이물, Rotation, RI, Fov, Distortion
@@ -34,9 +36,10 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 
 
 
-static int LGIT_MODEL_INDEX = M2_MBOX081D_8M;
+static int LGIT_MODEL_INDEX = M1_TANGERING_5M;
 //-----------------------------------------------------------------------------------------------------------------------------------
-#define					VER_STR		"250320_1"			// win7, Mil9 재설치 Okey? Okey Okey
+#define					VER_STR		"250324_1"			//
+//#define					VER_STR		"250320_1"			// win7, Mil9 재설치 Okey? Okey Okey
 //#define					VER_STR		"250318_1"			// CCD OPEN 
 //#define					VER_STR		"250317_1"			// 1호기 Tengring
 //#define					VER_STR		"250314_1"			// AA,EOL 

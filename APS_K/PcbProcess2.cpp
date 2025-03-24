@@ -3969,7 +3969,7 @@ int	CPcbProcess2::Complete_FinalInsp(int iStep)
 		}
 		else
 		{
-			if (LGIT_MODEL_INDEX == M2_MBOX081D_8M)
+			if (LGIT_MODEL_INDEX == M2_MBOX081D_8M || LGIT_MODEL_INDEX == M2_OX01H1B || LGIT_MODEL_INDEX == M2_VB56G4A)
 			{
 				//이물광원에서 oc 측정 요청240725
 				g_clPriInsp.g_GetIllumination(MIU.vDefectMidBuffer_6500K);
@@ -4587,7 +4587,7 @@ int	CPcbProcess2::func_MandoFinalSFR(int iStep)
 		}
 		else
 		{
-			if (LGIT_MODEL_INDEX == M2_MBOX081D_8M)
+			if (LGIT_MODEL_INDEX == M2_MBOX081D_8M || LGIT_MODEL_INDEX == M2_OX01H1B || LGIT_MODEL_INDEX == M2_VB56G4A)
 			{
 				//이물광원에서 oc 측정 요청240725
 				g_clPriInsp.func_Insp_Shm_Illumination(MIU.vDefectMidBuffer_6500K);
