@@ -1648,7 +1648,7 @@ UINT Thread_TaskLens(LPVOID parm)
 
 
  	pFrame->m_iCurCamNo = 0;
-	if(Task.LensTask >= 60000)
+	if(Task.LensTask >= 70000)
 	{
 		pFrame->ctrlSubDlg(MAIN_DLG);
 		pFrame->changeMainBtnColor(MAIN_DLG);
@@ -1732,17 +1732,25 @@ UINT Thread_TaskLens(LPVOID parm)
 #if (__MACHINE_MODEL == MACHINE_1ST)
 			Task.LensTask = theApp.MainDlg->pcbProcess.RunProc_LENS_AlignLaserMeasure(Task.LensTask);		//! LENS Align Step
 #else
+
+		
+#if (____AA_WAY == LENS_TILT_AA)
 			Task.LensTask = theApp.MainDlg->pcbProcess.RunProc_LENS_LensLoad(Task.LensTask);		//! LENS Align Step
+#endif
 #endif
 			//theApp.MainDlg->pcbProcess.RunProc_PCBOutsideAlign(Task.PCBTask);	
 			///Task.LensTask = pFrame->RunProc_LENS_AlignLaserMeasure(Task.LensTask);		//! LENS Align Step
 			//Task.LensTask = pFrame->RunProc_LENS_LensLoad(Task.LensTask);		//! LENS Align Step
 			
 		}
-
+#if(____AA_WAY == PCB_TILT_AA)
+		else if (Task.LensTask >= 50000 && Task.LensTask < 70000)
+		{
+			Task.LensTask = theApp.MainDlg->pcbProcess.RunProc_LENS_AlignLaserMeasure(Task.LensTask);		//
+		}
+#endif
 //★★★★///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		
 
 		if (Task.LensTask >= Task.m_iEnd_Step_LENS)
 		{
@@ -2485,6 +2493,16 @@ void CAABonderDlg::Rs232Init()
 		LightControlSecond.SetReceiveProcPtr(this);
 		bRet_Con_RS232C = LightControlSecond.Connect_Device(sCommPort, 0);
 	}
+
+	//IR_OC
+	//IrvAlignLed.Irv_RS232_CommOpen(6, 9600, IR_OC);
+
+	//Sleep(100);
+	//IrvAlignLed.IrvLight_Power(1, IR_OC);
+
+	//Sleep(100);
+	//IrvAlignLed.IrvLight_Power(0, IR_OC);
+
 	//조명 3 ALIGN/OC 조명
 	sCommPort.Format("COM%d", sysData.iCommPort[COMM_LIGHT3]);
 	LightControlthird.myNum = 1;
@@ -3109,7 +3127,16 @@ void CAABonderDlg::SetInterface_Label()
 		temp.Format(_T("M1_TANGERING_5M"));
 		ModelSelect = true;
 	}
-	// || LGIT_MODEL_INDEX == M2_VB1940_5M
+	else if (LGIT_MODEL_INDEX == M2_OX01H1B)
+	{
+		temp.Format(_T("M2_OX01H1B"));
+		ModelSelect = true;
+	}
+	else if (LGIT_MODEL_INDEX == M2_VB56G4A)
+	{
+		temp.Format(_T("M2_VB56G4A"));
+		ModelSelect = true;
+	}
 #endif
 	
 	
@@ -5898,7 +5925,7 @@ int CAABonderDlg::_checkMaxSfrPos(int iMode)
 	{
 		sfrLimit = 0.1;
 	}
-	sfrLimit = 0.6;   //250313
+	//sfrLimit = 0.6;   //250313
 	if ( Task.m_iCnt_Step_AA < 4 ){
 		return 0;
 	}
@@ -5926,7 +5953,7 @@ int CAABonderDlg::_checkMaxSfrPos(int iMode)
 			return -1;
 		}
 
-		if ( Task.SFR.iMaxIndex[i] > (Task.m_iCnt_Step_AA_Total-3) )
+		if ( Task.SFR.iMaxIndex[i] > (Task.m_iCnt_Step_AA_Total- 10))//3) )
 			return -1;
 
 
@@ -6032,8 +6059,8 @@ bool CAABonderDlg::_calcLaserTilt(CDPoint dMotorPos[4], double dLaser[4], double
 
 	//-------------------------------------------------------
 	Width = Length[1];                   // top
-	//Height = AvgLeft - AvgRight;
-	Height = AvgRight - AvgLeft;   //+ - 부호 안맞으면 순서 바꾸기
+	Height = AvgLeft - AvgRight;
+	//Height = AvgRight - AvgLeft;   //+ - 부호 안맞으면 순서 바꾸기
 	radian = atan(Height / Width);
 	theta = radian * 180 / M_PI;
 	//-------------------------------------------------------
@@ -6063,8 +6090,8 @@ bool CAABonderDlg::_calcLaserTilt(CDPoint dMotorPos[4], double dLaser[4], double
 	// ======================= 세로 각도 계산 (TX)
 	Width = Length[0];                   // left
 
-    //Height = AvgTop - AvgBottom;
-	Height = AvgBottom - AvgTop;		//+ - 부호 안맞으면 순서 바꾸기
+    Height = AvgTop - AvgBottom;
+	//Height = AvgBottom - AvgTop;		//+ - 부호 안맞으면 순서 바꾸기
 	
 	radian = atan(Height / Width);
 	theta = radian * 180 / M_PI;
@@ -6843,7 +6870,7 @@ void CAABonderDlg::OnBnClickedButtonAutorun()
 	Task.m_iEnd_Step_PCB	= 170000;
 	//
 	Task.m_iStart_Step_LENS	= 10000;
-	Task.m_iEnd_Step_LENS = 60000;
+	Task.m_iEnd_Step_LENS = 70000;
 
 	#ifdef ON_LINE_VISION
 		if(!m_bMiuRun && Task.AutoFlag)
@@ -10892,6 +10919,7 @@ void CAABonderDlg::OnClickedLabelTitle()
 	//UVCommand.UV_Shutter_PowerSet(95);//
 	//vision.bmpImageSaveFn(0, 0);
 	
+
 #ifdef NORINDA_MODE
 	//CDPoint cpLeftPos;
 	//CDPoint cpRighttPos;

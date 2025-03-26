@@ -666,7 +666,6 @@ void CLightDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	{
 		if (sysData.m_iIrChartUse == 1)
 		{
-
 			//strTemp.Format("%d.%d", (m_sliderCam1Led.GetPos() / 10), (m_sliderCam1Led.GetPos() % 10));
 			strTemp.Format("%d", m_sliderCam1Led.GetPos());
 			GetDlgItem(IDC_EDIT_CAM1_LED)->SetWindowText(strTemp);

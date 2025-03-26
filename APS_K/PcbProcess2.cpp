@@ -310,6 +310,8 @@ int CPcbProcess2::RunProc_ProductLoading(int iUseStep)
 	switch (iUseStep)
 	{
 	case 10000:
+		Task.bFlag_Auto_PCB_Bonding_Pos = false;
+		Task.bFlag_Auto_Lens_Laser_Finish = false;
 		Task.interlockLens = Task.interlockPcb = 0;
 		iRtnFunction = 10010;
 		break;
@@ -1129,6 +1131,11 @@ int	CPcbProcess2::RunProc_LaserMeasure(int iUseStep)
 	switch (iUseStep)
 	{
 	case 27000:
+#if (____AA_WAY == PCB_TILT_AA)
+		iRtnFunction = 30000;
+		break;
+#else
+
 		Task.oldLaserTx = 0.1;
 		Task.oldLaserTy = 0.1;
 		iLaser_Pos = 0;// 4;//4번부터가 laser out point
@@ -1152,6 +1159,7 @@ int	CPcbProcess2::RunProc_LaserMeasure(int iUseStep)
 		MandoInspLog.dLaserTestTilt[1] = 0.0;
 		iRtnFunction = 27100;// 27350;//<-임시 패스   Original-> 27100; 
 		break;
+#endif
 
 	case 27100:
 		if (motor.Pcb_Motor_Move_Laser(iLaser_Pos, Task.d_Align_offset_x[PCB_Chip_MARK], Task.d_Align_offset_y[PCB_Chip_MARK], Task.d_Align_offset_th[PCB_Chip_MARK]))
@@ -2011,12 +2019,22 @@ int CPcbProcess2::RunProc_InspAAPos(int iUseStep)
 			iRtnFunction = -39050;
 			break;
 		}
+		Sleep(500);
+		Task.bFlag_Auto_PCB_Bonding_Pos = true;
+		Task.LensTask = 50000;
+		Task.bFlag_Auto_Lens_Laser_Finish = false;
 		Task.PCBTaskTime = myTimer(true);
 		iRtnFunction = 39060;
-	case 39060:
 
+	case 39060:
 #if (____AA_WAY == PCB_TILT_AA)
-		iRtnFunction = 41000;
+		
+		
+		if (Task.bFlag_Auto_Lens_Laser_Finish == true)
+		{
+			iRtnFunction = 41000;
+			break;
+		}
 #elif (____AA_WAY == LENS_TILT_AA)
 		if (Task.interlockLens == 1 && Task.m_bOKLensPass == 1)
 		{
@@ -3004,7 +3022,7 @@ int	CPcbProcess2::procAutoFocus(int iStep)
 		//Lens는 Z축 상승
 		//Pcb는 Z축 하강
 #if (____AA_WAY == PCB_TILT_AA)
-		z_move_dist = fabs(model.axis[TITLE_MOTOR_Z].pos[Bonding_Pos] - dMovePos) * -1;	//1차 ->2 차이동
+		z_move_dist = fabs(model.axis[theApp.MainDlg->TITLE_MOTOR_Z].pos[Bonding_Pos] - dMovePos) * -1;	//1차 ->2 차이동
 #elif (____AA_WAY == LENS_TILT_AA)
 		z_move_dist = fabs(model.axis[theApp.MainDlg->TITLE_MOTOR_Z].pos[Bonding_Pos] - dMovePos) * 1;	//1차 ->2 차이동
 #endif
@@ -5092,7 +5110,20 @@ int CPcbProcess2::RunProc_LensNewPassPickup(int iUseStep)
 			errMsg2(Task.AutoFlag, logStr);
 			iRtnFunction = -15500;
 		}
-		iRtnFunction = 15550;
+		iRtnFunction = 15510;
+		break;
+	case 15510:
+		if (!motor.Lens_Motor_MoveXY(2, Wait_Pos))
+		{
+			sLangChange.LoadStringA(IDS_STRING748);	//Lens부 모터 대기 위치 이동 실패[%d]
+			logStr.Format(sLangChange, iUseStep);
+			putListLog(logStr);
+			iRtnFunction = -15510;
+		}
+		else
+		{
+			iRtnFunction = 15550;
+		}
 		break;
 	case 15550:
 		if (motor.Pcb_Motor_Move(Wait_Pos))			//PCB부 모터 대기위치 이동
@@ -5110,7 +5141,8 @@ int CPcbProcess2::RunProc_LensNewPassPickup(int iUseStep)
 		break;
 	case 15800:
 
-		Task.LensTask = 30000;	//pcb AA일때 lens 는 Align 이동후 laser
+		/////Task.LensTask = 30000;	//pcb AA일때 lens 는 Align 이동후 laser
+		Task.interlockLens = 1;
 		iRtnFunction = 15900;
 		logStr.Format("PCB Epoxy Waiting[%d]", iUseStep);
 		putListLog(logStr);
@@ -6191,7 +6223,7 @@ int CPcbProcess2::procProductComplete(int iStep)
 		break;
 
 	case 19600: // 본딩 위치 이동 
-				//if(motor.Pcb_Motor_Move(Bonding_Pos, Task.d_Align_offset_x[PCB_Holder_MARK] + Task.dAlignManual[0], Task.d_Align_offset_y[PCB_Holder_MARK] + Task.dAlignManual[1], Task.d_Align_offset_th[PCB_Holder_MARK] + Task.dAlignManual[2]) )
+		//if(motor.Pcb_Motor_Move(Bonding_Pos, Task.d_Align_offset_x[PCB_Holder_MARK] + Task.dAlignManual[0], Task.d_Align_offset_y[PCB_Holder_MARK] + Task.dAlignManual[1], Task.d_Align_offset_th[PCB_Holder_MARK] + Task.dAlignManual[2]) )
 		if (motor.Pcb_Motor_Move(Bonding_Pos, Task.d_Align_offset_x[PCB_Chip_MARK], Task.d_Align_offset_y[PCB_Chip_MARK], Task.d_Align_offset_th[PCB_Chip_MARK]))
 		{
 			Task.PCBTaskTime = myTimer(true);
@@ -6296,10 +6328,10 @@ int CPcbProcess2::RunProc_LENS_LensLoad(int iLensStep)
 	switch (iLensStep)
 	{
 	case 30000:
-#if (____AA_WAY == PCB_TILT_AA)
-		iRtnFunction = 50000;
-		break;
-#endif
+//#if (____AA_WAY == PCB_TILT_AA)
+//		iRtnFunction = 50000;
+//		break;
+//#endif
 		Task.interlockLens = 0;			//Lens AA 사용
 		if (Task.m_bOKLensPass == 1)//! Lens 넘김 미완료 일 경우	 
 		{
@@ -6489,6 +6521,7 @@ int CPcbProcess2::RunProc_LENS_LensLoad(int iLensStep)
 			iRtnFunction = -36400;
 			break;
 		}
+		logStr.Format("실패");
 		iRtnFunction = 36600;
 		break;
 	case 36600:
@@ -6502,6 +6535,7 @@ int CPcbProcess2::RunProc_LENS_LensLoad(int iLensStep)
 		iRtnFunction = 36800;
 		break;
 	case 36800:
+		logStr.Format("실패2");
 		if (!motor.Lens_Motor_MoveX(Wait_Pos))
 		{
 			logStr.Format("Lens X 대기위치 이동 실패");
@@ -6512,7 +6546,17 @@ int CPcbProcess2::RunProc_LENS_LensLoad(int iLensStep)
 		iRtnFunction = 37000;
 		break;
 	case 37000:
-		iRtnFunction = 37200;
+		if (!motor.Lens_Motor_MoveXY(2, Wait_Pos))
+		{
+			sLangChange.LoadStringA(IDS_STRING748);	//Lens부 모터 대기 위치 이동 실패[%d]
+			logStr.Format(sLangChange, iLensStep);
+			putListLog(logStr);
+			iRtnFunction = -37000;
+		}
+		else
+		{
+			iRtnFunction = 37200;
+		}
 		break;
 	case 37200:
 		iRtnFunction = 37400;
@@ -6526,6 +6570,774 @@ int CPcbProcess2::RunProc_LENS_LensLoad(int iLensStep)
 		break;
 	default:
 		logStr.Format("Lens Load Thread Step 번호 비정상 [%d]", iLensStep);
+		errMsg2(Task.AutoFlag, logStr);
+		iRtnFunction = -1;
+		break;
+	}
+
+	return iRtnFunction;
+}
+
+int CPcbProcess2::RunProc_LENS_AlignLaserMeasure(int iLensStep)
+{
+	int iRtnFunction = iLensStep;
+	int iCamDelay = model.strInfo_Cam[1].m_iDelayTime;		//PCB 영상 획득 Delay
+	int iAlignRetry = model.strInfo_Cam[1].m_iRetryCnt;
+	int iRtn = 0;
+	CString logStr = "";
+	bool bChk = true;
+	double offsetX = 0.0, offsetY = 0.0, offsetTh = 0.0;
+
+	int iLaserDelay = model.strInfo_Cam[0].m_iDelayTime;	//Laser 측정전 Delay
+
+	switch (iLensStep)
+	{
+	case 50000:
+		if (Task.bFlag_Auto_PCB_Bonding_Pos == true)
+		{
+			Task.oldLaserTx = 0.1;
+			Task.oldLaserTy = 0.1;
+			Task.d_Align_offset_x[LENS_Align_MARK] = 0;
+			Task.d_Align_offset_y[LENS_Align_MARK] = 0;
+			Task.d_Align_offset_th[LENS_Align_MARK] = 0;
+			//
+			Task.m_iRetry_Opt = 0;
+			if (motor.LENS_Z_Motor_Move(Wait_Pos))
+			{
+				Task.LensTaskTime = myTimer(true);
+				iRtnFunction = 50100;
+			}
+			else
+			{
+				logStr.Format("Lens_Z축 대기위치 이동 실패.[%d]", iLensStep);
+				errMsg2(Task.AutoFlag, logStr);
+				iRtnFunction = -50000;
+			}
+
+			break;
+		}
+		else
+		{
+			break;
+		}
+	case 50100:
+#if (____AA_WAY == PCB_TILT_AA)
+		iRtnFunction = 50500;
+#elif (____AA_WAY == LENS_TILT_AA)
+		if (motor.Lens_Motor_MoveXY(0, Wait_Pos))
+		{
+			iRtnFunction = 43000;//41900;		//렌즈쪽 카메라 없음
+		}
+		else
+		{
+			logStr.Format("Lens 대기위치 이동 실패[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = -30050;
+		}
+		break;
+
+#endif
+		break;
+	case 50500:
+		iRtnFunction = 50600;
+		break;
+	case 50600:
+		iRtnFunction = 50900;
+
+		break;
+	case 50900:
+#if (____AA_WAY == PCB_TILT_AA)
+		if (sysData.m_iLaserInspPass == 1)	//렌즈
+		{
+			iRtnFunction = 51100;			//Laser 측정 Pass
+		}
+		else
+		{
+			iRtnFunction = 51250; //51000;		// 31300;//얼라인 임시 패스
+		}
+
+#elif (____AA_WAY == LENS_TILT_AA)
+		iRtnFunction = 43000;//41900;		//렌즈쪽 카메라 없음
+#endif
+
+		break;
+#if 0
+	case 51000:
+		if (motor.LENS_Z_Motor_Move(Wait_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 51009;
+		}
+		else
+		{
+			logStr.Format("Lens_Z축 대기위치 이동 실패.[%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51000;
+		}
+		break;
+	case 51009:
+		if (motor.Lens_Motor_MoveXY(0, Wait_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			logStr.Format("Lens 대기 위치 이동 완료[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 51010;
+		}
+		else
+		{
+			logStr.Format("Lens 대기 위치 이동 실패[%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51009;
+		}
+		break;
+	case 51010:
+		if (motor.INSP_Motor_MoveX(Align_Pos))
+		{
+			Task.PCBTaskTime = myTimer(true);
+			logStr.Format("Insp X Lens Align  위치 이동 완료[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 51050;
+		}
+		else
+		{
+			Task.PCBTaskTime = myTimer(true);
+			logStr.Format("Insp X Lens Align  위치 이동 실패[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = -51010;
+		}
+		break;
+	case 51050:
+		LightControlthird.ctrlLedVolume(LIGHT_PCB, model.m_iLedValue[LEDDATA_LENS]);
+		if (motor.Lens_Motor_MoveXY(0, Lens_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			logStr.Format("Lens Align 위치 이동 완료[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 51060;
+		}
+		else
+		{
+			logStr.Format("Lens Align 위치 이동 실패[%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51050;
+		}
+		break;
+	case 51060:
+		if (motor.LENS_Z_Motor_Move(Lens_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			logStr.Format("Lens Align Z 위치 이동 완료[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 51080;
+		}
+		else
+		{
+			logStr.Format("Lens Align Z 위치 이동 실패[%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51060;
+		}
+		break;
+
+	case 51080:
+		checkMessage();
+		if ((myTimer(true) - Task.PCBTaskTime) > iCamDelay && (motor.IsStopAxis(Motor_Lens_X) && motor.IsStopAxis(Motor_Lens_Y)))
+		{
+			Task.PCBTaskTime = myTimer(true);
+			iRtnFunction = 51100;
+		}
+		break;
+
+	case 51100: // lens Align
+		if (Task.m_iRetry_Opt > iAlignRetry)
+		{
+			logStr.Format("Lens Align 재검사 %d 회 실패[%d]\n 보정 미적용으로 진행하시겠습니까?", Task.m_iRetry_Opt, iLensStep);
+			if (askMsg(logStr) == IDOK)
+			{
+				Task.d_Align_offset_x[LENS_Align_MARK] = 0;
+				Task.d_Align_offset_y[LENS_Align_MARK] = 0;
+				Task.d_Align_offset_th[LENS_Align_MARK] = 0;
+				iRtnFunction = 51300;
+			}
+			else
+			{
+				iRtnFunction = -51100;
+				logStr.Format("Lens Align 재검사 %d 회 실패[%d]", Task.m_iRetry_Opt, iLensStep);
+				errMsg2(Task.AutoFlag, logStr);
+			}
+			break;
+		}
+
+		offsetX = offsetY = offsetTh = 0.0;
+		Sleep(200);
+		iRtn = theApp.MainDlg->procCamAlign(CAM2 - 1, LENS_Align_MARK, false, offsetX, offsetY, offsetTh);
+		saveInspImage(LENS_IMAGE_SAVE, Task.m_iRetry_Opt);
+
+		Task.m_iRetry_Opt++;
+		offsetY = 0;
+		if (iRtn == 0)
+		{
+			Task.d_Align_offset_x[LENS_Align_MARK] -= offsetX;
+			Task.d_Align_offset_y[LENS_Align_MARK] += offsetY;
+			Task.d_Align_offset_th[LENS_Align_MARK] = 0;//+= offsetTh;	//Lens는 보정량 Theta가 없음
+
+			logStr.Format("Lens Align : %.3lf %.3lf %.3lf", Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]);
+			//pcbDlg->m_labelAlignResult.SetText(logStr);
+			//pcbDlg->m_labelAlignResult.Invalidate();
+
+			putListLog(logStr);
+
+			int iRtnVal = theApp.MainDlg->AlignLimitCheck(CAM2, offsetX, offsetY, 0);
+			if (iRtnVal == 1)
+			{
+				iRtnFunction = 51200;				// 보정 이동
+			}
+			else if (iRtnVal == 2)
+			{
+				logStr.Format("		Lens Align [%d] 완료 [%d]", Task.m_iRetry_Opt, iLensStep);
+				putListLog(logStr);
+				theApp.MainDlg->InstantMarkDelete(LENS_Align_MARK);			//임시 등록 마크 삭제
+
+				logStr.Format("		Lens Align Complete : %d, %.03f, %.03f, %.03f", Task.m_iLensPickupNoCentering, Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]);
+				AlignResultSave(logStr);
+				Task.m_iRetry_Opt = 0;
+				iRtnFunction = 51250;// 31300;				// 완료
+			}
+			else
+			{
+				logStr.Format("Lens Align [%d] 보정 범위 초과[%d]", Task.m_iRetry_Opt, iLensStep);
+				errMsg2(Task.AutoFlag, logStr);
+				AlignLogSave(logStr);
+				theApp.MainDlg->InstantMarkDelete(LENS_Align_MARK);
+				iRtnFunction = -51100;				// NG
+			}
+		}
+		else
+		{
+			logStr.Format("Lens Align [%d] 마크 인식 실패[%d]", Task.m_iRetry_Opt, iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 51100;					//  재검사 
+		}
+		break;
+
+	case 51200://!! 보정량 이동.- Retry
+		if (motor.Lens_Motor_Align_Move(Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 51080;
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING657);	//Lens Align 보정 위치 이동 실패
+			logStr.Format(sLangChange + _T("[%d]"), iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51200;
+		}
+		break;
+#endif
+	case 51250:
+		LightControlthird.ctrlLedVolume(LIGHT_PCB, 0);
+		if (motor.LENS_Z_Motor_Move(Wait_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 51251;
+		}
+		else
+		{
+			logStr.Format("Lens_Z축 대기위치 이동 실패.[%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51250;
+		}
+		break;
+	case 51251:
+		iRtnFunction = 51260;
+		break;
+	case 51260:
+		if (motor.INSP_Motor_MoveX(Laser_Pcb_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 51300;
+		}
+		else
+		{
+			logStr.Format("Insp X 축 Laser_Lens_Pos 이동 실패.[%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51260;
+		}
+	case 51300://! Lens-Z축 대기 위치 이동
+		iLaser_Pos = 0;
+		if (motor.Lens_Motor_Move_Laser(iLaser_Pos, Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]))
+		{
+			Task.LensTaskTime = myTimer(true);
+			logStr.Format("Laser 변위 측정 외부 위치 이동 완료[%d]", iLensStep);	//Laser 변위 측정 외부 위치 이동 완료[%d]
+			putListLog(logStr);
+			iRtnFunction = 60000;
+		}
+		else
+		{
+			logStr.Format("Laser 변위 측정 외부 위치 이동 실패 [%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -51300;
+		}
+		break;
+	case 60000://! Laser-Z축 외부 측정위치 이동
+		if (motor.LENS_Z_Motor_Move(Laser_Lens_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 60100;
+		}
+		else
+		{
+			logStr.Format("Laser-Z축 변위 측정 외부 위치 이동 실패 [%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -60000;
+		}
+		break;
+
+	case 60100:
+		iRtnFunction = 60200;
+		break;
+
+	case 60200://! Lens Stage 외부 Laser 측정위치 이동 
+		if (motor.Lens_Motor_Move_Laser(iLaser_Pos, Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]))
+		{
+			Task.LensTaskTime = myTimer(true);
+			logStr.Format("Laser 변위 측정 외부 위치 이동 완료[%d]", iLensStep);	//Laser 변위 측정 외부 위치 이동 완료[%d]
+			putListLog(logStr);
+			if (iLaser_Pos == 0) { iRtnFunction = 60210; }//처음만 하강명령.
+			else { iRtnFunction = 60300; }
+		}
+		else
+		{
+			logStr.Format("Laser 변위 측정 외부 위치 이동 실패 [%d]", iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -60200;
+		}
+		break;
+	case 60210:
+		iRtnFunction = 60220;
+		break;
+	case 60220:
+		iRtnFunction = 60300;
+		break;
+	case 60300://! 측정 전 Delay
+		checkMessage();
+		if ((myTimer(true) - Task.LensTaskTime) > iLaserDelay && (motor.IsStopAxis(Motor_Lens_X) && motor.IsStopAxis(Motor_Lens_Y)))	//최주임님, Delay 확인
+		{
+			iRtnFunction = 61000;
+		}
+		break;
+		//Laser 실린더 하강 END
+
+	case 61000: //외부 변위 감지 (저장 따로 하고 Align 이동)
+				//Keyence.func_LT9030_Scan(Task.m_Laser_Point[iLaser_Pos]);
+		Keyence.func_CL3000_Scan(Task.m_Laser_Point[iLaser_Pos]);
+		logStr.Format("변위 센서 %lf[%d] - 외부 - %d 위치", Task.m_Laser_Point[iLaser_Pos], iLensStep, iLaser_Pos + 1);
+		putListLog(logStr);
+		LaserPos[iLaser_Pos].x = motor.GetEncoderPos(Motor_Lens_X) - sysData.dDataset[Motor_Lens_X];
+		LaserPos[iLaser_Pos].y = motor.GetEncoderPos(Motor_Lens_Y) - sysData.dDataset[Motor_Lens_Y];
+		LaserValue[iLaser_Pos] = Task.m_Laser_Point[iLaser_Pos];
+		if (Task.m_Laser_Point[iLaser_Pos] != 0)
+		{
+			if (iLaser_Pos == 3)
+			{
+				if (theApp.MainDlg->func_Check_LaserValueErr(LaserValue) == false)
+				{
+					sLangChange.LoadStringA(IDS_STRING639);	//Laser 측정값 이상..외부 변위 측정값이 이상..[%d]\n 측정값:%.04lf, %.04lf, %.04lf, %.04lf
+					logStr.Format(sLangChange, iLensStep, LaserValue[0], LaserValue[1], LaserValue[2], LaserValue[3]);
+					errMsg2(Task.AutoFlag, logStr);
+					iRtnFunction = -61000;
+					break;
+				}
+
+				if (theApp.MainDlg->_calcLaserTilt(LaserPos, LaserValue, Task.d_Align_offset_xt[LENS_Align_MARK], Task.d_Align_offset_yt[LENS_Align_MARK]))
+				{
+					Task.m_dataOffset_x[LENS_Align_MARK] = Task.d_Align_offset_xt[LENS_Align_MARK];
+					Task.m_dataOffset_y[LENS_Align_MARK] = Task.d_Align_offset_yt[LENS_Align_MARK];
+
+
+					sLangChange.LoadStringA(IDS_STRING1264);		//보정량 Tx: %.04lf, Ty: %.04lf
+					logStr.Format(_T("		") + sLangChange, Task.d_Align_offset_xt[LENS_Align_MARK], Task.d_Align_offset_yt[LENS_Align_MARK]);
+					putListLog(logStr);
+
+					int Rnd = theApp.MainDlg->TiltAlignLimitCheck(Task.m_dataOffset_x[LENS_Align_MARK], Task.m_dataOffset_y[LENS_Align_MARK]);
+					//20160117 이형석 수정
+
+					if (Rnd == 2)
+					{
+
+						Task.m_timeChecker.Measure_Time(5);	//Laser 변위 측정 완료 시간
+						Task.m_dTime_LaserDpm = Task.m_timeChecker.m_adTime[5] - Task.m_timeChecker.m_adTime[4];
+						//dispGrid();
+						MandoInspLog.dTilteOffset[0] = Task.m_dataOffset_x[LENS_Align_MARK];	//만도 차량용Camera 검사 Log 저장
+						MandoInspLog.dTilteOffset[1] = Task.m_dataOffset_y[LENS_Align_MARK];
+
+
+						//20141217 LHC - DataBase에 0값이 저장되는 경우가 생겨 0값이 들어갈 경우 저장하지않고 알람치도록.
+						//김영호 20150602 FraneeGrabber  관련 임시 Pass
+						if (Task.m_dataOffset_x[LENS_Align_MARK] == 0 || Task.m_dataOffset_y[LENS_Align_MARK] == 0)
+						{
+							sLangChange.LoadStringA(IDS_STRING627);	//Laser 변위 차 값 이상 발생..
+							logStr.Format(sLangChange + _T("Xt : %lf, Yt : %lf"), Task.m_dataOffset_x[LENS_Align_MARK], Task.m_dataOffset_y[LENS_Align_MARK]);
+							errMsg2(Task.AutoFlag, logStr);
+							iRtnFunction = -61000;
+							break;
+						}
+						if (!g_ADOData.func_AATaskToRecordLaser(Task.ChipID, Task.m_dataOffset_x[LENS_Align_MARK], Task.m_dataOffset_y[LENS_Align_MARK], Task.m_Laser_Point))
+						{
+							sLangChange.LoadStringA(IDS_STRING489);	//DataBase Laser 변위 측정 Data 기록 실패.[%d]\n MS Office를 닫아주세요.
+							logStr.Format(sLangChange, iLensStep);
+							errMsg2(Task.AutoFlag, logStr);
+							iRtnFunction = -61000;
+							break;
+						}
+
+						LightControlthird.ctrlLedVolume(LIGHT_PCB, model.m_iLedValue[LEDDATA_LENS]);		// Align만 조명 ON
+						Task.LensTaskTime = myTimer(true);
+						iRtnFunction = 61100;
+						iLaser_Pos++;
+
+					}
+					else if (Rnd == 1)
+					{
+						iRtnFunction = 61050;
+					}
+					else
+					{
+						logStr.Format("Laser Tilt  보정값 Limit를 초과 하였습니다.[%d]", iLensStep);
+						errMsg2(Task.AutoFlag, logStr);
+						iRtnFunction = -61000;
+					}
+				}
+			}
+			else
+			{
+				iRtnFunction = 60200;
+				iLaser_Pos++;
+			}
+		}
+		else
+		{
+			iRtnFunction = 61000;
+		}
+		break;
+
+	case 61050: // 이동  변위값이 0으로 만들기 위해 이동
+		if (motor.Lens_Move_Tilt(Task.d_Align_offset_xt[LENS_Align_MARK], Task.d_Align_offset_yt[LENS_Align_MARK]))
+		{
+			iRtnFunction = 60200;
+			iLaser_Pos = 0;//4;
+
+		}
+		break;
+
+	case 61100:
+		iRtnFunction = 61110;
+		break;
+
+		//laser실린더 상승
+	case 61110:
+		iRtnFunction = 61120;
+		break;
+
+	case 61120:
+		iRtnFunction = 61200;
+		break;
+		//laser실린더 상승END
+
+	case 61200://! Lens-Z축 대기 위치 이동
+		if (motor.LENS_Z_Motor_Move(Wait_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 61850;;//// 41300; //41850;//임시 렌즈 align pass
+								  //iRtnFunction = 41300;
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING739);	//Lens_Z축 대기위치 이동 실패
+			logStr.Format(sLangChange + _T("[%d]"), iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -61200;
+		}
+		break;
+#if 0
+	case 61300:
+		if (motor.Lens_Motor_MoveXY(0, Lens_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			sLangChange.LoadStringA(IDS_STRING659);	//Lens Align 이동 [%d]
+			logStr.Format(sLangChange, iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 61400;
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING660);	//Lens Align 이동 실패[%d]
+			logStr.Format(sLangChange, iLensStep);
+			putListLog(logStr);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -61300;
+		}
+
+		break;
+	case 61400:
+
+		if (motor.LENS_Z_Motor_Move(Lens_Pos))
+		{
+			Task.d_Align_offset_x[LENS_Align_MARK] = 0;
+			Task.d_Align_offset_y[LENS_Align_MARK] = 0;
+			Task.d_Align_offset_th[LENS_Align_MARK] = 0;
+			Task.LensTaskTime = myTimer(true);
+			sLangChange.LoadStringA(IDS_STRING661);	//Lens Align 위치 이동 완료[%d]
+			logStr.Format(sLangChange, iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 61500;
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING660);	//Lens Align 위치 이동 실패[%d]
+			logStr.Format(sLangChange, iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -61400;
+		}
+		break;
+
+	case 61500:
+		checkMessage();
+		if ((myTimer(true) - Task.LensTaskTime) > iCamDelay && (motor.IsStopAxis(Motor_Lens_X) && motor.IsStopAxis(Motor_Lens_Y)))
+		{
+			iRtnFunction = 61600;
+			Task.m_iRetry_Opt = 0;
+		}
+		break;
+
+	case 61600://! LENS Align(변위측정 보정후, Shift 계산 용도)
+		if (sysData.m_FreeRun == 1)
+		{
+			for (int i = 0; i<100; i++)
+			{
+				Sleep(10);
+				checkMessage();
+			}
+
+			iRtnFunction = 61700;
+			Task.d_Align_offset_x[LENS_Align_MARK] = 0;
+			Task.d_Align_offset_y[LENS_Align_MARK] = 0;
+			Task.d_Align_offset_th[LENS_Align_MARK] = 0;
+			break;
+		}
+		if (Task.m_iRetry_Opt > iAlignRetry)
+		{
+			logStr.Format("Lens Align 재검사 %d 회 실패[%d]\n 보정 미적용으로 진행하시겠습니까?", Task.m_iRetry_Opt, iLensStep);
+			if (askMsg(logStr) == IDOK)
+			{
+				Task.d_Align_offset_x[LENS_Align_MARK] = 0;
+				Task.d_Align_offset_y[LENS_Align_MARK] = 0;
+				Task.d_Align_offset_th[LENS_Align_MARK] = 0;
+				iRtnFunction = 61800;
+			}
+			else
+			{
+				iRtnFunction = -61600;
+				logStr.Format("Lens Align 재검사 %d 회 실패[%d]", Task.m_iRetry_Opt, iLensStep);
+				errMsg2(Task.AutoFlag, logStr);
+			}
+
+			break;
+		}
+		offsetX = offsetY = offsetTh = 0.0;
+		Sleep(200);
+		iRtn = theApp.MainDlg->procCamAlign(CAM2 - 1, LENS_Align_MARK, false, offsetX, offsetY, offsetTh);
+
+		saveInspImage(LENS_IMAGE_SAVE, Task.m_iRetry_Opt);
+
+		Task.m_iRetry_Opt++;
+
+		if (iRtn == 0)
+		{
+			Task.d_Align_offset_x[LENS_Align_MARK] -= offsetX;
+			Task.d_Align_offset_y[LENS_Align_MARK] += offsetY;
+			Task.d_Align_offset_th[LENS_Align_MARK] = 0;//+= offsetTh;	//Lens는 보정량 Theta가 없음
+
+			sLangChange.LoadStringA(IDS_STRING651);	//Lens Align : %.3lf %.3lf %.3lf
+			logStr.Format("Lens Align : %.3lf %.3lf %.3lf", Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]);
+			//			Sleep(500);
+			//pcbDlg->m_labelAlignResult.SetText(logStr);
+			//pcbDlg->m_labelAlignResult.Invalidate();
+
+			putListLog(logStr);
+
+			int iRtnVal = theApp.MainDlg->AlignLimitCheck(CAM2, offsetX, offsetY, 0);
+			if (iRtnVal == 1)
+			{
+				iRtnFunction = 61700;				// 보정 이동
+			}
+			else if (iRtnVal == 2)
+			{
+				sLangChange.LoadStringA(IDS_STRING654);	//Lens Align [%d] 완료 [%d]
+				logStr.Format(_T("		") + sLangChange, Task.m_iRetry_Opt, iLensStep);
+				putListLog(logStr);
+
+				theApp.MainDlg->InstantMarkDelete(LENS_Align_MARK);			//임시 등록 마크 삭제
+
+				sLangChange.LoadStringA(IDS_STRING655);	//Lens Align Complete : %d, %.03f, %.03f, %.03f
+				logStr.Format(_T("		") + sLangChange, Task.m_iLensPickupNoCentering, Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]);
+				AlignResultSave(logStr);
+				Task.m_iRetry_Opt = 0;
+				iRtnFunction = 61800;				// 완료
+			}
+			else
+			{
+				sLangChange.LoadStringA(IDS_STRING653);	//Lens Align [%d] 보정 범위 초과
+				logStr.Format(sLangChange + _T("[%d]"), Task.m_iRetry_Opt, iLensStep);
+				errMsg2(Task.AutoFlag, logStr);
+				AlignLogSave(logStr);
+				theApp.MainDlg->InstantMarkDelete(LENS_Align_MARK);
+				iRtnFunction = -61600;				// NG
+			}
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING652);	//Lens Align [%d] 마크 인식 실패[%d]
+			logStr.Format(sLangChange, Task.m_iRetry_Opt, iLensStep);
+			putListLog(logStr);
+
+			iRtnFunction = 61600;					//  재검사 
+		}
+		break;
+
+	case 61700://!! 보정량 이동.- Retry
+		if (motor.Lens_Motor_Align_Move(Task.d_Align_offset_x[LENS_Align_MARK], Task.d_Align_offset_y[LENS_Align_MARK], Task.d_Align_offset_th[LENS_Align_MARK]))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 61500;
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING657);	//Lens Align 보정 위치 이동 실패
+			logStr.Format(sLangChange + _T("[%d]"), iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -61700;
+		}
+	case 61800: // 값 저장2
+
+				//!!!!! 1차 Align 보정량 편차 저장 공식(PCB<-> Lens Sensor간)
+		Task.m_dataOffset_x[1] = Task.d_Align_offset_x[LENS_Align_MARK];
+		Task.m_dataOffset_y[1] = Task.d_Align_offset_y[LENS_Align_MARK];
+		//		Task.m_dataOffset_th[1] = Task.d_Align_offset_th[LENS_Align_MARK] - Task.d_Align_offset_th[PCB_Chip_MARK];
+
+		//sLangChange.LoadStringA(IDS_STRING962);	//PCB Sensor_Holder간 Align 편차값 : X:%.03f, Y:%.03f, Θ:%.04f [%d]
+		//logStr.Format(_T("		") + sLangChange, Task.m_dataOffset_x[1], Task.m_dataOffset_y[1],Task.m_dataOffset_th[1], iLensStep);
+		//putListLog(logStr);
+
+		//만도 차량용Camera 검사 Log 저장
+		MandoInspLog.dLensOffset[0] = Task.m_dataOffset_x[1];
+		MandoInspLog.dLensOffset[1] = Task.m_dataOffset_y[1];
+		MandoInspLog.dLensOffset[2] = Task.m_dataOffset_th[1];
+
+
+		iRtnFunction = 61850;
+		//if (Dio.CamLaserSlinderMove(false, true))
+		//{
+		//	logStr.Format("Laser/Cam 실린더 후진 완료[%d]", iLensStep);
+		//	//putListLog(logStr);
+		//	Task.LensTaskTime = myTimer(true);
+		//	iRtnFunction = 41850;
+		//}
+		//else
+		//{
+		//	logStr.Format("Laser/Cam 실린더 후진 실패[%d]", iLensStep);
+		//	errMsg2(Task.AutoFlag, logStr);
+		//	iRtnFunction = -41800;
+		//}
+
+		// 20141217 LHC - sensor_holder간 align 편차 값에 0가 들어가면 정지하게끔
+		//김영호 20150602 FraneeGrabber  관련 임시 Pass
+		//if(Task.m_dataOffset_x[1] == 0 || Task.m_dataOffset_y[1] == 0 || Task.m_dataOffset_th[1] == 0)
+		//{
+		//	sLangChange.LoadStringA(IDS_STRING963);	//PCB Sensor_Holder간 Align 편차값 이상 발생 : X:%.03f, Y:%.03f, Θ:%.04f [%d]
+		//	logStr.Format(_T("		") + sLangChange, Task.m_dataOffset_x[1], Task.m_dataOffset_y[1],Task.m_dataOffset_th[1], iLensStep);
+		//	putListLog(logStr);
+		//	errMsg2(Task.AutoFlag,logStr);
+		//	iRtnFunction = -41800;
+		//	break;
+		//}
+
+		//-- ADO DB 저장
+		//g_ADOData.func_AATaskToRecordAlign(Task.ChipID, MandoInspLog.dLensOffset[0], MandoInspLog.dLensOffset[1], MandoInspLog.dLensOffset[2]);
+
+		break;
+#endif
+	case 61850:
+		if (motor.Lens_Motor_MoveY(Wait_Pos))
+		{
+			logStr.Format("Lens Y 대기위치 이동 명령[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 61870;		
+		}
+		else
+		{
+			logStr.Format("Lens Y 대기위치 이동 실패[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = -61850;
+		}
+		break;
+
+	case 61870:
+		if (motor.INSP_Motor_MoveX(Wait_Pos))
+		{
+			logStr.Format("Insp X 대기위치 이동 명령[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = 61900;		
+		}
+		else
+		{
+			logStr.Format("Insp X 대기위치 이동 실패[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = -61870;
+		}
+		break;
+	case 61900://! Lens-Z축 대기 위치 이동
+		if (motor.LENS_Z_Motor_Move(Wait_Pos))
+		{
+			Task.LensTaskTime = myTimer(true);
+			iRtnFunction = 61950;
+		}
+		else
+		{
+			sLangChange.LoadStringA(IDS_STRING739);	//Lens_Z축 대기위치 이동 실패
+			logStr.Format(sLangChange + _T("[%d]"), iLensStep);
+			errMsg2(Task.AutoFlag, logStr);
+			iRtnFunction = -61900;
+		}
+		break;
+	case 61950:
+		iRtnFunction = 62000;
+		break;
+	case 62000: // 본딩 위치 이동
+		if (motor.Lens_Motor_MoveXY(0, Wait_Pos))
+		{
+			iRtnFunction = 62200;
+		}
+		else
+		{
+			logStr.Format("Lens 대기위치 이동 실패[%d]", iLensStep);
+			putListLog(logStr);
+			iRtnFunction = -62000;
+		}
+		break;
+	case 62200:
+		//죽스 모델  , lens 본딩위치에서 z축 대기위치에서 pcb 본딩위치로 못들어와서 z축 좀 들어올려놔야됨
+		iRtnFunction = 63000;
+		break;
+	case 63000:
+		Task.interlockPcb = 1;
+		Task.interlockLens = 1;
+		Task.bFlag_Auto_Lens_Laser_Finish = true;
+		iRtnFunction = 70000;
+		break;
+	default:
+		sLangChange.LoadStringA(IDS_STRING628);	//Laser 변위 측정 Thread Step 번호 비정상 .
+		logStr.Format(sLangChange + _T("[%d]"), iLensStep);
 		errMsg2(Task.AutoFlag, logStr);
 		iRtnFunction = -1;
 		break;

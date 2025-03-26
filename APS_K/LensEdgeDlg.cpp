@@ -1103,6 +1103,8 @@ void CLensEdgeDlg::OnBnClickedButtonMotorSupply()
 
 void CLensEdgeDlg::OnBnClickedButtonMotorAlign()
 {
+	CString sTmpLog = "";
+
 	if( !func_TaskMovingCheck() )	return;
 	if( !func_MovingInterlock() )	return;
 
@@ -1134,6 +1136,26 @@ void CLensEdgeDlg::OnBnClickedButtonMotorAlign()
 	//delayMsg("렌즈 틸트로 미사용 위치입니다.", 2000, M_COLOR_RED);
 	//return;
 #endif
+#else
+	g_bMovingflag = true;
+	if (!motor.Lens_Motor_MoveX(Lens_Pos))
+	{
+		sLangChange.LoadStringA(IDS_STRING648);	//Lens %s 이동 실패
+		sTmpLog.Format(sLangChange, MotorPosName[Lens_Pos]);
+		delayMsg(sTmpLog.GetBuffer(99), 3000, M_COLOR_RED);
+		g_bMovingflag = false;
+		return;
+	}
+	else
+	{
+		if (motor.Lens_Motor_MoveXY(2, Lens_Pos))
+		{
+
+			sLangChange.LoadStringA(IDS_STRING649);	//Lens %s 이동 완료
+			sTmpLog.Format(sLangChange, MotorPosName[Wait_Pos]);
+			delayMsg(sTmpLog.GetBuffer(99), 3000, M_COLOR_GREEN);
+		}
+	}
 #endif
 	g_bMovingflag =false;
 }

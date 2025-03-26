@@ -1051,40 +1051,41 @@ bool CPRIFunc_Insp::func_Insp_Shm_Illumination(BYTE* rawImage, bool bAutoMode, b
 	//	vROI[i].bottom = vROI[i].top + 50;
 	//}
 	RECT rtRefEdge;
-	int roiSize = 50;
+	int roiSize = 39;
+	int roiSize_V = 79;
 	double nfield = 0.85;
 	int fieldGapW = (nWidth * nfield);
 	int fieldGapH = (nHeight * nfield);
 
-	vROI[0].left = nWidth / 2 - (roiSize / 2);
-	vROI[0].top = nHeight / 2 - (roiSize / 2);
+	vROI[0].left = 700; //nWidth / 2 - (roiSize / 2);
+	vROI[0].top = 500; // nHeight / 2 - (roiSize / 2);
 	vROI[0].right = vROI[0].left + roiSize;
-	vROI[0].bottom = vROI[0].top + roiSize;
+	vROI[0].bottom = vROI[0].top + roiSize_V;
 	
 
 	//LT
-	vROI[1].left = nWidth - fieldGapW;
-	vROI[1].top = nHeight - fieldGapH;
+	vROI[1].left = 52; // nWidth - fieldGapW;
+	vROI[1].top = 14; // nHeight - fieldGapH;
 	vROI[1].right = vROI[1].left + roiSize;
-	vROI[1].bottom = vROI[1].top + roiSize;
+	vROI[1].bottom = vROI[1].top + roiSize_V;
 
 	//RT
-	vROI[2].left = fieldGapW;
-	vROI[2].top = nHeight - fieldGapH;
+	vROI[2].left = 1347; // fieldGapW;
+	vROI[2].top = 14; // nHeight - fieldGapH;
 	vROI[2].right = vROI[2].left + roiSize;
-	vROI[2].bottom = vROI[2].top + roiSize;
+	vROI[2].bottom = vROI[2].top + roiSize_V;
 
 	//BL
-	vROI[3].left = nWidth - fieldGapW;
-	vROI[3].top = fieldGapH;
+	vROI[3].left = 52; // nWidth - fieldGapW;
+	vROI[3].top = 985; // fieldGapH;
 	vROI[3].right = vROI[3].left + roiSize;
-	vROI[3].bottom = vROI[3].top + roiSize;
+	vROI[3].bottom = vROI[3].top + roiSize_V;
 
 	//BR
-	vROI[4].left = fieldGapW;
-	vROI[4].top = fieldGapH;
+	vROI[4].left = 1367; // fieldGapW;
+	vROI[4].top = 985; // fieldGapH;
 	vROI[4].right = vROI[4].left + roiSize;
-	vROI[4].bottom = vROI[4].top + roiSize;
+	vROI[4].bottom = vROI[4].top + roiSize_V;
 
 	
 	for (i = 0; i < 5; i++)

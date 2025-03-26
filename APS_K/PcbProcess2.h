@@ -55,6 +55,7 @@ public:
 	//Lens Thread
 	//
 	int RunProc_LENS_LensLoad(int iLensStep); //! Lens Thread Control (30000 ~ 39999)
+	int RunProc_LENS_AlignLaserMeasure(int iLensStep); //! Lens Thread Control (30000 ~ 39999)
 
 };
 

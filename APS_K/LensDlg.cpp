@@ -2886,12 +2886,12 @@ void CLensDlg::OnBnClickedButtonComAlignTest()
 			axis[1] = Motor_PCB_Y;
 			axis[2] = Motor_PCB_TH;
 
-			pos[0]	= motor.GetCommandPos(Motor_PCB_X)		- offsetX;
-			pos[1]	= motor.GetCommandPos(Motor_PCB_Y)		- offsetY;
+			pos[0]	= motor.GetCommandPos(Motor_PCB_X)		+ offsetX;
+			pos[1]	= motor.GetCommandPos(Motor_PCB_Y)		+ offsetY;
 			pos[2]	= motor.GetCommandPos(Motor_PCB_TH)		+ offsetTh;
 
-			Task.d_Align_offset_x[PCB_Chip_MARK] = -offsetX;
-			Task.d_Align_offset_y[PCB_Chip_MARK] = -offsetY;
+			Task.d_Align_offset_x[PCB_Chip_MARK] = offsetX;
+			Task.d_Align_offset_y[PCB_Chip_MARK] = offsetY;
 			Task.d_Align_offset_th[PCB_Chip_MARK] = offsetTh;
 
 			motor.goMotorPos(3, axis, pos);

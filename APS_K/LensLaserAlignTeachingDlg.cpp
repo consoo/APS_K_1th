@@ -159,7 +159,7 @@ void CMotorDlg4::InitGridCtrl_LensAlign()
 	CRect rect;
 	CWnd *pWnd= (CWnd*)GetDlgItem(IDC_STATIC_TEACHLENS_LASER_ALIGN_GRID);
 #if (____AA_WAY == PCB_TILT_AA)
-	LensRow = 13;//아래
+	LensAlignRow = 14;// 13;//아래
 #elif (____AA_WAY == LENS_TILT_AA)
 	LensAlignRow = 14;//아래
 #endif	

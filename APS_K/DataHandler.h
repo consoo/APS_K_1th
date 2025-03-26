@@ -155,6 +155,8 @@ public:
 
 	bool    bFlag_Auto_White_Balance;	//! Auto White Balance Thread가 동작 중이면 true 설정
 	
+	bool	bFlag_Auto_PCB_Bonding_Pos;
+	bool	bFlag_Auto_Lens_Laser_Finish;
 
     std::vector<int> m_vDirection;
     std::vector<double> m_vFrquency;

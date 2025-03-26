@@ -645,7 +645,7 @@ void CMotorDlg::dispMotorStatus()
 	{
 		iIndex = i - Motor_Lens_X;
 		
-		if((i == Motor_Lens_Xt) || (i== Motor_Lens_Yt) || (i == Motor_PCB_Xt) || (i == Motor_PCB_Yt) )		// 스태핑 모터
+		if((i == Motor_Lens_Xt) || (i== Motor_Lens_Yt) || (i == Motor_PCB_Xt) || (i == Motor_PCB_Yt) || (i == Motor_Lens_TH))	// 스태핑 모터
 			motorPos	= motor.GetCommandPos_Disp(i);
 		else
 			motorPos	= motor.GetEncoderPos_Disp(i);

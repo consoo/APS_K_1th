@@ -7130,12 +7130,13 @@ bool CAxlMotorSet::Pcb_Motor_Move(int index, double offsetX, double offsetY, dou
 			{
 				if (Task.AutoFlag == 1)
 				{
-
-					//pos[0] = Task.dAAPcbMotor[0] + offsetX;	//PCB X access 历厘等 蔼
-					//pos[1] = Task.dAAPcbMotor[1] + offsetY;	//PCB Y
-					//pos[2] = Task.dAAPcbMotor[2] + offsetTh;	//PCB TH 
-					pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - Task.dAAPcbMotor[0] + offsetX);
-					pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - Task.dAAPcbMotor[1] + offsetY);
+#if (____AA_WAY == PCB_TILT_AA)
+					pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - model.axis[Motor_PCB_X].pos[index] + offsetX);
+					pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - model.axis[Motor_PCB_Y].pos[index] + offsetY);
+#elif (____AA_WAY == LENS_TILT_AA)
+					pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - Task.dAAPcbMotor[0] + offsetX);	//PCB X access 历厘等 蔼
+					pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - Task.dAAPcbMotor[1] + offsetY);	//PCB X access 历厘等 蔼
+#endif
 				}
 				else
 				{
@@ -7145,8 +7146,13 @@ bool CAxlMotorSet::Pcb_Motor_Move(int index, double offsetX, double offsetY, dou
 			}
 			else
 			{
+#if (____AA_WAY == PCB_TILT_AA)
+				pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - pos[0]);
+				pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - pos[1]);
+#elif (____AA_WAY == LENS_TILT_AA)
 				pcbPosX = fabs(GetEncoderPos(Motor_PCB_X) - model.axis[Motor_PCB_X].pos[index] + offsetX);
 				pcbPosY = fabs(GetEncoderPos(Motor_PCB_Y) - model.axis[Motor_PCB_Y].pos[index] + offsetY);
+#endif
 			}
 			
 #endif
@@ -9511,7 +9517,7 @@ bool CAxlMotorSet::PCB_Z_Motor_Move(int index, double offsetZ)
 	if(sysData.m_iProductComp == 1 && index == Bonding_Pos)//if(sysData.m_iProductComp == 1  && !(Task.dAAPcbMotor[0] == 0 && Task.dAAPcbMotor[1] == 0 && Task.dAAPcbMotor[2] == 0 && Task.dAAPcbMotor[3] == 0 && Task.dAAPcbMotor[4] == 0 && Task.dAAPcbMotor[5] == 0))
 	{
 #if (____AA_WAY == PCB_TILT_AA)
-		pos[0] = Task.dAAPcbMotor[5];
+		pos[0] = model.axis[Motor_PCB_Z].pos[index];//pos[0] = Task.dAAPcbMotor[5];
 		axis[0] = Motor_PCB_Z;
 #elif (____AA_WAY == LENS_TILT_AA)
 		pos[0] = model.axis[Motor_PCB_Z].pos[index];

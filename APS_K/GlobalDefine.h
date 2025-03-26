@@ -9,13 +9,13 @@
 #define	PCB_TILT_AA				0
 #define LENS_TILT_AA			1
 
-#define ____AA_WAY					LENS_TILT_AA	//PCB_TILT_AA, LENS_TILT_AA
+#define ____AA_WAY					PCB_TILT_AA	//PCB_TILT_AA, LENS_TILT_AA
 
 
 #define	MACHINE_1ST				110
 #define MACHINE______2ST		304
 //
-#define	__MACHINE_MODEL			MACHINE_1ST
+#define	__MACHINE_MODEL			MACHINE______2ST
 
 
 
@@ -36,9 +36,15 @@ const int M1_HEATING_GEN2 = 10050;		//240721 렌즈에 꼬리 ,강민우선임 ,차트 9개 0
 
 
 
-static int LGIT_MODEL_INDEX = M1_TANGERING_5M;
+static int LGIT_MODEL_INDEX = M2_OX01H1B;
 //-----------------------------------------------------------------------------------------------------------------------------------
-#define					VER_STR		"250324_1"			//
+#define					VER_STR		"250326_2"			//완제품 align XY 방향 부호 반대
+//#define					VER_STR		"250326_1"			// _checkMaxSfrPos ->  m_iCnt_Step_AA_Total 임시 값 -10
+//#define					VER_STR		"250325_3"			//PCB AA
+//#define					VER_STR		"250325_2"			//
+//#define					VER_STR		"250324_3"			//Line Pulse 0.125
+//#define					VER_STR		"250324_2"			//IR CHART, CCD OPEN
+//#define					VER_STR		"250324_1"			//
 //#define					VER_STR		"250320_1"			// win7, Mil9 재설치 Okey? Okey Okey
 //#define					VER_STR		"250318_1"			// CCD OPEN 
 //#define					VER_STR		"250317_1"			// 1호기 Tengring
@@ -283,8 +289,8 @@ enum	RS_232_COMM {
 #define		CAM_SIZE_X			1280						// CIS 카메라 영상 크기..
 #define		CAM_SIZE_Y			960
 #else
-#define		CAM_SIZE_X			1280						// CIS 카메라 영상 크기..
-#define		CAM_SIZE_Y			1024
+#define		CAM_SIZE_X			1280						// CIS 카메라 영상 크기..	
+#define		CAM_SIZE_Y			1024						//							
 #endif
 
 #if 1
